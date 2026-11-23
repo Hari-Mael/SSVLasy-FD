@@ -29,14 +29,14 @@ namespace Sahavola
         {
             Instance = this;
             // Détection tactile : Android / iOS = tactile, Windows / Linux / macOS = souris
-            EstTactile = OS.GetName() == "Android" || OS.GetName() == "iOS" || DisplayServer.IsTouchScreenAvailable();
+            EstTactile = OS.GetName() == "Android" || OS.GetName() == "iOS" || DisplayServer.IsTouchscreenAvailable();
             GetViewport().SizeChanged += OnTailleChangee;
             OnTailleChangee();
         }
 
         private void OnTailleChangee()
         {
-            Vector2I taille = GetViewport().GetVisibleRect().Size;
+            Vector2I taille = (Vector2I)GetViewport().GetVisibleRect().Size;
             // Sécurité : raha 0, mampiasa 1280x720
             if (taille.X <= 0 || taille.Y <= 0) taille = new Vector2I(1280, 720);
             TailleEcran = taille;
