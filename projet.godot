@@ -1,0 +1,44 @@
+; Engine configuration file.
+config_version=5
+
+[application]
+
+config/name="Sahavola - Lasy Skoto"
+config/description="Lasy Skoto / Camp Scout - Bilingue Malagasy / Français - Teknika Skoto - Sécurisé - Responsive"
+run/main_scene="res://Main.tscn"
+config/features=PackedStringArray("4.2", "C#")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameManager="*res://scripts/GameManager.cs"
+
+[dotnet]
+
+project/assembly_name="Sahavola"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/viewport_width_override=1280
+window/size/viewport_height_override=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/stretch/scale_mode="fractional"
+window/stretch/scale=1.0
+window/handheld/orientation="sensor"
+window/dpi/allow_hidpi=true
+window/size/resizable=true
+window/size/expand_to_entire_screen=true
+
+[rendering]
+
+renderer/rendering_method="forward_plus"
+renderer/rendering_method.mobile="mobile"
+renderer/textures/canvas_textures/default_texture_filter=0
+
+[input]
+
+# Touch : joystick + boutons tactiles
+# Souris : ZQSD + Flèches + clic

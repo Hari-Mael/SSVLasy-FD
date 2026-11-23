@@ -1,0 +1,1490 @@
+[gd_scene load_steps=4 format=3]
+[ext_resource type="Script" path="res://scripts/Main.cs" id="1_main"]
+[ext_resource type="Script" path="res://scripts/ResponsiveManager.cs" id="2_resp"]
+[ext_resource type="Script" path="res://scripts/ResponsiveForm.cs" id="3_form"]
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_main")
+[node name="ResponsiveManager" type="Node" parent="."]
+script = ExtResource("2_resp")
+[node name="RootVBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 6
+[node name="TopBar" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="TitreLabel" type="Label" parent="RootVBox/TopBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 1.0
+text = "🌲 SAHAVOLA — Lasy Skoto / Camp Scout"
+autowrap_mode = 2
+vertical_alignment = 1
+[node name="StatusMini" type="Label" parent="RootVBox/TopBar"]
+layout_mode = 2
+text = "Vonona / Prêt"
+autowrap_mode = 2
+vertical_alignment = 1
+[node name="BtnDeconnexion" type="Button" parent="RootVBox/TopBar"]
+layout_mode = 2
+text = "🚪 Mivoaha / Déconnexion"
+custom_minimum_size = Vector2(140, 44)
+[node name="TabScroll" type="ScrollContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+vertical_scroll_mode = 0
+horizontal_scroll_mode = 1
+[node name="TabBar" type="HBoxContainer" parent="RootVBox/TabScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+[node name="BtnTabCamp" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🏕️ Tobi / Camp"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabPerso" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🎮 Ny mpilalaoko / Mon joueur"
+custom_minimum_size = Vector2(160, 48)
+[node name="BtnTabTarika" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🏕️ Tarika / Groupe"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabComptes" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "👑 Kaonty / Comptes"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabCarte" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🗺️ Sarintany / Carte"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabActivites" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🎯 Asa / Activités"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabCodes" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🔐 Kaody / Codes"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabTeknika" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "📖 Teknika Skoto"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabEquipes" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "👥 Ekipa / Équipes"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabChef" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🧭 Mpitarika / Chef"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabCreer" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "➕ Mamorona / Créer"
+custom_minimum_size = Vector2(140, 48)
+[node name="BtnTabBackend" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "⚙️ Rafitra ambadika / Backend"
+custom_minimum_size = Vector2(160, 48)
+[node name="BtnTab3D" type="Button" parent="RootVBox/TabScroll/TabBar"]
+layout_mode = 2
+text = "🎮 3D — Mpikambana 2 / 2 joueurs"
+custom_minimum_size = Vector2(180, 48)
+[node name="ContentScroll" type="ScrollContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+[node name="Content" type="VBoxContainer" parent="RootVBox/ContentScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+[node name="AuthPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="AuthVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/AuthPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="AuthTitre" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+text = "🔐 Fidirana / Connexion — Tsy misy kaonty voasoratra mialoha / Aucun compte pré-rempli"
+autowrap_mode = 2
+[node name="AuthTabs" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BtnAuthLogin" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/AuthTabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Fidirana / Connexion"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnAuthRegister" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/AuthTabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mamorona kaonty / Créer un compte"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnAuthFirst" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/AuthTabs"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Mpitantana Ambony voalohany / Premier Super Admin"
+custom_minimum_size = Vector2(0, 48)
+[node name="LoginForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblLoginPseudo" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+text = "Anarana fidirana / Pseudo"
+autowrap_mode = 2
+[node name="EditLoginPseudo" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblLoginPass" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+text = "Tenimiafina / Mot de passe — 8 litera farafahakeliny / 8 caractères minimum"
+autowrap_mode = 2
+[node name="EditLoginPass" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tenimiafina / Mot de passe"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="EditSecret" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Lakile fanafenana / Clé de chiffrement (AES) — tsy voasoratra anaty kaody / jamais en dur"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="LblSecretInfo" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm"]
+layout_mode = 2
+text = "Lakile : angatahina amin'ny fanombohana. Raha very, tsy azo vakiana ny tahiry. / Clé : demandée au démarrage. Si perdue, données illisibles."
+autowrap_mode = 2
+[node name="BtnLogin" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔐 Miditra / Se connecter"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblLoginHint" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+text = "Tsy misy kaonty ? Mamorona aloha ny Mpitantana Ambony voalohany. / Aucun compte ? Crée d'abord le Premier Super Admin."
+autowrap_mode = 2
+[node name="RegisterForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+visible = false
+script = ExtResource("3_form")
+[node name="LblRegPseudo" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Anarana fidirana / Pseudo"
+autowrap_mode = 2
+[node name="EditRegPseudo" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegPass" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Tenimiafina / Mot de passe"
+autowrap_mode = 2
+[node name="EditRegPass" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tenimiafina / Mot de passe"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegRole" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Andraikitra angatahina / Rôle demandé"
+autowrap_mode = 2
+[node name="OptRegRole" type="OptionButton" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegEquipe" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Ekipa (anarana malalaka) / Équipe (nom libre)"
+autowrap_mode = 2
+[node name="EditRegEquipe" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Ekipa / Équipe"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegRoleEq" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Andraikitra ao amin'ny ekipa / Rôle dans l'équipe"
+autowrap_mode = 2
+[node name="EditRegRoleEq" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Cuisinier, Bois, Eau, Orientation..."
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegParrain" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Iza no nanasa anao ? Anaran'ny mpitarika / Qui t'a invité ? Pseudo du chef"
+autowrap_mode = 2
+[node name="EditRegParrain" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo du chef"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblRegParent" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "Ray aman-dreny / Parent — Anarana + Contact — Fanomezan-dalana / Consentement"
+autowrap_mode = 2
+[node name="EditRegParent" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Anaran'ny ray aman-dreny / Nom du parent"
+custom_minimum_size = Vector2(0, 48)
+[node name="EditRegContactParent" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Contact ray aman-dreny / Contact parent"
+custom_minimum_size = Vector2(0, 48)
+[node name="CheckConsentement" type="CheckBox" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm"]
+layout_mode = 2
+text = "✅ Manaiky ny ray aman-dreny / Consentement parental — tsy maintsy TRUE raha Mpikambana / obligatoire si Membre"
+[node name="BtnRegister" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "➕ Mangataka famoronana / Demander la création"
+custom_minimum_size = Vector2(0, 52)
+[node name="FirstForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+visible = false
+script = ExtResource("3_form")
+[node name="LblFirstPseudo" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm"]
+layout_mode = 2
+text = "Anaran'ny Mpitantana Ambony voalohany / Pseudo du premier Super Admin"
+autowrap_mode = 2
+[node name="EditFirstPseudo" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblFirstPass" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm"]
+layout_mode = 2
+text = "Tenimiafina / Mot de passe"
+autowrap_mode = 2
+[node name="EditFirstPass" type="LineEdit" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tenimiafina / Mot de passe"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnFirst" type="Button" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "👑 Mamorona ny Mpitantana Ambony voalohany / Créer le premier Super Admin"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblAuthMsg" type="Label" parent="RootVBox/ContentScroll/Content/AuthPanel/AuthVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="PersoPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="PersoVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/PersoPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="PersoTitre" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox"]
+layout_mode = 2
+text = "🎮 Ny mpilalaoko / Mon joueur — Tahaka ny God of War / Comme God of War"
+autowrap_mode = 2
+[node name="PersoApercu" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox"]
+layout_mode = 2
+text = "🧑 — Mpilalao / Joueur"
+autowrap_mode = 2
+horizontal_alignment = 1
+[node name="PersoForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblPersoNom" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Anaran'ny mpilalao / Nom du personnage"
+autowrap_mode = 2
+[node name="EditPersoNom" type="LineEdit" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Kratos, Leon, Prince..."
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoAvatar" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Avatar / Emoji"
+autowrap_mode = 2
+[node name="OptPersoAvatar" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoTenue" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Akanjo / Tenue"
+autowrap_mode = 2
+[node name="OptPersoTenue" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoFoulard" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Foulard — Loko / Couleur"
+autowrap_mode = 2
+[node name="OptPersoFoulard" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoArme" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Fitaovana / Équipement"
+autowrap_mode = 2
+[node name="OptPersoArme" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoTaille" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Habe / Taille (1.50 — 2.00 m)"
+autowrap_mode = 2
+[node name="EditPersoTaille" type="SpinBox" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.5
+max_value = 2.0
+step = 0.05
+value = 1.75
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoGenre" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Genre"
+autowrap_mode = 2
+[node name="OptPersoGenre" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPersoCheveux" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+text = "Volo / Cheveux"
+autowrap_mode = 2
+[node name="OptPersoCheveux" type="OptionButton" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnPersoSauver" type="Button" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💾 Tehirizo ny mpilalaoko / Sauvegarder mon joueur"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblPersoMsg" type="Label" parent="RootVBox/ContentScroll/Content/PersoPanel/PersoVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="TarikaPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="TarikaVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/TarikaPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="TarikaTitre" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox"]
+layout_mode = 2
+text = "🏕️ Tarika / Groupe — 16 olona / personnes — 1 Mpitarika + 3 Ekipa × 5"
+autowrap_mode = 2
+[node name="LblTarikaList" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox"]
+layout_mode = 2
+text = "Tsy misy tarika / Aucun groupe"
+autowrap_mode = 2
+[node name="TarikaForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblTarikaNom" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+text = "Anaran'ny tarika / Nom du groupe"
+autowrap_mode = 2
+[node name="EditTarikaNom" type="LineEdit" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tarika Voromahery"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblTarikaChef" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+text = "Mpitarika / Chef"
+autowrap_mode = 2
+[node name="OptTarikaChef" type="OptionButton" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblTarikaEmbleme" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+text = "Marika / Emblème"
+autowrap_mode = 2
+[node name="OptTarikaEmbleme" type="OptionButton" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblTarikaDevise" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+text = "Teny filamatra / Devise"
+autowrap_mode = 2
+[node name="EditTarikaDevise" type="LineEdit" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Vonona foana !"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnTarikaCreer" type="Button" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "➕ Mamorona tarika / Créer un groupe"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblTarikaMsg" type="Label" parent="RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="CampPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="CampVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/CampPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="CampTitre" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "🏕️ Tobi / Camp"
+autowrap_mode = 2
+[node name="CampStats" type="GridContainer" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 4
+script = ExtResource("3_form")
+[node name="LblFeu" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats"]
+layout_mode = 2
+text = "🔥 Afo / Feu\n0%"
+autowrap_mode = 2
+[node name="LblEau" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats"]
+layout_mode = 2
+text = "💧 Rano / Eau\n0%"
+autowrap_mode = 2
+[node name="LblBois" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats"]
+layout_mode = 2
+text = "🪵 Kitay / Bois\n0%"
+autowrap_mode = 2
+[node name="LblTente" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats"]
+layout_mode = 2
+text = "⛺ Lay / Tente\n0%"
+autowrap_mode = 2
+[node name="CampBtns" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BtnFeu" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "+ Kitay / + Bois"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnNuit" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🌙 Alina / Andro — Nuit / Jour"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnGps" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📍 GPS tena izy / GPS réel"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblGps" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "GPS : tsy mbola navadika / non activé"
+autowrap_mode = 2
+[node name="LblZone" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "⚠️ Faritra voarara / Zone interdite : Tsy misy / Aucune"
+autowrap_mode = 2
+[node name="BtnSos" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🆘 SOS — SOS ihany no alefa / Seul le SOS est envoyé"
+custom_minimum_size = Vector2(0, 52)
+[node name="JoueursTitre" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "🧑🧑 Mpikambana 2 milalao / 2 joueurs — Ny mpilalaonareo personnalisé no miseho / Vos joueurs personnalisés apparaissent"
+autowrap_mode = 2
+[node name="JoueursForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblJ1" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm"]
+layout_mode = 2
+text = "Mpikambana 1 / Joueur 1"
+autowrap_mode = 2
+[node name="OptJ1" type="OptionButton" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblJ2" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm"]
+layout_mode = 2
+text = "Mpikambana 2 (ekipa mitovy) / Joueur 2 (même équipe)"
+autowrap_mode = 2
+[node name="OptJ2" type="OptionButton" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnChoisir" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "▶️ Fidio / Choisir"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblPlayers" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "Tsy misy mpikambana voafidy / Aucun joueur choisi"
+autowrap_mode = 2
+[node name="LblClassement" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "📊 Filaharana / Classement"
+autowrap_mode = 2
+[node name="LblClassementList" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "Tsy misy isa / Aucun score"
+autowrap_mode = 2
+[node name="LblBadges" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "🎖️ Mari-pankasitrahana / Badges : Tsy misy / Aucun"
+autowrap_mode = 2
+[node name="CampagneTitre" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "📅 Lasy — Sokajy : Tselatra 1–3 / Lehibe 1–5 / Feno 1–11 andro"
+autowrap_mode = 2
+[node name="CampagneForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblCampType" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+text = "Sokajin'ny lasy / Type de camp"
+autowrap_mode = 2
+[node name="OptCampType" type="OptionButton" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblCampTypeInfo" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+text = "⚡ Tselatra : 1–3 andro — 🏕️ Lehibe : 1–5 andro — 🌲 Feno : 1–11 andro"
+autowrap_mode = 2
+[node name="LblCampJours" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+text = "Isan'ny andro (1–11) / Nombre de jours (1–11)"
+autowrap_mode = 2
+[node name="EditCampJours" type="SpinBox" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 11.0
+value = 3.0
+custom_minimum_size = Vector2(0, 48)
+[node name="LblCampDebut" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+text = "Daty fanombohana / Date de début"
+autowrap_mode = 2
+[node name="EditCampDebut" type="LineEdit" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "AAAA-MM-JJ / AAAA-MM-JJ"
+custom_minimum_size = Vector2(0, 48)
+[node name="CampagneBtns" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BtnCampCreer" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "✅ Mamorona lasy / Créer la campagne"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnCampPause" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⏸️ Atsaharo / Pause"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnCampReprendre" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "▶️ Tohizo / Reprendre"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnCampFin" type="Button" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🏁 Vitao / Terminer"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblCampagneInfo" type="Label" parent="RootVBox/ContentScroll/Content/CampPanel/CampVBox"]
+layout_mode = 2
+text = "Tsy misy lasy / Aucune campagne"
+autowrap_mode = 2
+[node name="ComptesPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="ComptesVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/ComptesPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="ComptesTitre" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+text = "👑 Kaonty / Comptes"
+autowrap_mode = 2
+[node name="LblCompteInfo" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+text = "Midira aloha / Connecte-toi d'abord"
+autowrap_mode = 2
+[node name="SuperPanel" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+visible = false
+[node name="LblSuper" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+text = "👑 Mpitantana Ambony — Mitantana ny zava-drehetra / Super Admin — Gère tout"
+autowrap_mode = 2
+[node name="LblAttente" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+text = "⏳ Miandry / En attente (0)"
+autowrap_mode = 2
+[node name="LblDemandes" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+text = "Tsy misy fangatahana / Aucune demande"
+autowrap_mode = 2
+[node name="SuperForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblSaPseudo" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+text = "Pseudo"
+autowrap_mode = 2
+[node name="EditSaPseudo" type="LineEdit" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblSaPass" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+text = "Tenimiafina / Mot de passe"
+autowrap_mode = 2
+[node name="EditSaPass" type="LineEdit" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tenimiafina / Mot de passe"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="LblSaRole" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+text = "Andraikitra / Rôle"
+autowrap_mode = 2
+[node name="OptSaRole" type="OptionButton" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblSaEquipe" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+text = "Ekipa / Équipe"
+autowrap_mode = 2
+[node name="EditSaEquipe" type="LineEdit" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Ekipa / Équipe"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnSuperCreer" type="Button" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "👑 Mamorona sy manamarina / Créer et valider"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblDemandesActivites" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+text = "⏳ Fangatahana Asa Rehetra / Cross-Tarika — Miandry / En attente"
+autowrap_mode = 2
+[node name="LblDemandesActivitesList" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel"]
+layout_mode = 2
+text = "Tsy misy fangatahana asa / Aucune demande d'activité"
+autowrap_mode = 2
+[node name="ChefPanel" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+visible = false
+[node name="LblChef" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel"]
+layout_mode = 2
+text = "🧭 Mpitarika — Mamorona mpampiasa / Chef — Crée les utilisateurs"
+autowrap_mode = 2
+[node name="ChefForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblChefPseudo" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm"]
+layout_mode = 2
+text = "Pseudo"
+autowrap_mode = 2
+[node name="EditChefPseudo" type="LineEdit" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblChefPass" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm"]
+layout_mode = 2
+text = "Tenimiafina / Mot de passe"
+autowrap_mode = 2
+[node name="EditChefPass" type="LineEdit" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Tenimiafina / Mot de passe"
+secret = true
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnChefCreer" type="Button" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🧭 Mamorona (miandry) / Créer (en attente)"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblMesCreations" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel"]
+layout_mode = 2
+text = "Ny noforoniko / Mes créations"
+autowrap_mode = 2
+[node name="LblUsers" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+text = "👥 Mpampiasa rehetra / Tous les utilisateurs (0)"
+autowrap_mode = 2
+[node name="LblUsersList" type="Label" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+text = "Tsy misy mpampiasa / Aucun utilisateur"
+autowrap_mode = 2
+[node name="BtnLogout" type="Button" parent="RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🚪 Mivoaha / Déconnexion"
+custom_minimum_size = Vector2(0, 52)
+[node name="CartePanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="CarteVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/CartePanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="CarteTitre" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox"]
+layout_mode = 2
+text = "🗺️ Sarintany 2D / Carte 2D — Toerana noforoninao / Lieux créés par toi"
+autowrap_mode = 2
+[node name="CarteInfo" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox"]
+layout_mode = 2
+text = "Sarintany 2D — tsindrio ny toerana / Carte 2D — clique sur un lieu"
+autowrap_mode = 2
+[node name="PoiForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblPoiNom" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+text = "Anarana / Nom"
+autowrap_mode = 2
+[node name="EditPoiNom" type="LineEdit" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Anarana / Nom"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPoiLat" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+text = "Latitude"
+autowrap_mode = 2
+[node name="EditPoiLat" type="LineEdit" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "-18.9100"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPoiLon" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+text = "Longitude"
+autowrap_mode = 2
+[node name="EditPoiLon" type="LineEdit" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "47.5350"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPoiInterdit" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+text = "Faritra / Zone"
+autowrap_mode = 2
+[node name="OptPoiInterdit" type="OptionButton" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPoiDesc" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+text = "Famaritana / Description"
+autowrap_mode = 2
+[node name="EditPoiDesc" type="LineEdit" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Famaritana / Description"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnPoiCreer" type="Button" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "➕ Mamorona toerana / Créer un lieu"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblPoiList" type="Label" parent="RootVBox/ContentScroll/Content/CartePanel/CarteVBox"]
+layout_mode = 2
+text = "📍 Toerana / Lieux : Tsy misy / Aucun"
+autowrap_mode = 2
+[node name="ActivitesPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="ActivitesVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/ActivitesPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="ActivitesTitre" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = "🎯 Asa / Activités — Andro / Jour 1"
+autowrap_mode = 2
+[node name="JourBtns" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="LblActivitesList" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = "Tsy misy asa / Aucune activité — Ny mpanentana no mamorona / L'animateur en crée"
+autowrap_mode = 2
+[node name="JouerTitre" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = "▶️ Milalao / Jouer"
+autowrap_mode = 2
+[node name="LblEnigme" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = "Fidio ny asa / Choisis une activité"
+autowrap_mode = 2
+[node name="EditReponse" type="LineEdit" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Valin'ny ekipa / Réponse d'équipe"
+custom_minimum_size = Vector2(0, 52)
+[node name="BtnRepondre" type="Button" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "✅ Hamarino (HMAC) / Valider (HMAC)"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblReponseMsg" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="LblEssais" type="Label" parent="RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox"]
+layout_mode = 2
+text = "Andrana / Essais : 0 / 3"
+autowrap_mode = 2
+[node name="CodesPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="CodesVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/CodesPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="CodesTitre" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+text = "🔐 Kaody / Codes — Teknika Skoto A, p.1–30"
+autowrap_mode = 2
+[node name="CodesNote" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+text = "Ny kaody no miaro ny tsiambaratelo, mila mamadika azy. / Le code protège le secret, il faut le décrypter."
+autowrap_mode = 2
+[node name="CodesForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblMsgClair" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+text = "Hafatra mazava / Message en clair"
+autowrap_mode = 2
+[node name="EditMsgClair" type="LineEdit" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Hafatra mazava / Message en clair"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblCodeChoix" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+text = "Kaody / Code"
+autowrap_mode = 2
+[node name="OptCodeChoix" type="OptionButton" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblParam" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+text = "Fepetra : elanelana na teny fanalahidy / Décalage ou mot-clé"
+autowrap_mode = 2
+[node name="EditParam" type="LineEdit" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "3 na CLE / 3 ou CLE"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnEncoder" type="Button" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔐 Kaody / Encoder"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblCodeResult" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+text = "..."
+autowrap_mode = 2
+[node name="LblCodeAide" type="Label" parent="RootVBox/ContentScroll/Content/CodesPanel/CodesVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="TeknikaPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="TeknikaVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/TeknikaPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="TeknikaTitre" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = "📖 Teknika Skoto — Faraka Malina"
+autowrap_mode = 2
+[node name="TeknikaNote" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = "Boky fanondroana. Tsy misy mpampiasa noforonina avy amin'ity boky ity. / Manuel de référence. Aucun utilisateur créé depuis ce manuel."
+autowrap_mode = 2
+[node name="EditTekSearch" type="LineEdit" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Karohy : vona seza, sémaphore, may, kidoro / Rechercher : nœud de chaise, sémaphore, brûlure, kidoro"
+custom_minimum_size = Vector2(0, 48)
+[node name="TekFiltres" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="LblTekList" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = "Teknika rehetra / Toutes les techniques"
+autowrap_mode = 2
+[node name="QuizTitre" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = "🧪 Fanontaniana / Quiz"
+autowrap_mode = 2
+[node name="LblQuizQ" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = "Tsindrio ny bokotra. / Clique sur le bouton."
+autowrap_mode = 2
+[node name="QuizOpts" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="LblQuizMsg" type="Label" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="BtnQuiz" type="Button" parent="RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔄 Fanontaniana vaovao / Nouvelle question"
+custom_minimum_size = Vector2(0, 52)
+[node name="EquipesPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="EquipesVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/EquipesPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="EquipesTitre" type="Label" parent="RootVBox/ContentScroll/Content/EquipesPanel/EquipesVBox"]
+layout_mode = 2
+text = "👥 Ekipa / Équipes"
+autowrap_mode = 2
+[node name="EquipesNote" type="Label" parent="RootVBox/ContentScroll/Content/EquipesPanel/EquipesVBox"]
+layout_mode = 2
+text = "Isaky ny mpitarika : ekipa 3 farafahabetsany, mpikambana 5 isaky ny ekipa. / Par chef : 3 équipes maximum, 5 membres par équipe."
+autowrap_mode = 2
+[node name="LblEquipesList" type="Label" parent="RootVBox/ContentScroll/Content/EquipesPanel/EquipesVBox"]
+layout_mode = 2
+text = "Tsy misy ekipa / Aucune équipe"
+autowrap_mode = 2
+[node name="ChefPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="ChefVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/ChefPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="ChefTitre" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "🧭 Toeran'ny Mpitarika / Poste Chef"
+autowrap_mode = 2
+[node name="LblPositions" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "Tsy misy toerana / Aucune position — SOS ihany no alefa / Seul le SOS est envoyé"
+autowrap_mode = 2
+[node name="AlertesTitre" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "🚨 Fampitandremana / Alertes"
+autowrap_mode = 2
+[node name="LblAlertes" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "Tsy misy / Aucune"
+autowrap_mode = 2
+[node name="ChefBtns" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BtnTestAlerte" type="Button" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/ChefBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🧪 Fitsapana / Tester"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnPurger" type="Button" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/ChefBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🧹 Fafao / Purger"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnVueAerienne" type="Button" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/ChefBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎮 Fijerena avy eny ambony / Vue aérienne"
+custom_minimum_size = Vector2(0, 48)
+[node name="AuditTitre" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "📋 Audit — Iza no nanao inona ? / Qui a fait quoi ?"
+autowrap_mode = 2
+[node name="LblAudit" type="Label" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+text = "Tsy misy audit / Aucun audit"
+autowrap_mode = 2
+[node name="BtnVoirAudit" type="Button" parent="RootVBox/ContentScroll/Content/ChefPanel/ChefVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📋 Jereo ny Audit / Voir l'audit"
+custom_minimum_size = Vector2(0, 52)
+[node name="CreerPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="CreerVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/CreerPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="CreerTitre" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "➕ Mamorona asa / Créer une activité — Double permission"
+autowrap_mode = 2
+[node name="LblCreerDroit" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "Midira aloha / Connecte-toi d'abord"
+autowrap_mode = 2
+[node name="LblCreerQuota" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "Quota Asa Rehetra : 0 / 2 tamin'ity herinandro ity / cette semaine"
+autowrap_mode = 2
+[node name="CreerForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblNTitre" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Lohateny / Titre"
+autowrap_mode = 2
+[node name="EditNTitre" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Lohateny / Titre"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNModele" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Modely / Modèle"
+autowrap_mode = 2
+[node name="OptNModele" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNCode" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Kaody / Code"
+autowrap_mode = 2
+[node name="OptNCode" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNClair" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Hafatra mazava / Message en clair"
+autowrap_mode = 2
+[node name="EditNClair" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Hafatra mazava / Message en clair"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNPoints" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Isa / Points"
+autowrap_mode = 2
+[node name="EditNPoints" type="SpinBox" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 100.0
+value = 10.0
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNJour" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Andro (1–11) / Jour (1–11) — Araka ny sokajin'ny lasy / Selon le type de camp"
+autowrap_mode = 2
+[node name="EditNJour" type="SpinBox" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 11.0
+value = 1.0
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNHeure" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Ora / Horaire"
+autowrap_mode = 2
+[node name="EditNHeure" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "09:00 - 11:00"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNLieu" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Toerana / Lieu"
+autowrap_mode = 2
+[node name="OptNLieu" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNTeknika" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Teknika Teknika / Technique Teknika"
+autowrap_mode = 2
+[node name="EditNTeknika" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Vona Seza / Nœud de Chaise p.60"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNReponses" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Valiny ekena (sarahina amin'ny ;) / Réponses acceptées (séparées par ;)"
+autowrap_mode = 2
+[node name="EditNReponses" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "VALINY1; VALINY2"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNIndices" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Toro-hevitra hatramin'ny 3 / Indices (jusqu'à 3)"
+autowrap_mode = 2
+[node name="EditNIndice1" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Toro-hevitra 1 / Indice 1"
+custom_minimum_size = Vector2(0, 48)
+[node name="EditNIndice2" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Toro-hevitra 2 / Indice 2"
+custom_minimum_size = Vector2(0, 48)
+[node name="EditNIndice3" type="LineEdit" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Toro-hevitra 3 / Indice 3"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNEssais" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Isan'ny andrana / Nombre d'essais"
+autowrap_mode = 2
+[node name="EditNEssais" type="SpinBox" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 1.0
+max_value = 5.0
+value = 3.0
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNVariante" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Karazana / Variante"
+autowrap_mode = 2
+[node name="OptNVariante" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNPortee" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Ho an'iza ? / Pour qui ? — Fahazoan-dalana roa / Double permission"
+autowrap_mode = 2
+[node name="OptNPortee" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNTarikaCible" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Tarika kendrena (raha Cross-Tarika) / Groupe cible (si Cross-Groupe)"
+autowrap_mode = 2
+[node name="OptNTarikaCible" type="OptionButton" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 48)
+[node name="LblNEvenement" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Hetsika iombonana ? / Évènement commun ? — Tsy maintsy TRUE raha Asa Rehetra / Obligatoire si Activité Tous"
+autowrap_mode = 2
+[node name="CheckNEvenementCommun" type="CheckBox" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "✅ Hetsika iombonana / Évènement commun — Grand Jeu, Veillée, Cérémonie — Iharahan'ny rehetra / Pour tous"
+[node name="LblNPorteeInfo" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm"]
+layout_mode = 2
+text = "Tarika = avy hatrany — Rehetra = mangata + Super Admin manamarina + Quota 2/sem — Cross = mangata + Super Admin manamarina"
+autowrap_mode = 2
+[node name="BtnCreerAct" type="Button" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "✅ Mamorona volavola / Créer un brouillon"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblApercu" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "Aperçu : Ny mpilalao dia mahazo ny kaody fotsiny, tsy ny valiny mihitsy. / Le joueur ne voit que le code, jamais la réponse."
+autowrap_mode = 2
+[node name="LblBrouillons" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "Ny volavolako / Mes brouillons"
+autowrap_mode = 2
+[node name="LblDemandesValidation" type="Label" parent="RootVBox/ContentScroll/Content/CreerPanel/CreerVBox"]
+layout_mode = 2
+text = "⏳ Fangatahana miandry fanamarinana / Demandes en attente"
+autowrap_mode = 2
+[node name="BackendPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BackendVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/BackendPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="BackendTitre" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox"]
+layout_mode = 2
+text = "⚙️ Rafitra ambadika / Backend"
+autowrap_mode = 2
+[node name="BackendForm" type="GridContainer" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+script = ExtResource("3_form")
+[node name="LblBackendUrl" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+text = "URL Backend"
+autowrap_mode = 2
+[node name="EditBackendUrl" type="LineEdit" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "http://192.168.1.10:8000"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblCampagneId" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+text = "Campagne ID"
+autowrap_mode = 2
+[node name="EditCampagneId" type="LineEdit" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Campagne ID"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblEquipeId" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+text = "Ekipa / Équipe"
+autowrap_mode = 2
+[node name="EditEquipeId" type="LineEdit" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Ekipa / Équipe"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblPseudoBackend" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+text = "Pseudo"
+autowrap_mode = 2
+[node name="EditPseudoBackend" type="LineEdit" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Pseudo"
+custom_minimum_size = Vector2(0, 48)
+[node name="BackendBtns" type="HBoxContainer" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="BtnSaveBackend" type="Button" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💾 Tehirizo / Sauvegarder"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnLoginBackend" type="Button" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔐 Fidirana / Connexion"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnTestBackend" type="Button" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendBtns"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🧪 Fitsapana / Tester"
+custom_minimum_size = Vector2(0, 48)
+[node name="LblBackendTest" type="Label" parent="RootVBox/ContentScroll/Content/BackendPanel/BackendVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="Panel3D" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="VBox3D" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/Panel3D"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+[node name="Titre3D" type="Label" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+text = "🎮 Kilalao 3D — Mpikambana 2 / Jeu 3D — 2 joueurs — Personnalisé"
+autowrap_mode = 2
+[node name="Info3D" type="Label" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+text = "J1 : ZQSD / Joystick gauche — J2 : Flèches / Joystick droit — E : Mifampiresaka / Interagir à 2 — Fakantsary afovoany / Caméra milieu — Zana-tsipìka mavo / Flèche jaune = tanjona / objectif — Ny mpilalaonareo personnalisé no miseho / Vos joueurs personnalisés apparaissent"
+autowrap_mode = 2
+[node name="BtnOuvrir3D" type="Button" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎮 Sokafy ny 3D / Ouvrir la 3D"
+custom_minimum_size = Vector2(0, 52)
+[node name="LblQuest" type="Label" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+text = "🎯 Iraka / Mission : Tsy misy asa / Aucune activité"
+autowrap_mode = 2
+[node name="LblQuestList" type="Label" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="BtnQuestHelp" type="Button" parent="RootVBox/ContentScroll/Content/Panel3D/VBox3D"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "❓ Aiza no aleha ? / Où aller ?"
+custom_minimum_size = Vector2(0, 48)
+[node name="DialogPanel" type="PanelContainer" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+visible = false
+[node name="DialogVBox" type="VBoxContainer" parent="RootVBox/ContentScroll/Content/DialogPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+[node name="LblDialogNom" type="Label" parent="RootVBox/ContentScroll/Content/DialogPanel/DialogVBox"]
+layout_mode = 2
+text = "🧑 Mpitarika / Chef"
+autowrap_mode = 2
+[node name="LblDialogTxt" type="Label" parent="RootVBox/ContentScroll/Content/DialogPanel/DialogVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+[node name="BtnDialogOk" type="Button" parent="RootVBox/ContentScroll/Content/DialogPanel/DialogVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "OK, andao / OK, on y va"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnInteract" type="Button" parent="RootVBox/ContentScroll/Content"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎯 Manaova ny asa miaraka 2 / Faire l'activité à 2 !"
+custom_minimum_size = Vector2(0, 52)
+visible = false
+[node name="StatusLabel" type="Label" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Vonona / Prêt — Responsive — Téléphone / Tablette / Ordinateur"
+autowrap_mode = 2
+[node name="BottomBar" type="HBoxContainer" parent="RootVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+[node name="BtnBGps" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📍 GPS"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBInv" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎒 Kitapo / Inventaire"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBJournal" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📓 Diarin'ny dia / Journal"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBCarte" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🗺️ Sarintany / Carte"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBCodes" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔐 Kaody / Codes"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBSos" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🆘 SOS"
+custom_minimum_size = Vector2(0, 48)
+[node name="BtnBHome" type="Button" parent="RootVBox/BottomBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🏠 Fandraisana / Accueil"
+custom_minimum_size = Vector2(0, 48)
+[node name="EndScreen" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+visible = false
+[node name="EndVBox" type="VBoxContainer" parent="EndScreen"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -100.0
+offset_right = 200.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+[node name="LblEndNom" type="Label" parent="EndScreen/EndVBox"]
+layout_mode = 2
+text = "🎉 Bravo !"
+autowrap_mode = 2
+horizontal_alignment = 1
+[node name="LblEndScore" type="Label" parent="EndScreen/EndVBox"]
+layout_mode = 2
+text = "0 pts"
+autowrap_mode = 2
+horizontal_alignment = 1
+[node name="LblEndTotem" type="Label" parent="EndScreen/EndVBox"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
+horizontal_alignment = 1
+[node name="BtnRejouer" type="Button" parent="EndScreen/EndVBox"]
+layout_mode = 2
+text = "🔄 Avereno / Rejouer"
+custom_minimum_size = Vector2(0, 52)
