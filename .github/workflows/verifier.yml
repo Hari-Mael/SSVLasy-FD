@@ -30,13 +30,18 @@ jobs:
 
       - name: Vérifier la présence du projet C#
         run: |
-          if [ ! -f Sahavola.csproj ]; then
-            echo "::error::Sahavola.csproj absent. Ouvrez le projet dans Godot .NET (Projet > Outils > C# > Créer une solution C#), puis commitez Sahavola.csproj et Sahavola.sln."
-            exit 1
-          fi
+          for fichier in Sahavola.csproj Sahavola.sln; do
+            if [ ! -f "$fichier" ]; then
+              echo "::error::$fichier absent à la racine du dépôt."
+              exit 1
+            fi
+          done
 
-      - name: Compiler le C#
-        run: dotnet build Sahavola.csproj
+      - name: Compiler le C# avec dotnet
+        run: dotnet build Sahavola.sln --configuration Debug
+
+      - name: Générer les assemblies Godot
+        run: "$GODOT_BIN" --headless --path . --build-solutions --quit
 
       - name: Importer les ressources Godot
         run: "$GODOT_BIN" --headless --path . --import
