@@ -28,16 +28,12 @@ jobs:
           chmod +x "$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}_mono_linux.x86_64"
           echo "GODOT_BIN=$RUNNER_TEMP/godot/Godot_v${GODOT_VERSION}_mono_linux.x86_64" >> "$GITHUB_ENV"
 
-      - name: Vérifier la présence du projet C#
+      - name: Vérifier les fichiers du projet
         run: |
-          for fichier in Sahavola.csproj Sahavola.sln; do
-            if [ ! -f "$fichier" ]; then
-              echo "::error::$fichier absent à la racine du dépôt."
-              exit 1
-            fi
-          done
+          test -f Sahavola.csproj || { echo "::error::Sahavola.csproj absent"; exit 1; }
+          test -f Sahavola.sln || { echo "::error::Sahavola.sln absent"; exit 1; }
 
-      - name: Compiler le C# avec dotnet
+      - name: Compiler le C#
         run: dotnet build Sahavola.sln --configuration Debug
 
       - name: Générer les assemblies Godot
