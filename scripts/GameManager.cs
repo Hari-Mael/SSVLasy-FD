@@ -95,7 +95,7 @@ namespace Sahavola
             Data.Progressions ??= new List<TeamProgress>();
             Data.Audit ??= new List<AuditLog>();
             if (!string.IsNullOrEmpty(Data.CleHmac)) return false;
-            Data.CleHmac = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+            Data.CleHmac = Convert.ToBase64String(System.Security.Cryptography.RandomNumberGenerator.GetBytes(32));
             return true;
         }
 
