@@ -1,4 +1,11 @@
 ; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
@@ -6,39 +13,28 @@ config_version=5
 config/name="Sahavola - Lasy Skoto"
 config/description="Lasy Skoto / Camp Scout - Bilingue Malagasy / Français - Teknika Skoto - Sécurisé - Responsive"
 run/main_scene="res://Main.tscn"
-config/features=PackedStringArray("4.2", "C#")
+config/features=PackedStringArray("4.3", "C#")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameManager="*res://scripts/GameManager.cs"
 
-[dotnet]
-
-project/assembly_name="Sahavola"
-
 [display]
 
 window/size/viewport_width=1280
 window/size/viewport_height=720
-window/size/viewport_width_override=1280
-window/size/viewport_height_override=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
-window/stretch/scale_mode="fractional"
-window/stretch/scale=1.0
 window/handheld/orientation="sensor"
-window/dpi/allow_hidpi=true
-window/size/resizable=true
+window/size/viewport_width_override=1280
+window/size/viewport_height_override=720
 window/size/expand_to_entire_screen=true
+
+[dotnet]
+
+project/assembly_name="Sahavola"
 
 [rendering]
 
-renderer/rendering_method="forward_plus"
-renderer/rendering_method.mobile="mobile"
 renderer/textures/canvas_textures/default_texture_filter=0
-
-[input]
-
-# Touch : joystick + boutons tactiles
-# Souris : ZQSD + Flèches + clic
