@@ -1,174 +1,76 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace Sahavola
 {
     public partial class Main : Control
     {
+        private const string Racine = "RootVBox/ContentScroll/Content/";
+        private const string BarreOnglets = "RootVBox/TabScroll/TabBar/";
+
+        private static readonly Dictionary<string, string> Panneaux = new()
+        {
+            ["Camp"] = "CampPanel",
+            ["Perso"] = "PersoPanel",
+            ["Tarika"] = "TarikaPanel",
+            ["Comptes"] = "ComptesPanel",
+            ["Carte"] = "CartePanel",
+            ["Activites"] = "ActivitesPanel",
+            ["Codes"] = "CodesPanel",
+            ["Teknika"] = "TeknikaPanel",
+            ["Equipes"] = "EquipesPanel",
+            ["Chef"] = "ChefPanel",
+            ["Creer"] = "CreerPanel",
+            ["Backend"] = "BackendPanel"
+        };
+
+        private static readonly Dictionary<string, string> Onglets = new()
+        {
+            ["Camp"] = "BtnTabCamp",
+            ["Perso"] = "BtnTabPerso",
+            ["Tarika"] = "BtnTabTarika",
+            ["Comptes"] = "BtnTabComptes",
+            ["Carte"] = "BtnTabCarte",
+            ["Activites"] = "BtnTabActivites",
+            ["Codes"] = "BtnTabCodes",
+            ["Teknika"] = "BtnTabTeknika",
+            ["Equipes"] = "BtnTabEquipes",
+            ["Chef"] = "BtnTabChef",
+            ["Creer"] = "BtnTabCreer",
+            ["Backend"] = "BtnTabBackend"
+        };
+
+        private static readonly string[] Modeles =
+        {
+            "enigme_codee", "chasse_tresor", "jeu_nuit", "veillee", "survie", "corvee",
+            "observation", "secourisme", "grand_jeu", "koja_skoto", "vona", "teknika"
+        };
+
         private GameManager _gm = null!;
         private ResponsiveManager _resp = null!;
         private GPS _gps = null!;
-        private Label _status = null!;
-        private Label _statusMini = null!;
-        private Label _titre = null!;
-        private GridContainer _loginForm = null!;
-        private GridContainer _registerForm = null!;
-        private GridContainer _firstForm = null!;
-        private LineEdit _editLoginPseudo = null!;
-        private LineEdit _editLoginPass = null!;
-        private LineEdit _editSecret = null!;
-        private LineEdit _editRegPseudo = null!;
-        private LineEdit _editRegPass = null!;
-        private OptionButton _optRegRole = null!;
-        private LineEdit _editRegEquipe = null!;
-        private LineEdit _editRegRoleEq = null!;
-        private LineEdit _editRegParrain = null!;
-        private LineEdit _editRegParent = null!;
-        private LineEdit _editRegContactParent = null!;
-        private CheckBox _checkConsentement = null!;
-        private LineEdit _editFirstPseudo = null!;
-        private LineEdit _editFirstPass = null!;
-        private Label _lblAuthMsg = null!;
-        private Label _lblPersoApercu = null!;
-        private LineEdit _editPersoNom = null!;
-        private OptionButton _optPersoAvatar = null!;
-        private OptionButton _optPersoTenue = null!;
-        private OptionButton _optPersoFoulard = null!;
-        private OptionButton _optPersoArme = null!;
-        private SpinBox _editPersoTaille = null!;
-        private OptionButton _optPersoGenre = null!;
-        private OptionButton _optPersoCheveux = null!;
-        private Label _lblPersoMsg = null!;
-        private Label _lblTarikaList = null!;
-        private LineEdit _editTarikaNom = null!;
-        private OptionButton _optTarikaChef = null!;
-        private OptionButton _optTarikaEmbleme = null!;
-        private LineEdit _editTarikaDevise = null!;
-        private Label _lblTarikaMsg = null!;
-        private Label _lblFeu = null!;
-        private Label _lblEau = null!;
-        private Label _lblBois = null!;
-        private Label _lblTente = null!;
-        private Label _lblGps = null!;
-        private Label _lblZone = null!;
-        private Label _lblPlayers = null!;
-        private Label _lblClassementList = null!;
-        private Label _lblBadges = null!;
-        private Label _lblCampagneInfo = null!;
-        private OptionButton _optJ1 = null!;
-        private OptionButton _optJ2 = null!;
-        private OptionButton _optCampType = null!;
-        private SpinBox _editCampJours = null!;
-        private LineEdit _editCampDebut = null!;
-        private Label _lblCompteInfo = null!;
-        private Control _superPanel = null!;
-        private Control _chefPanel = null!;
-        private Label _lblAttente = null!;
-        private Label _lblDemandes = null!;
-        private Label _lblDemandesActivites = null!;
-        private Label _lblDemandesActivitesList = null!;
-        private Label _lblUsers = null!;
-        private Label _lblUsersList = null!;
-        private LineEdit _editSaPseudo = null!;
-        private LineEdit _editSaPass = null!;
-        private OptionButton _optSaRole = null!;
-        private LineEdit _editSaEquipe = null!;
-        private LineEdit _editChefPseudo = null!;
-        private LineEdit _editChefPass = null!;
-        private Label _lblMesCreations = null!;
-        private LineEdit _editPoiNom = null!;
-        private LineEdit _editPoiLat = null!;
-        private LineEdit _editPoiLon = null!;
-        private OptionButton _optPoiInterdit = null!;
-        private LineEdit _editPoiDesc = null!;
-        private Label _lblPoiList = null!;
-        private Label _lblActivitesTitre = null!;
-        private HBoxContainer _jourBtns = null!;
-        private Label _lblActivitesList = null!;
-        private Label _lblEnigme = null!;
-        private LineEdit _editReponse = null!;
-        private Label _lblReponseMsg = null!;
-        private Label _lblEssais = null!;
-        private LineEdit _editMsgClair = null!;
-        private OptionButton _optCodeChoix = null!;
-        private LineEdit _editParam = null!;
-        private Label _lblCodeResult = null!;
-        private Label _lblCodeAide = null!;
-        private LineEdit _editTekSearch = null!;
-        private HBoxContainer _tekFiltres = null!;
-        private Label _lblTekList = null!;
-        private Label _lblQuizQ = null!;
-        private HBoxContainer _quizOpts = null!;
-        private Label _lblQuizMsg = null!;
-        private Label _lblEquipesList = null!;
-        private Label _lblPositions = null!;
-        private Label _lblAlertes = null!;
-        private Label _lblAudit = null!;
-        private Label _lblCreerDroit = null!;
-        private Label _lblCreerQuota = null!;
-        private LineEdit _editNTitre = null!;
-        private OptionButton _optNModele = null!;
-        private OptionButton _optNCode = null!;
-        private LineEdit _editNClair = null!;
-        private SpinBox _editNPoints = null!;
-        private SpinBox _editNJour = null!;
-        private LineEdit _editNHeure = null!;
-        private OptionButton _optNLieu = null!;
-        private LineEdit _editNTeknika = null!;
-        private LineEdit _editNReponses = null!;
-        private LineEdit _editNIndice1 = null!;
-        private LineEdit _editNIndice2 = null!;
-        private LineEdit _editNIndice3 = null!;
-        private SpinBox _editNEssais = null!;
-        private OptionButton _optNVariante = null!;
-        private OptionButton _optNPortee = null!;
-        private OptionButton _optNTarikaCible = null!;
-        private CheckBox _checkNEvenementCommun = null!;
-        private Label _lblApercu = null!;
-        private Label _lblBrouillons = null!;
-        private Label _lblDemandesValidation = null!;
-        private LineEdit _editBackendUrl = null!;
-        private LineEdit _editCampagneId = null!;
-        private LineEdit _editEquipeId = null!;
-        private LineEdit _editPseudoBackend = null!;
-        private Label _lblBackendTest = null!;
-        private Label _lblQuest = null!;
-        private Label _lblQuestList = null!;
-        private Control _dialogPanel = null!;
-        private Label _lblDialogNom = null!;
-        private Label _lblDialogTxt = null!;
-        private Button _btnInteract = null!;
-        private Control _endScreen = null!;
-        private Label _lblEndNom = null!;
-        private Label _lblEndScore = null!;
-        private Label _lblEndTotem = null!;
-        private SubViewportContainer? _view3D;
-        private CharacterBody3D? _j1;
-        private CharacterBody3D? _j2;
-        private MeshInstance3D? _fleche;
-        private Camera3D? _cam;
-        private Control? _joyGauche;
-        private Control? _joyDroit;
-        private string _panelActuel = "Camp";
-        private Activite? _activiteJouee;
-        private int _essaisActuels;
-        private Teknika? _tekQuiz;
-        private string _tekFiltre = "Rehetra / Tout";
-        private int _jourFiltre = 1;
-        private int _feu = 0;
-        private int _eau = 0;
-        private int _bois = 0;
-        private int _tente = 0;
-        private bool _isNight;
-        private string _joueur1Pseudo = "";
-        private string _joueur1Role = "";
-        private string _joueur2Pseudo = "";
-        private string _joueur2Role = "";
-        private string _equipeChoisie = "";
+        private LineEdit _editCle = null!;
+        private VBoxContainer _boiteDemandes = null!;
+        private VBoxContainer _boiteActivitesAttente = null!;
+        private VBoxContainer _boiteBrouillons = null!;
+        private readonly Dictionary<string, Node> _cache = new();
+        private readonly List<string> _nomsLieux = new();
+        private readonly List<string> _idsTarikasCibles = new();
+        private readonly List<Teknika> _teknikas = TeknikaData.All();
+        private readonly Random _rng = new();
+        private Activite? _activiteAffichee;
+        private bool _stockageOuvert;
+        private bool _finMasquee;
+        private int _bois;
+        private int _feu;
+        private bool _nuit;
         private string _backendUrl = "";
-        private string _campagneIdBackend = "";
-        private string _equipeIdBackend = "";
+        private string _backendCampagne = "";
+        private string _backendEquipe = "";
+        private string _backendPseudo = "";
 
         public override void _Ready()
         {
@@ -176,224 +78,998 @@ namespace Sahavola
             _resp = ResponsiveManager.Instance;
             _gps = new GPS();
             AddChild(_gps);
-            GetRefs();
-            FillOptions();
-            ConnectButtons();
-            Build3D();
-            BuildJoysticks();
-            _resp.OnResolutionChangee += OnResolutionChangee;
+
+            ConstruireChampCle();
+            ConstruireBoites();
+            RemplirOptions();
+            ConnecterBoutons();
+            CacherHorsUsage();
+
+            _resp.OnResolutionChangee += AppliquerResponsive;
             AppliquerResponsive(_resp.TypeActuel, _resp.OrientationActuelle, _resp.FacteurEchelle);
-            ShowPanel("Camp");
-            SwitchAuth("login");
-            RefreshAll();
-            SetStatus("Vonona / Prêt — " + _resp.TypeActuel + " " + _resp.OrientationActuelle);
+            AppliquerSession();
         }
 
-        private void GetRefs()
+        public override void _ExitTree()
         {
-            _status = GetNode<Label>("RootVBox/StatusLabel");
-            _statusMini = GetNode<Label>("RootVBox/TopBar/StatusMini");
-            _titre = GetNode<Label>("RootVBox/TopBar/TitreLabel");
-            _loginForm = GetNode<GridContainer>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm");
-            _registerForm = GetNode<GridContainer>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm");
-            _firstForm = GetNode<GridContainer>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm");
-            _editLoginPseudo = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm/EditLoginPseudo");
-            _editLoginPass = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm/EditLoginPass");
-            _editSecret = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LoginForm/EditSecret");
-            _editRegPseudo = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegPseudo");
-            _editRegPass = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegPass");
-            _optRegRole = GetNode<OptionButton>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/OptRegRole");
-            _editRegEquipe = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegEquipe");
-            _editRegRoleEq = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegRoleEq");
-            _editRegParrain = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegParrain");
-            _editRegParent = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegParent");
-            _editRegContactParent = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/EditRegContactParent");
-            _checkConsentement = GetNode<CheckBox>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/RegisterForm/CheckConsentement");
-            _editFirstPseudo = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm/EditFirstPseudo");
-            _editFirstPass = GetNode<LineEdit>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/FirstForm/EditFirstPass");
-            _lblAuthMsg = GetNode<Label>("RootVBox/ContentScroll/Content/AuthPanel/AuthVBox/LblAuthMsg");
-            _lblPersoApercu = GetNode<Label>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoApercu");
-            _editPersoNom = GetNode<LineEdit>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/EditPersoNom");
-            _optPersoAvatar = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoAvatar");
-            _optPersoTenue = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoTenue");
-            _optPersoFoulard = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoFoulard");
-            _optPersoArme = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoArme");
-            _editPersoTaille = GetNode<SpinBox>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/EditPersoTaille");
-            _optPersoGenre = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoGenre");
-            _optPersoCheveux = GetNode<OptionButton>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/PersoForm/OptPersoCheveux");
-            _lblPersoMsg = GetNode<Label>("RootVBox/ContentScroll/Content/PersoPanel/PersoVBox/LblPersoMsg");
-            _lblTarikaList = GetNode<Label>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/LblTarikaList");
-            _editTarikaNom = GetNode<LineEdit>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm/EditTarikaNom");
-            _optTarikaChef = GetNode<OptionButton>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm/OptTarikaChef");
-            _optTarikaEmbleme = GetNode<OptionButton>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm/OptTarikaEmbleme");
-            _editTarikaDevise = GetNode<LineEdit>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/TarikaForm/EditTarikaDevise");
-            _lblTarikaMsg = GetNode<Label>("RootVBox/ContentScroll/Content/TarikaPanel/TarikaVBox/LblTarikaMsg");
-            _lblFeu = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats/LblFeu");
-            _lblEau = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats/LblEau");
-            _lblBois = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats/LblBois");
-            _lblTente = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampStats/LblTente");
-            _lblGps = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblGps");
-            _lblZone = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblZone");
-            _lblPlayers = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblPlayers");
-            _lblClassementList = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblClassementList");
-            _lblBadges = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblBadges");
-            _lblCampagneInfo = GetNode<Label>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/LblCampagneInfo");
-            _optJ1 = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm/OptJ1");
-            _optJ2 = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/JoueursForm/OptJ2");
-            _optCampType = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm/OptCampType");
-            _editCampJours = GetNode<SpinBox>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm/EditCampJours");
-            _editCampDebut = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CampPanel/CampVBox/CampagneForm/EditCampDebut");
-            _lblCompteInfo = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/LblCompteInfo");
-            _superPanel = GetNode<Control>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel");
-            _chefPanel = GetNode<Control>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel");
-            _lblAttente = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/LblAttente");
-            _lblDemandes = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/LblDemandes");
-            _lblDemandesActivites = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/LblDemandesActivites");
-            _lblDemandesActivitesList = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/LblDemandesActivitesList");
-            _lblUsers = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/LblUsers");
-            _lblUsersList = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/LblUsersList");
-            _editSaPseudo = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm/EditSaPseudo");
-            _editSaPass = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm/EditSaPass");
-            _optSaRole = GetNode<OptionButton>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm/OptSaRole");
-            _editSaEquipe = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/SuperPanel/SuperForm/EditSaEquipe");
-            _editChefPseudo = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm/EditChefPseudo");
-            _editChefPass = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/ChefForm/EditChefPass");
-            _lblMesCreations = GetNode<Label>("RootVBox/ContentScroll/Content/ComptesPanel/ComptesVBox/ChefPanel/LblMesCreations");
-            _editPoiNom = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm/EditPoiNom");
-            _editPoiLat = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm/EditPoiLat");
-            _editPoiLon = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm/EditPoiLon");
-            _optPoiInterdit = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm/OptPoiInterdit");
-            _editPoiDesc = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/PoiForm/EditPoiDesc");
-            _lblPoiList = GetNode<Label>("RootVBox/ContentScroll/Content/CartePanel/CarteVBox/LblPoiList");
-            _lblActivitesTitre = GetNode<Label>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/ActivitesTitre");
-            _jourBtns = GetNode<HBoxContainer>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/JourBtns");
-            _lblActivitesList = GetNode<Label>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/LblActivitesList");
-            _lblEnigme = GetNode<Label>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/LblEnigme");
-            _editReponse = GetNode<LineEdit>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/EditReponse");
-            _lblReponseMsg = GetNode<Label>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/LblReponseMsg");
-            _lblEssais = GetNode<Label>("RootVBox/ContentScroll/Content/ActivitesPanel/ActivitesVBox/LblEssais");
-            _editMsgClair = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm/EditMsgClair");
-            _optCodeChoix = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm/OptCodeChoix");
-            _editParam = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/CodesForm/EditParam");
-            _lblCodeResult = GetNode<Label>("RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/LblCodeResult");
-            _lblCodeAide = GetNode<Label>("RootVBox/ContentScroll/Content/CodesPanel/CodesVBox/LblCodeAide");
-            _editTekSearch = GetNode<LineEdit>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/EditTekSearch");
-            _tekFiltres = GetNode<HBoxContainer>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/TekFiltres");
-            _lblTekList = GetNode<Label>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/LblTekList");
-            _lblQuizQ = GetNode<Label>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/LblQuizQ");
-            _quizOpts = GetNode<HBoxContainer>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/QuizOpts");
-            _lblQuizMsg = GetNode<Label>("RootVBox/ContentScroll/Content/TeknikaPanel/TeknikaVBox/LblQuizMsg");
-            _lblEquipesList = GetNode<Label>("RootVBox/ContentScroll/Content/EquipesPanel/EquipesVBox/LblEquipesList");
-            _lblPositions = GetNode<Label>("RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/LblPositions");
-            _lblAlertes = GetNode<Label>("RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/LblAlertes");
-            _lblAudit = GetNode<Label>("RootVBox/ContentScroll/Content/ChefPanel/ChefVBox/LblAudit");
-            _lblCreerDroit = GetNode<Label>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/LblCreerDroit");
-            _lblCreerQuota = GetNode<Label>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/LblCreerQuota");
-            _editNTitre = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNTitre");
-            _optNModele = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNModele");
-            _optNCode = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNCode");
-            _editNClair = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNClair");
-            _editNPoints = GetNode<SpinBox>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNPoints");
-            _editNJour = GetNode<SpinBox>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNJour");
-            _editNHeure = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNHeure");
-            _optNLieu = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNLieu");
-            _editNTeknika = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNTeknika");
-            _editNReponses = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNReponses");
-            _editNIndice1 = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNIndice1");
-            _editNIndice2 = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNIndice2");
-            _editNIndice3 = GetNode<LineEdit>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNIndice3");
-            _editNEssais = GetNode<SpinBox>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/EditNEssais");
-            _optNVariante = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNVariante");
-            _optNPortee = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNPortee");
-            _optNTarikaCible = GetNode<OptionButton>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/OptNTarikaCible");
-            _checkNEvenementCommun = GetNode<CheckBox>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/CreerForm/CheckNEvenementCommun");
-            _lblApercu = GetNode<Label>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/LblApercu");
-            _lblBrouillons = GetNode<Label>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/LblBrouillons");
-            _lblDemandesValidation = GetNode<Label>("RootVBox/ContentScroll/Content/CreerPanel/CreerVBox/LblDemandesValidation");
-            _editBackendUrl = GetNode<LineEdit>("RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm/EditBackendUrl");
-            _editCampagneId = GetNode<LineEdit>("RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm/EditCampagneId");
-            _editEquipeId = GetNode<LineEdit>("RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm/EditEquipeId");
-            _editPseudoBackend = GetNode<LineEdit>("RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/BackendForm/EditPseudoBackend");
-            _lblBackendTest = GetNode<Label>("RootVBox/ContentScroll/Content/BackendPanel/BackendVBox/LblBackendTest");
-            _lblQuest = GetNode<Label>("RootVBox/ContentScroll/Content/Panel3D/VBox3D/LblQuest");
-            _lblQuestList = GetNode<Label>("RootVBox/ContentScroll/Content/Panel3D/VBox3D/LblQuestList");
-            _dialogPanel = GetNode<Control>("RootVBox/ContentScroll/Content/DialogPanel");
-            _lblDialogNom = GetNode<Label>("RootVBox/ContentScroll/Content/DialogPanel/DialogVBox/LblDialogNom");
-            _lblDialogTxt = GetNode<Label>("RootVBox/ContentScroll/Content/DialogPanel/DialogVBox/LblDialogTxt");
-            _btnInteract = GetNode<Button>("RootVBox/ContentScroll/Content/BtnInteract");
-            _endScreen = GetNode<Control>("EndScreen");
-            _lblEndNom = GetNode<Label>("EndScreen/EndVBox/LblEndNom");
-            _lblEndScore = GetNode<Label>("EndScreen/EndVBox/LblEndScore");
-            _lblEndTotem = GetNode<Label>("EndScreen/EndVBox/LblEndTotem");
+            if (_resp != null) _resp.OnResolutionChangee -= AppliquerResponsive;
         }
 
-        private void FillOptions()
+        private T N<T>(string nom) where T : Node
         {
-            _optRegRole.Clear(); _optRegRole.AddItem("🧑 Mpikambana / Membre", 0); _optRegRole.AddItem("🧭 Mpitarika / Chef", 1); _optRegRole.AddItem("🎭 Mpanentana / Animateur", 2);
-            _optSaRole.Clear(); _optSaRole.AddItem("🧑 Mpikambana / Membre", 0); _optSaRole.AddItem("🧭 Mpitarika / Chef", 1); _optSaRole.AddItem("🎭 Mpanentana / Animateur", 2); _optSaRole.AddItem("👑 Mpitantana Ambony / Super Admin", 3);
-            _optPoiInterdit.Clear(); _optPoiInterdit.AddItem("🟢 Avela / Autorisé", 0); _optPoiInterdit.AddItem("🔴 Voarara / Interdit (géofence)", 1);
-            string[] codes = { "Cesar", "Morse", "Atbash", "Vigenere", "Polybe", "A1Z26", "Inverse", "Semaphore", "Pigpen", "Braille", "Signes de piste", "Morse lampe", "Morse sifflet", "OTAN", "Montre Murale", "Pyramide", "Code Q", "Chiffre", "Lohateny", "Code-Code", "Vakana", "Rantsan-kazo", "Arabie", "Voanjo", "Dan", "Fige", "Kely" };
-            _optCodeChoix.Clear(); _optNCode.Clear(); foreach (string c in codes) { _optCodeChoix.AddItem(c); _optNCode.AddItem(c); }
-            string[] modeles = { "enigme_codee", "chasse_tresor", "jeu_nuit", "veillee", "survie", "corvee", "observation", "secourisme", "grand_jeu", "koja_skoto", "vona", "teknika" };
-            _optNModele.Clear(); foreach (string m in modeles) _optNModele.AddItem(m);
-            _optNVariante.Clear(); _optNVariante.AddItem("An-tany / Terrain", 0); _optNVariante.AddItem("Virtoaly / Virtuel", 1); _optNVariante.AddItem("Mifangaro / Hybride", 2); _optNVariante.Select(2);
-            _optNPortee.Clear();
-            _optNPortee.AddItem("🏕️ Asa Tarika — Tarikako ihany / Mon groupe — Avy hatrany", 0);
-            _optNPortee.AddItem("🌍 Asa Rehetra — Rehetra / Tous — Mangata + Super Admin + Quota 2/sem", 1);
-            _optNPortee.AddItem("🔀 Cross-Tarika — Tarika hafa 1 / Un autre groupe — Mangata + Super Admin", 2);
-            _optCampType.Clear();
-            _optCampType.AddItem("⚡ Lasy Tselatra — 1 → 3 andro / jours", 0);
-            _optCampType.AddItem("🏕️ Lasy Lehibe — 1 → 5 andro / jours", 1);
-            _optCampType.AddItem("🌲 Lasy Feno — 1 → 11 andro / jours", 2);
-            _optCampType.Select(0);
-            _optPersoAvatar.Clear(); foreach (var e in new[] { "🧑", "👩", "🧔", "👱‍♀️", "🦸", "🧙", "🏹", "🗡️", "👑" }) _optPersoAvatar.AddItem(e);
-            _optPersoTenue.Clear(); foreach (var t in new[] { "Tenue Skoto Classique", "Tenue Nuit", "Tenue Pluie", "Tenue Cérémonie", "Explorateur" }) _optPersoTenue.AddItem(t);
-            _optPersoFoulard.Clear(); foreach (var f in new[] { "Rouge", "Vert", "Bleu", "Jaune", "Orange" }) _optPersoFoulard.AddItem(f);
-            _optPersoArme.Clear(); foreach (var a in new[] { "Bâton", "Corde", "Lampe", "Boussole", "Sac" }) _optPersoArme.AddItem(a);
-            _optPersoGenre.Clear(); foreach (var g in new[] { "Non précisé", "Garçon", "Fille" }) _optPersoGenre.AddItem(g);
-            _optPersoCheveux.Clear(); foreach (var c in new[] { "Court", "Long", "Tressé", "Rasé", "Natte" }) _optPersoCheveux.AddItem(c);
-            _optTarikaEmbleme.Clear(); foreach (var e in new[] { "🦅", "🦁", "🐢", "🐘", "🌳", "🔥", "⭐", "🏔️" }) _optTarikaEmbleme.AddItem(e);
-            RefreshLieuxOptions(); RefreshJoueursOptions(); RefreshTarikaChefs(); RefreshTarikaCibleOptions();
-            SyncCampagneJoursMax();
+            if (!_cache.TryGetValue(nom, out Node? noeud))
+            {
+                noeud = FindChild(nom, true, false)
+                    ?? throw new InvalidOperationException("Nœud introuvable / Nœud introuvable : " + nom);
+                _cache[nom] = noeud;
+            }
+            return (T)noeud;
         }
 
-        private void RefreshLieuxOptions()
+        private Control Panneau(string nom) => GetNode<Control>(Racine + Panneaux[nom]);
+
+        private Label Statut() => GetNode<Label>("RootVBox/StatusLabel");
+
+        private void SetStatus(string texte) => Statut().Text = texte;
+
+        private static string Texte(OptionButton option) =>
+            option.Selected >= 0 ? option.GetItemText(option.Selected) : "";
+
+        private static void SelectionnerTexte(OptionButton option, string texte)
         {
-            _optNLieu.Clear();
-            if (_gm.Data.Pois.Count == 0) { _optNLieu.AddItem("Tsy misy toerana — mamorona aloha / Aucun lieu — crée-en d’abord"); return; }
-            foreach (Poi p in _gm.Data.Pois) _optNLieu.AddItem(p.Nom);
+            for (int i = 0; i < option.ItemCount; i++)
+            {
+                if (option.GetItemText(i) == texte)
+                {
+                    option.Select(i);
+                    return;
+                }
+            }
         }
 
-        private void RefreshJoueursOptions()
+        private static void ViderBoite(Node boite)
         {
-            _optJ1.Clear(); _optJ2.Clear();
-            var membres = new List<User>();
-            foreach (User u in _gm.Data.Users) if (u.Role == Role.Membre && u.Statut == StatutCompte.Valide) membres.Add(u);
-            if (membres.Count == 0) { _optJ1.AddItem("Tsy misy mpikambana voamarina / Aucun membre validé"); _optJ2.AddItem("Tsy misy mpikambana voamarina / Aucun membre validé"); return; }
-            foreach (User m in membres) { var p = _gm.GetPerso(m.Pseudo); string label = p.AvatarEmoji + " " + p.NomPersonnage + " (" + m.Pseudo + ") - " + m.Equipe + " - " + m.RoleEquipe; _optJ1.AddItem(label); _optJ2.AddItem(label); }
+            foreach (Node enfant in boite.GetChildren()) enfant.QueueFree();
         }
 
-        private void RefreshTarikaChefs()
+        private void ConstruireChampCle()
         {
-            _optTarikaChef.Clear();
-            foreach (User u in _gm.Data.Users) if (u.Role == Role.Chef && u.Statut == StatutCompte.Valide) _optTarikaChef.AddItem(u.Pseudo);
-            if (_optTarikaChef.ItemCount == 0) _optTarikaChef.AddItem("Tsy misy mpitarika voamarina / Aucun chef validé");
+            VBoxContainer authVBox = N<VBoxContainer>("AuthVBox");
+            var libelle = new Label
+            {
+                Text = "Lakile fanafenana / Clé de chiffrement — angatahina alohanina / obligatoire d'abord",
+                AutowrapMode = TextServer.AutowrapMode.WordSmart
+            };
+            _editCle = new LineEdit
+            {
+                Secret = true,
+                PlaceholderText = "Lakile / Clé",
+                CustomMinimumSize = new Vector2(0, 48)
+            };
+            authVBox.AddChild(libelle);
+            authVBox.AddChild(_editCle);
+            authVBox.MoveChild(libelle, 2);
+            authVBox.MoveChild(_editCle, 3);
+            N<LineEdit>("EditSecret").Visible = false;
+            N<Label>("LblSecretInfo").Visible = false;
         }
 
-        private void RefreshTarikaCibleOptions()
+        private VBoxContainer BoiteApres(string nomReference)
         {
-            _optNTarikaCible.Clear();
-            if (_gm.Data.Tarikas.Count == 0) { _optNTarikaCible.AddItem("Tsy misy tarika / Aucun groupe"); return; }
-            foreach (Tarika t in _gm.Data.Tarikas) _optNTarikaCible.AddItem(t.Embleme + " " + t.Nom + " — " + t.ChefPseudo);
+            Node reference = N<Node>(nomReference);
+            Node parent = reference.GetParent();
+            var boite = new VBoxContainer { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
+            parent.AddChild(boite);
+            parent.MoveChild(boite, reference.GetIndex() + 1);
+            return boite;
         }
 
-        private void ConnectButtons()
+        private void ConstruireBoites()
         {
-            GetNode<Button>("RootVBox/TopBar/BtnDeconnexion").Pressed += OnLogout;
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabCamp").Pressed += () => ShowPanel("Camp");
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabPerso").Pressed += () => ShowPanel("Perso");
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabTarika").Pressed += () => ShowPanel("Tarika");
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabComptes").Pressed += () => ShowPanel("Comptes");
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabCarte").Pressed += () => ShowPanel("Carte");
-            GetNode<Button>("RootVBox/TabScroll/TabBar/BtnTabActivites").Pressed += () => ShowPanel("Activites");
-            GetNode<Button>("RootVBox/Tab
+            _boiteDemandes = BoiteApres("LblDemandes");
+            _boiteActivitesAttente = BoiteApres("LblDemandesActivitesList");
+            _boiteBrouillons = BoiteApres("LblBrouillons");
+        }
+
+        private void CacherHorsUsage()
+        {
+            GetNode<Control>(Racine + "Panel3D").Visible = false;
+            GetNode<Control>(BarreOnglets + "BtnTab3D").Visible = false;
+            GetNode<Control>(Racine + "DialogPanel").Visible = false;
+            N<Button>("BtnInteract").Visible = false;
+            N<Button>("BtnPurger").Disabled = true;
+            N<Label>("LblTekList").Text = "";
+            N<Control>("EndScreen").Visible = false;
+        }
+
+        private void RemplirOptions()
+        {
+            OptionButton regRole = N<OptionButton>("OptRegRole");
+            regRole.Clear();
+            regRole.AddItem("🧑 Mpikambana / Membre");
+            regRole.AddItem("🧭 Mpitarika / Chef");
+            regRole.AddItem("🎭 Mpanentana / Animateur");
+
+            OptionButton saRole = N<OptionButton>("OptSaRole");
+            saRole.Clear();
+            saRole.AddItem("🧭 Mpitarika / Chef");
+            saRole.AddItem("🎭 Mpanentana / Animateur");
+            saRole.AddItem("👑 Mpitantana Ambony / Super Admin");
+
+            OptionButton poi = N<OptionButton>("OptPoiInterdit");
+            poi.Clear();
+            poi.AddItem("🟢 Avela / Autorisé");
+            poi.AddItem("🔴 Voarara / Interdit (géofence)");
+
+            OptionButton variante = N<OptionButton>("OptNVariante");
+            variante.Clear();
+            variante.AddItem("An-tany / Terrain");
+            variante.AddItem("Virtoaly / Virtuel");
+            variante.AddItem("Mifangaro / Hybride");
+            variante.Select(2);
+
+            OptionButton portee = N<OptionButton>("OptNPortee");
+            portee.Clear();
+            portee.AddItem("🏕️ Asa Tarika — Tarikako ihany / Mon groupe — Avy hatrany");
+            portee.AddItem("🌍 Asa Rehetra — Tous — Mangata + Super Admin");
+            portee.AddItem("🔀 Cross-Tarika — Un autre groupe — Mangata + Super Admin");
+
+            OptionButton campType = N<OptionButton>("OptCampType");
+            campType.Clear();
+            campType.AddItem("⚡ Lasy Tselatra — 1 → 3 andro / jours");
+            campType.AddItem("🏕️ Lasy Lehibe — 1 → 5 andro / jours");
+            campType.AddItem("🌲 Lasy Feno — 1 → 11 andro / jours");
+            campType.Select(0);
+
+            OptionButton modele = N<OptionButton>("OptNModele");
+            modele.Clear();
+            foreach (string m in Modeles) modele.AddItem(m);
+
+            OptionButton codeChoix = N<OptionButton>("OptCodeChoix");
+            OptionButton codeNouveau = N<OptionButton>("OptNCode");
+            codeChoix.Clear();
+            codeNouveau.Clear();
+            foreach (string code in CodeEncoder.CodesSupportes.OrderBy(c => c))
+            {
+                codeChoix.AddItem(code);
+                codeNouveau.AddItem(code);
+            }
+
+            RemplirListe(N<OptionButton>("OptPersoAvatar"), new[] { "🧑", "👩", "🧔", "👱‍♀️", "🦸", "🧙", "🏹", "🗡️", "👑" });
+            RemplirListe(N<OptionButton>("OptPersoTenue"), new[] { "Tenue Skoto Classique", "Tenue Nuit", "Tenue Pluie", "Tenue Cérémonie", "Explorateur" });
+            RemplirListe(N<OptionButton>("OptPersoFoulard"), new[] { "Rouge", "Vert", "Bleu", "Jaune", "Orange" });
+            RemplirListe(N<OptionButton>("OptPersoArme"), new[] { "Bâton", "Corde", "Lampe", "Boussole", "Sac" });
+            RemplirListe(N<OptionButton>("OptPersoGenre"), new[] { "Non précisé", "Garçon", "Fille" });
+            RemplirListe(N<OptionButton>("OptPersoCheveux"), new[] { "Court", "Long", "Tressé", "Rasé", "Natte" });
+            RemplirListe(N<OptionButton>("OptTarikaEmbleme"), new[] { "🦅", "🦁", "🐢", "🐘", "🌳", "🔥", "⭐", "🏔️" });
+        }
+
+        private static void RemplirListe(OptionButton option, IEnumerable<string> elements)
+        {
+            option.Clear();
+            foreach (string e in elements) option.AddItem(e);
+            if (option.ItemCount > 0) option.Select(0);
+        }
+
+        private void ConnecterBoutons()
+        {
+            N<Button>("BtnAuthLogin").Pressed += () => ChoisirAuth("login");
+            N<Button>("BtnAuthRegister").Pressed += () => ChoisirAuth("register");
+            N<Button>("BtnAuthFirst").Pressed += () => ChoisirAuth("first");
+            N<Button>("BtnLogin").Pressed += OnConnexion;
+            N<Button>("BtnRegister").Pressed += OnDemandeCreation;
+            N<Button>("BtnFirst").Pressed += OnPremierSuperAdmin;
+
+            N<Button>("BtnDeconnexion").Pressed += OnDeconnexion;
+            N<Button>("BtnLogout").Pressed += OnDeconnexion;
+
+            foreach (KeyValuePair<string, string> onglet in Onglets)
+            {
+                string panneau = onglet.Key;
+                N<Button>(onglet.Value).Pressed += () => ChoisirPanneau(panneau);
+            }
+
+            N<Button>("BtnBGps").Pressed += OnGps;
+            N<Button>("BtnBInv").Pressed += () => ChoisirPanneau("Camp");
+            N<Button>("BtnBJournal").Pressed += () => ChoisirPanneau("Activites");
+            N<Button>("BtnBCarte").Pressed += () => ChoisirPanneau("Carte");
+            N<Button>("BtnBCodes").Pressed += () => ChoisirPanneau("Codes");
+            N<Button>("BtnBSos").Pressed += OnSos;
+            N<Button>("BtnBHome").Pressed += () => ChoisirPanneau("Camp");
+
+            N<Button>("BtnFeu").Pressed += OnBois;
+            N<Button>("BtnNuit").Pressed += OnBasculerNuit;
+            N<Button>("BtnGps").Pressed += OnGps;
+            N<Button>("BtnSos").Pressed += OnSos;
+            N<Button>("BtnCampCreer").Pressed += OnCampagneCreer;
+            N<Button>("BtnCampPause").Pressed += () => OnCampagneEtat(StatutCampagne.Paused);
+            N<Button>("BtnCampReprendre").Pressed += () => OnCampagneEtat(StatutCampagne.Running);
+            N<Button>("BtnCampFin").Pressed += () => OnCampagneEtat(StatutCampagne.Finished);
+
+            N<Button>("BtnPersoSauver").Pressed += OnPersoSauver;
+            N<Button>("BtnTarikaCreer").Pressed += OnTarikaCreer;
+            N<Button>("BtnSuperCreer").Pressed += OnCreerCompteSuperAdmin;
+            N<Button>("BtnPoiCreer").Pressed += OnPoiCreer;
+            N<Button>("BtnRepondre").Pressed += OnRepondre;
+            N<Button>("BtnEncoder").Pressed += OnEncoder;
+            N<Button>("BtnQuiz").Pressed += OnNouvelleQuestion;
+            N<LineEdit>("EditTekSearch").TextChanged += texte => RafraichirTeknika();
+            N<Button>("BtnTestAlerte").Pressed += OnTestAlerte;
+            N<Button>("BtnVueAerienne").Pressed += () => ChoisirPanneau("Carte");
+            N<Button>("BtnVoirAudit").Pressed += RafraichirAudit;
+            N<Button>("BtnCreerAct").Pressed += OnCreerActivite;
+            N<LineEdit>("EditNClair").TextChanged += texte => RafraichirApercu();
+            N<OptionButton>("OptNCode").ItemSelected += index => RafraichirApercu();
+            N<Button>("BtnSaveBackend").Pressed += OnSauverBackend;
+            N<Button>("BtnTestBackend").Pressed += OnTesterBackend;
+            N<Button>("BtnLoginBackend").Pressed += () => Statut().Text = "Fidirana backend tsy mbola misy / Connexion backend non disponible";
+            N<Button>("BtnRejouer").Pressed += () => { _finMasquee = true; N<Control>("EndScreen").Visible = false; };
+        }
+
+        private void AppliquerResponsive(TypeEcran type, OrientationEcran orientation, float echelle)
+        {
+            AdapterArbre(this);
+        }
+
+        private void AdapterArbre(Node noeud)
+        {
+            foreach (Node enfant in noeud.GetChildren())
+            {
+                if (enfant is Button bouton) _resp.AdapterBouton(bouton);
+                else if (enfant is Label libelle) _resp.AdapterLabel(libelle);
+                AdapterArbre(enfant);
+            }
+        }
+
+        private bool OuvrirStockage()
+        {
+            if (_stockageOuvert) return true;
+            string cle = _editCle.Text;
+            if (string.IsNullOrEmpty(cle))
+            {
+                N<Label>("LblAuthMsg").Text = "❌ Angatahina ny lakile / Clé obligatoire";
+                return false;
+            }
+            _gm.SetSecret(cle);
+            _editCle.Text = "";
+            if (_gm.LectureSeule)
+            {
+                N<Label>("LblAuthMsg").Text = "❌ " + _gm.ErreurStockage;
+                return false;
+            }
+            _stockageOuvert = true;
+            ChoisirAuth(_gm.Data.Users.Count == 0 ? "first" : "login");
+            return true;
+        }
+
+        private void ChoisirAuth(string mode)
+        {
+            N<GridContainer>("LoginForm").Visible = mode == "login";
+            N<Button>("BtnLogin").Visible = mode == "login";
+            N<Label>("LblLoginHint").Visible = mode == "login";
+            N<GridContainer>("RegisterForm").Visible = mode == "register";
+            N<Button>("BtnRegister").Visible = mode == "register";
+            N<GridContainer>("FirstForm").Visible = mode == "first";
+            N<Button>("BtnFirst").Visible = mode == "first";
+            N<Label>("LblAuthMsg").Text = "";
+        }
+
+        private void OnConnexion()
+        {
+            if (!OuvrirStockage()) return;
+            string message = _gm.Login(N<LineEdit>("EditLoginPseudo").Text, N<LineEdit>("EditLoginPass").Text);
+            N<Label>("LblAuthMsg").Text = message;
+            if (_gm.CurrentUser == null) return;
+            N<LineEdit>("EditLoginPass").Text = "";
+            AppliquerSession();
+        }
+
+        private void OnDemandeCreation()
+        {
+            if (!OuvrirStockage()) return;
+            Role role = N<OptionButton>("OptRegRole").Selected switch
+            {
+                1 => Role.Chef,
+                2 => Role.Animateur,
+                _ => Role.Membre
+            };
+            N<Label>("LblAuthMsg").Text = _gm.CreateUser(
+                N<LineEdit>("EditRegPseudo").Text,
+                N<LineEdit>("EditRegPass").Text,
+                role,
+                N<LineEdit>("EditRegEquipe").Text,
+                N<LineEdit>("EditRegRoleEq").Text,
+                N<LineEdit>("EditRegParrain").Text,
+                false,
+                N<CheckBox>("CheckConsentement").ButtonPressed,
+                N<LineEdit>("EditRegParent").Text,
+                N<LineEdit>("EditRegContactParent").Text);
+        }
+
+        private void OnPremierSuperAdmin()
+        {
+            if (!OuvrirStockage()) return;
+            N<Label>("LblAuthMsg").Text = _gm.CreateFirstSuperAdmin(N<LineEdit>("EditFirstPseudo").Text, N<LineEdit>("EditFirstPass").Text);
+            if (_gm.Data.Users.Count > 0) ChoisirAuth("login");
+        }
+
+        private void OnDeconnexion()
+        {
+            _gm.Logout();
+            _activiteAffichee = null;
+            _finMasquee = false;
+            AppliquerSession();
+        }
+
+        private void AppliquerSession()
+        {
+            User? u = _gm.CurrentUser;
+            bool connecte = u != null;
+
+            GetNode<Control>(Racine + "AuthPanel").Visible = !connecte;
+            GetNode<Control>("RootVBox/TabScroll").Visible = connecte;
+            GetNode<Control>("RootVBox/BottomBar").Visible = connecte;
+            N<Button>("BtnDeconnexion").Visible = connecte;
+            N<Label>("StatusMini").Text = connecte ? u!.Pseudo + " — " + u.Role : "Vonona / Prêt";
+
+            foreach (string nom in Panneaux.Keys) Panneau(nom).Visible = false;
+            if (!connecte)
+            {
+                if (!_stockageOuvert) ChoisirAuth("login");
+                RafraichirTout();
+                return;
+            }
+
+            foreach (KeyValuePair<string, string> onglet in Onglets)
+            {
+                N<Button>(onglet.Value).Visible = AutorisePanneau(onglet.Key);
+            }
+            ChargerPerso();
+            ChoisirPanneau("Camp");
+        }
+
+        private bool AutorisePanneau(string nom)
+        {
+            Role? role = _gm.CurrentUser?.Role;
+            if (role == null) return false;
+            bool sa = role == Role.SuperAdmin;
+            bool chef = role == Role.Chef;
+            bool animateur = role == Role.Animateur;
+            return nom switch
+            {
+                "Tarika" or "Backend" => sa,
+                "Comptes" or "Carte" or "Equipes" or "Chef" => sa || chef,
+                "Creer" => sa || chef || animateur,
+                _ => true
+            };
+        }
+
+        private void ChoisirPanneau(string nom)
+        {
+            if (_gm.CurrentUser == null) return;
+            if (!AutorisePanneau(nom))
+            {
+                SetStatus("❌ Tsy azo ny miditra / Accès refusé");
+                return;
+            }
+            foreach (string cle in Panneaux.Keys) Panneau(cle).Visible = cle == nom;
+            RafraichirTout();
+        }
+
+        private void RafraichirTout()
+        {
+            RafraichirEntete();
+            RafraichirCamp();
+            RafraichirComptes();
+            RafraichirTarika();
+            RafraichirCarte();
+            RafraichirActivites();
+            RafraichirTeknika();
+            RafraichirEquipes();
+            RafraichirChef();
+            RafraichirCreer();
+            RafraichirBackend();
+        }
+
+        private void RafraichirEntete()
+        {
+            Statut().Text = _gm.ErreurStockage ?? "Vonona / Prêt";
+            N<Label>("StatusMini").Text = _gm.CurrentUser == null
+                ? "Vonona / Prêt"
+                : _gm.CurrentUser.Pseudo + " — " + _gm.CurrentUser.Role;
+        }
+
+        private void ChargerPerso()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            Personnalisation p = _gm.GetPerso(u.Pseudo);
+            N<LineEdit>("EditPersoNom").Text = p.NomPersonnage;
+            SelectionnerTexte(N<OptionButton>("OptPersoAvatar"), p.AvatarEmoji);
+            SelectionnerTexte(N<OptionButton>("OptPersoTenue"), p.Tenue);
+            SelectionnerTexte(N<OptionButton>("OptPersoFoulard"), p.Foulard);
+            SelectionnerTexte(N<OptionButton>("OptPersoArme"), p.Arme);
+            SelectionnerTexte(N<OptionButton>("OptPersoGenre"), p.Genre);
+            SelectionnerTexte(N<OptionButton>("OptPersoCheveux"), p.StyleCheveux);
+            N<SpinBox>("EditPersoTaille").Value = p.Taille;
+            N<Label>("PersoApercu").Text = p.AvatarEmoji + " " + p.NomPersonnage;
+        }
+
+        private void OnPersoSauver()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            var perso = new Personnalisation
+            {
+                NomPersonnage = N<LineEdit>("EditPersoNom").Text.Trim(),
+                AvatarEmoji = Texte(N<OptionButton>("OptPersoAvatar")),
+                Tenue = Texte(N<OptionButton>("OptPersoTenue")),
+                Foulard = Texte(N<OptionButton>("OptPersoFoulard")),
+                Arme = Texte(N<OptionButton>("OptPersoArme")),
+                Genre = Texte(N<OptionButton>("OptPersoGenre")),
+                StyleCheveux = Texte(N<OptionButton>("OptPersoCheveux")),
+                Taille = (float)N<SpinBox>("EditPersoTaille").Value
+            };
+            N<Label>("LblPersoMsg").Text = _gm.SauverPersonnalisation(u.Pseudo, perso);
+            ChargerPerso();
+        }
+
+        private void RafraichirCamp()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            Campagne? campagne = _gm.Data.Campagne;
+
+            N<Label>("LblFeu").Text = "🔥 Afo / Feu\n" + _feu + "%";
+            N<Label>("LblEau").Text = "💧 Rano / Eau\n—";
+            N<Label>("LblBois").Text = "🪵 Kitay / Bois\n" + _bois;
+            N<Label>("LblTente").Text = "⛺ Lay / Tente\n—";
+            N<Button>("BtnNuit").Text = _nuit ? "🌞 Andro / Jour" : "🌙 Alina / Nuit";
+
+            N<Label>("LblGps").Text = _gps.Actif
+                ? "GPS : aktif ±" + _gps.Precision.ToString("0", CultureInfo.InvariantCulture) + " m"
+                : "GPS : tsy mbola navadika / non activé";
+
+            List<Poi> zones = _gm.ZonesInterdites();
+            N<Label>("LblZone").Text = "⚠️ Faritra voarara / Zone interdite : "
+                + (zones.Count == 0 ? "Tsy misy / Aucune" : string.Join(", ", zones.Select(z => z.Nom)));
+
+            var classement = _gm.Data.Progressions
+                .Where(p => p.Score > 0)
+                .OrderByDescending(p => p.Score)
+                .Select((p, i) => (i + 1) + ". " + p.Cle + " — " + p.Score + " pts");
+            string listeClassement = string.Join("\n", classement);
+            N<Label>("LblClassementList").Text = listeClassement.Length == 0 ? "Tsy misy isa / Aucun score" : listeClassement;
+
+            List<string> badges = _gm.ProgressionCourante().Badges;
+            N<Label>("LblBadges").Text = "🎖️ Mari-pankasitrahana / Badges : " + (badges.Count == 0 ? "Tsy misy / Aucun" : string.Join(", ", badges));
+
+            N<Label>("LblCampagneInfo").Text = campagne == null
+                ? "Tsy misy lasy / Aucune campagne"
+                : campagne.NomType + " — " + campagne.Statut + " — andro " + campagne.JourActuel + "/" + campagne.Jours + " — " + campagne.Debut;
+
+            bool gere = u.Role == Role.SuperAdmin || u.Role == Role.Chef;
+            N<Control>("CampagneForm").Visible = gere;
+            N<Control>("CampagneBtns").Visible = gere;
+            N<Button>("BtnCampCreer").Disabled = campagne != null && campagne.Statut != StatutCampagne.Finished;
+            N<Button>("BtnCampPause").Disabled = campagne?.Statut != StatutCampagne.Running;
+            N<Button>("BtnCampReprendre").Disabled = !(campagne?.Statut is StatutCampagne.Scheduled or StatutCampagne.Paused);
+            N<Button>("BtnCampFin").Disabled = !(campagne?.Statut is StatutCampagne.Running or StatutCampagne.Paused);
+
+            N<Control>("EndScreen").Visible = campagne?.Statut == StatutCampagne.Finished && !_finMasquee;
+            N<Label>("LblEndNom").Text = "🎉 Bravo, " + u.Pseudo + " !";
+            N<Label>("LblEndScore").Text = _gm.ScoreCourant() + " pts";
+            N<Label>("LblEndTotem").Text = string.Join(", ", _gm.ProgressionCourante().Badges);
+        }
+
+        private void OnBois()
+        {
+            _bois++;
+            _feu = Math.Min(100, _feu + 10);
+            RafraichirCamp();
+        }
+
+        private void OnBasculerNuit()
+        {
+            _nuit = !_nuit;
+            RafraichirCamp();
+        }
+
+        private void OnGps()
+        {
+            SetStatus(_gps.Actif
+                ? "📍 GPS aktif"
+                : "📍 Tsy misy loharano GPS amin'ity version / Aucune source GPS dans cette version");
+            RafraichirCamp();
+        }
+
+        private void OnSos()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            bool envoye = _gps.EnvoyerSos(u.Equipe);
+            SetStatus(envoye
+                ? "🆘 SOS enregistré — chef informé"
+                : "❌ Pas de position GPS — SOS non envoyé");
+        }
+
+        private void OnCampagneCreer()
+        {
+            TypeLasy type = N<OptionButton>("OptCampType").Selected switch
+            {
+                1 => TypeLasy.Lehibe,
+                2 => TypeLasy.Feno,
+                _ => TypeLasy.Tselatra
+            };
+            int jours = (int)N<SpinBox>("EditCampJours").Value;
+            SetStatus(_gm.CreerCampagne(jours, N<LineEdit>("EditCampDebut").Text.Trim(), type));
+            RafraichirTout();
+        }
+
+        private void OnCampagneEtat(StatutCampagne cible)
+        {
+            SetStatus(_gm.ChangerStatutCampagne(cible));
+            RafraichirTout();
+        }
+
+        private void RafraichirComptes()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            bool sa = u.Role == Role.SuperAdmin;
+
+            N<Label>("LblCompteInfo").Text = "👤 " + u.Pseudo + " — " + u.Role + " (" + u.Statut + ")";
+            N<Control>("SuperPanel").Visible = sa;
+            GetNode<Control>(Racine + "ComptesPanel/ComptesVBox/ChefPanel").Visible = u.Role == Role.Chef;
+
+            ViderBoite(_boiteDemandes);
+            ViderBoite(_boiteActivitesAttente);
+            List<User> attente = _gm.Data.Users.Where(x => x.Statut == StatutCompte.EnAttente).ToList();
+            N<Label>("LblAttente").Text = "⏳ Miandry / En attente (" + attente.Count + ")";
+            if (sa)
+            {
+                foreach (User demande in attente)
+                {
+                    string pseudo = demande.Pseudo;
+                    AjouterLigneValidation(_boiteDemandes, pseudo + " (" + demande.Role + ")",
+                        () => { SetStatus(_gm.ValiderUser(pseudo, true)); RafraichirTout(); },
+                        () => { SetStatus(_gm.ValiderUser(pseudo, false)); RafraichirTout(); });
+                }
+                foreach (Activite a in _gm.Data.Activites.Where(x => x.Statut == "en_attente_validation"))
+                {
+                    string id = a.Id;
+                    AjouterLigneValidation(_boiteActivitesAttente, a.Titre + " — " + a.TarikaNom,
+                        () => { SetStatus(_gm.ValiderDemandeActivite(id, true)); RafraichirTout(); },
+                        () => { SetStatus(_gm.ValiderDemandeActivite(id, false)); RafraichirTout(); });
+                }
+            }
+            N<Label>("LblDemandes").Text = attente.Count == 0 ? "Tsy misy fangatahana / Aucune demande" : "";
+            N<Label>("LblDemandesActivites").Text = "⏳ Fangatahana Asa / Demandes d'activités";
+            N<Label>("LblDemandesActivitesList").Visible = false;
+
+            List<User> tous = _gm.Data.Users;
+            N<Label>("LblUsers").Text = "👥 Mpampiasa rehetra / Tous les utilisateurs (" + tous.Count + ")";
+            N<Label>("LblUsersList").Text = string.Join("\n", tous.Select(x => x.Pseudo + " — " + x.Role + " — " + x.Statut));
+
+            N<Label>("LblMesCreations").Text = "Ny mpikambanako / Mes membres : "
+                + string.Join(", ", tous.Where(x => x.Parrain == u.Pseudo).Select(x => x.Pseudo));
+            N<Button>("BtnChefCreer").Disabled = true;
+            N<Label>("LblChef").Text = "🧭 Mpitarika — Ny fisoratra no mamorona mpikambana / Chef — les membres s'inscrivent eux-mêmes";
+        }
+
+        private static void AjouterLigneValidation(VBoxContainer boite, string texte, Action valider, Action refuser)
+        {
+            var ligne = new HBoxContainer();
+            ligne.AddChild(new Label
+            {
+                Text = texte,
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                AutowrapMode = TextServer.AutowrapMode.WordSmart
+            });
+            var boutonValider = new Button { Text = "✅", CustomMinimumSize = new Vector2(56, 44) };
+            var boutonRefuser = new Button { Text = "❌", CustomMinimumSize = new Vector2(56, 44) };
+            boutonValider.Pressed += valider;
+            boutonRefuser.Pressed += refuser;
+            ligne.AddChild(boutonValider);
+            ligne.AddChild(boutonRefuser);
+            boite.AddChild(ligne);
+        }
+
+        private static void AjouterLigneSimple(VBoxContainer boite, string texte, string libelleBouton, Action action)
+        {
+            var ligne = new HBoxContainer();
+            ligne.AddChild(new Label
+            {
+                Text = texte,
+                SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                AutowrapMode = TextServer.AutowrapMode.WordSmart
+            });
+            var bouton = new Button { Text = libelleBouton, CustomMinimumSize = new Vector2(120, 44) };
+            bouton.Pressed += action;
+            ligne.AddChild(bouton);
+            boite.AddChild(ligne);
+        }
+
+        private void OnCreerCompteSuperAdmin()
+        {
+            Role role = N<OptionButton>("OptSaRole").Selected switch
+            {
+                0 => Role.Chef,
+                1 => Role.Animateur,
+                _ => Role.SuperAdmin
+            };
+            SetStatus(_gm.CreateUser(
+                N<LineEdit>("EditSaPseudo").Text,
+                N<LineEdit>("EditSaPass").Text,
+                role,
+                "",
+                "",
+                "",
+                true,
+                false,
+                "",
+                ""));
+            RafraichirTout();
+        }
+
+        private void RafraichirTarika()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            N<Label>("LblTarikaList").Text = _gm.Data.Tarikas.Count == 0
+                ? "Tsy misy tarika / Aucun groupe"
+                : string.Join("\n", _gm.Data.Tarikas.Select(t =>
+                    t.Embleme + " " + t.Nom + " — chef " + t.ChefPseudo + " — " + _gm.CompterTarika(t.Id) + " olona / personnes"));
+
+            OptionButton chefs = N<OptionButton>("OptTarikaChef");
+            chefs.Clear();
+            foreach (User c in _gm.Data.Users.Where(x => x.Role == Role.Chef && x.Statut == StatutCompte.Valide && string.IsNullOrEmpty(x.TarikaId)))
+            {
+                chefs.AddItem(c.Pseudo);
+            }
+            if (chefs.ItemCount == 0) chefs.AddItem("Tsy misy mpitarika tsy manan-tarika / Aucun chef sans groupe");
+        }
+
+        private void OnTarikaCreer()
+        {
+            SetStatus(_gm.CreerTarika(
+                N<LineEdit>("EditTarikaNom").Text,
+                Texte(N<OptionButton>("OptTarikaChef")),
+                "#2E7D32",
+                Texte(N<OptionButton>("OptTarikaEmbleme")),
+                N<LineEdit>("EditTarikaDevise").Text));
+            RafraichirTout();
+        }
+
+        private void RafraichirCarte()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            N<Label>("LblPoiList").Text = _gm.Data.Pois.Count == 0
+                ? "📍 Toerana / Lieux : Tsy misy / Aucun"
+                : "📍 Toerana / Lieux :\n" + string.Join("\n", _gm.Data.Pois.Select(p =>
+                    (p.Interdit ? "🔴 " : "🟢 ") + p.Nom + " (" + p.Lat.ToString("0.0000", CultureInfo.InvariantCulture)
+                    + ", " + p.Lon.ToString("0.0000", CultureInfo.InvariantCulture) + ")"));
+
+            _nomsLieux.Clear();
+            OptionButton lieux = N<OptionButton>("OptNLieu");
+            lieux.Clear();
+            foreach (Poi p in _gm.Data.Pois)
+            {
+                _nomsLieux.Add(p.Nom);
+                lieux.AddItem(p.Nom);
+            }
+            if (lieux.ItemCount == 0) lieux.AddItem("Tsy misy toerana / Aucun lieu — crée-en d'abord");
+        }
+
+        private void OnPoiCreer()
+        {
+            bool latOk = double.TryParse(N<LineEdit>("EditPoiLat").Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double lat);
+            bool lonOk = double.TryParse(N<LineEdit>("EditPoiLon").Text, NumberStyles.Float, CultureInfo.InvariantCulture, out double lon);
+            if (!latOk || !lonOk)
+            {
+                SetStatus("❌ Latitude / Longitude diso / incorrect");
+                return;
+            }
+            SetStatus(_gm.CreerPoi(
+                N<LineEdit>("EditPoiNom").Text,
+                lat,
+                lon,
+                N<OptionButton>("OptPoiInterdit").Selected == 1,
+                N<LineEdit>("EditPoiDesc").Text));
+            RafraichirTout();
+        }
+
+        private void RafraichirActivites()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            List<Activite> visibles = _gm.GetActivitesVisibles(u);
+            N<Label>("LblActivitesList").Text = visibles.Count == 0
+                ? "Tsy misy asa / Aucune activité — Ny mpanentana no mamorona / L'animateur en crée"
+                : string.Join("\n", visibles.Select(a =>
+                    "[" + a.Statut + "] J" + a.Jour + " " + a.Titre + " — " + a.Points + " pts — " + a.TarikaNom));
+
+            _activiteAffichee = _gm.ActiviteActuelle();
+            if (_activiteAffichee == null)
+            {
+                N<Label>("LblEnigme").Text = "⏳ Tsy misy asa azo atao amin'izao / Aucune activité jouable maintenant (lasy, andro ou ora)";
+                N<Label>("LblEssais").Text = "";
+                return;
+            }
+
+            Activite a = _activiteAffichee;
+            N<Label>("LblEnigme").Text = "🎯 " + a.Titre + " — Jour " + a.Jour + "\n🔐 " + a.TexteCode;
+            int essais = _gm.ProgressionCourante().Essais.GetValueOrDefault(a.Id);
+            N<Label>("LblEssais").Text = "Andrana / Essais : " + essais + " / " + a.EssaisMax;
+        }
+
+        private void OnRepondre()
+        {
+            if (_activiteAffichee == null)
+            {
+                N<Label>("LblReponseMsg").Text = "❌ Tsy misy asa / Aucune activité";
+                return;
+            }
+            string reponse = N<LineEdit>("EditReponse").Text;
+            if (string.IsNullOrWhiteSpace(reponse))
+            {
+                N<Label>("LblReponseMsg").Text = "❌ Valiny banga / Réponse vide";
+                return;
+            }
+            _gm.Repondre(_activiteAffichee, reponse, out string retour, out _);
+            N<Label>("LblReponseMsg").Text = retour;
+            N<LineEdit>("EditReponse").Text = "";
+            RafraichirTout();
+        }
+
+        private void OnEncoder()
+        {
+            string code = Texte(N<OptionButton>("OptCodeChoix"));
+            try
+            {
+                string resultat = CodeEncoder.Encode(code, N<LineEdit>("EditMsgClair").Text, N<LineEdit>("EditParam").Text);
+                N<Label>("LblCodeResult").Text = resultat.Length == 0 ? "…" : resultat;
+                N<Label>("LblCodeAide").Text = "Kaody / Code : " + code;
+            }
+            catch (NotSupportedException ex)
+            {
+                N<Label>("LblCodeResult").Text = "❌ " + ex.Message;
+                N<Label>("LblCodeAide").Text = "";
+            }
+        }
+
+        private void RafraichirTeknika()
+        {
+            string filtre = N<LineEdit>("EditTekSearch").Text.Trim();
+            var lignes = _teknikas
+                .Where(t => filtre.Length == 0
+                    || t.Titre.Contains(filtre, StringComparison.OrdinalIgnoreCase)
+                    || t.Categorie.Contains(filtre, StringComparison.OrdinalIgnoreCase))
+                .Select(t => t.Titre + " — " + t.Categorie + " (" + t.Page + ")");
+            string texte = string.Join("\n", lignes);
+            N<Label>("LblTekList").Text = texte.Length == 0 ? "Tsy hita / Aucun résultat" : texte;
+        }
+
+        private void OnNouvelleQuestion()
+        {
+            if (_teknikas.Count < 4) return;
+            HBoxContainer options = N<HBoxContainer>("QuizOpts");
+            ViderBoite(options);
+
+            Teknika bonne = _teknikas[_rng.Next(_teknikas.Count)];
+            List<Teknika> leurres = _teknikas.Where(t => t != bonne).OrderBy(_ => _rng.Next()).Take(3).ToList();
+            List<Teknika> choix = leurres.Append(bonne).OrderBy(_ => _rng.Next()).ToList();
+
+            N<Label>("LblQuizQ").Text = "❓ Ino ny teknika ? / Quelle technique ?\n" + bonne.UsageFr;
+            N<Label>("LblQuizMsg").Text = "";
+            foreach (Teknika option in choix)
+            {
+                bool juste = option == bonne;
+                var bouton = new Button
+                {
+                    Text = option.Titre,
+                    SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
+                    CustomMinimumSize = new Vector2(0, 48)
+                };
+                bouton.Pressed += () => N<Label>("LblQuizMsg").Text = juste
+                    ? "✅ Marina / Bravo !"
+                    : "❌ Diso / Faux — " + bonne.Titre;
+                options.AddChild(bouton);
+            }
+        }
+
+        private void RafraichirEquipes()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            var lignes = new List<string>();
+            foreach (User chef in _gm.Data.Users.Where(x => x.Role == Role.Chef))
+            {
+                Tarika? tarika = _gm.GetTarikaDe(chef.Pseudo);
+                lignes.Add("🧭 " + chef.Pseudo + " — " + (tarika?.Nom ?? "tsy misy tarika / pas de groupe"));
+                var membres = _gm.Data.Users.Where(x => x.Role == Role.Membre && x.Parrain == chef.Pseudo);
+                foreach (IGrouping<string, User> equipe in membres.GroupBy(x => x.Equipe))
+                {
+                    lignes.Add("   👥 " + equipe.Key + " : " + string.Join(", ", equipe.Select(m => m.Pseudo)));
+                }
+            }
+            N<Label>("LblEquipesList").Text = lignes.Count == 0 ? "Tsy misy ekipa / Aucune équipe" : string.Join("\n", lignes);
+        }
+
+        private void RafraichirChef()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            N<Label>("LblPositions").Text = _gm.Data.DernierSos is SosEnregistre s
+                ? "🆘 " + s.Equipe + " — " + s.Date.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture)
+                    + " — (" + s.Lat.ToString("0.0000", CultureInfo.InvariantCulture) + ", " + s.Lon.ToString("0.0000", CultureInfo.InvariantCulture) + ")"
+                : "Tsy misy SOS / Aucun SOS";
+
+            List<AuditLog> alertes = _gm.GetAudit().Where(l => l.Action == "ALERTE_ZONE").TakeLast(5).ToList();
+            N<Label>("LblAlertes").Text = alertes.Count == 0
+                ? "Tsy misy / Aucune"
+                : string.Join("\n", alertes.Select(l => l.Date.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture) + " — " + l.Detail));
+        }
+
+        private void OnTestAlerte()
+        {
+            _gm.SignalerAlerte("Fitsapana / Test", 0);
+            RafraichirTout();
+        }
+
+        private void RafraichirAudit()
+        {
+            List<AuditLog> journal = _gm.GetAudit().TakeLast(20).Reverse().ToList();
+            N<Label>("LblAudit").Text = journal.Count == 0
+                ? "Tsy misy audit / Aucun audit"
+                : string.Join("\n", journal.Select(l =>
+                    l.Date.ToLocalTime().ToString("dd/MM HH:mm", CultureInfo.InvariantCulture) + " — " + l.Pseudo + " — " + l.Action + " — " + l.Detail));
+        }
+
+        private void RafraichirCreer()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            string droit = u.Role switch
+            {
+                Role.SuperAdmin => "👑 Mamorona sy manamarina ny asa rehetra / Tout créer et valider",
+                Role.Chef => "🧭 Asa tarika avy hatrany ; Asa rehetra sy cross → fanamarinana SA",
+                Role.Animateur => "🎭 Mamorona brouillon, mampiditra avy eo / Crée des brouillons puis publie",
+                _ => "🚫 Tsy manana fahazoan-dalana / Pas de droit de création"
+            };
+            N<Label>("LblCreerDroit").Text = droit;
+            N<Label>("LblCreerQuota").Text = u.Role == Role.Chef
+                ? "Quota Asa Rehetra : " + _gm.CompterAsaRehetraCetteSemaine(u.Pseudo) + " / "
+                    + GameManager.QUOTA_ASA_REHETRA_PAR_SEMAINE + " tamin'ity herinandro ity / cette semaine"
+                : "";
+
+            ViderBoite(_boiteBrouillons);
+            foreach (Activite a in _gm.Data.Activites.Where(x => x.Statut == "brouillon" && (u.Role == Role.SuperAdmin || x.CreePar == u.Pseudo)))
+            {
+                string id = a.Id;
+                AjouterLigneSimple(_boiteBrouillons, a.Titre + " — J" + a.Jour, "📢 Navoaka / Publier", () =>
+                {
+                    SetStatus(_gm.PublierActivite(id));
+                    RafraichirTout();
+                });
+            }
+            N<Label>("LblBrouillons").Text = "📝 Ny volavolako / Mes brouillons";
+
+            int attente = _gm.Data.Activites.Count(x => x.Statut == "en_attente_validation" && x.CreePar == u.Pseudo);
+            N<Label>("LblDemandesValidation").Text = "⏳ Fangatahana miandry / Demandes en attente : " + attente;
+
+            OptionButton tarikaCible = N<OptionButton>("OptNTarikaCible");
+            tarikaCible.Clear();
+            _idsTarikasCibles.Clear();
+            foreach (Tarika t in _gm.Data.Tarikas)
+            {
+                _idsTarikasCibles.Add(t.Id);
+                tarikaCible.AddItem(t.Embleme + " " + t.Nom + " — " + t.ChefPseudo);
+            }
+            if (tarikaCible.ItemCount == 0) tarikaCible.AddItem("Tsy misy tarika / Aucun groupe");
+
+            RafraichirApercu();
+        }
+
+        private static string ParametreParDefaut(string code) => code switch
+        {
+            "Cesar" => "3",
+            "Vigenere" => "CLE",
+            _ => ""
+        };
+
+        private void RafraichirApercu()
+        {
+            string code = Texte(N<OptionButton>("OptNCode"));
+            try
+            {
+                string apercu = CodeEncoder.Encode(code, N<LineEdit>("EditNClair").Text, ParametreParDefaut(code));
+                N<Label>("LblApercu").Text = "Aperçu joueur : " + (apercu.Length == 0 ? "…" : apercu);
+            }
+            catch (NotSupportedException ex)
+            {
+                N<Label>("LblApercu").Text = "❌ " + ex.Message;
+            }
+        }
+
+        private void OnCreerActivite()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+
+            string[] heure = N<LineEdit>("EditNHeure").Text.Split('-').Select(s => s.Trim()).ToArray();
+            string code = Texte(N<OptionButton>("OptNCode"));
+            int indexLieu = N<OptionButton>("OptNLieu").Selected;
+            int indexTarika = N<OptionButton>("OptNTarikaCible").Selected;
+
+            var activite = new Activite
+            {
+                Titre = N<LineEdit>("EditNTitre").Text.Trim(),
+                Modele = Texte(N<OptionButton>("OptNModele")),
+                Code = code,
+                Param = ParametreParDefaut(code),
+                Clair = N<LineEdit>("EditNClair").Text,
+                Points = (int)N<SpinBox>("EditNPoints").Value,
+                Jour = (int)N<SpinBox>("EditNJour").Value,
+                HeureDebut = heure.Length > 0 ? heure[0] : "",
+                HeureFin = heure.Length > 1 ? heure[1] : "",
+                Lieu = indexLieu >= 0 && indexLieu < _nomsLieux.Count ? _nomsLieux[indexLieu] : "",
+                Teknika = N<LineEdit>("EditNTeknika").Text.Trim(),
+                EssaisMax = (int)N<SpinBox>("EditNEssais").Value,
+                Variante = (Variante)Math.Max(0, N<OptionButton>("OptNVariante").Selected),
+                Indices = new List<string>
+                {
+                    N<LineEdit>("EditNIndice1").Text,
+                    N<LineEdit>("EditNIndice2").Text,
+                    N<LineEdit>("EditNIndice3").Text
+                }.Select(s => s.Trim()).Where(s => s.Length > 0).ToList(),
+                Reponses = N<LineEdit>("EditNReponses").Text
+                    .Split(';')
+                    .Select(s => s.Trim())
+                    .Where(s => s.Length > 0)
+                    .ToList()
+            };
+
+            PorteeActivite portee = (PorteeActivite)Math.Max(0, N<OptionButton>("OptNPortee").Selected);
+            string tarikaId = indexTarika >= 0 && indexTarika < _idsTarikasCibles.Count ? _idsTarikasCibles[indexTarika] : "";
+            bool evenement = N<CheckBox>("CheckNEvenementCommun").ButtonPressed;
+
+            SetStatus(_gm.CreerActivite(activite, tarikaId, portee, evenement));
+            RafraichirTout();
+        }
+
+        private void OnSauverBackend()
+        {
+            _backendUrl = N<LineEdit>("EditBackendUrl").Text.Trim();
+            _backendCampagne = N<LineEdit>("EditCampagneId").Text.Trim();
+            _backendEquipe = N<LineEdit>("EditEquipeId").Text.Trim();
+            _backendPseudo = N<LineEdit>("EditPseudoBackend").Text.Trim();
+            N<Label>("LblBackendTest").Text = "💾 Tehirizo ao an-tsaina / Sauvegardé en mémoire";
+        }
+
+        private void OnTesterBackend()
+        {
+            string url = N<LineEdit>("EditBackendUrl").Text.Trim();
+            bool valide = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri)
+                && (uri!.Scheme == "http" || uri.Scheme == "https");
+            N<Label>("LblBackendTest").Text = valide
+                ? "✅ Adiresy mety / URL valide — backend tsy mbola voafatotra / backend non connecté dans cette version"
+                : "❌ URL diso / URL invalide";
+        }
+
+        private void RafraichirBackend()
+        {
+            N<LineEdit>("EditBackendUrl").Text = _backendUrl;
+            N<LineEdit>("EditCampagneId").Text = _backendCampagne;
+            N<LineEdit>("EditEquipeId").Text = _backendEquipe;
+            N<LineEdit>("EditPseudoBackend").Text = _backendPseudo;
+        }
+    }
+}
