@@ -9,6 +9,7 @@ namespace Sahavola
     public partial class Main : Control
     {
         private const string Racine = "RootVBox/ContentScroll/Content/";
+        private const string FichierSession = "user://sahavola_session.cfg";
         private const string BarreOnglets = "RootVBox/TabScroll/TabBar/";
 
         private static readonly Dictionary<string, string> Panneaux = new()
@@ -52,6 +53,7 @@ namespace Sahavola
         private GameManager _gm = null!;
         private ResponsiveManager _resp = null!;
         private GPS _gps = null!;
+        private CheckBox _chkMemoriser = null!;
         private LineEdit _editCle = null!;
         private VBoxContainer _boiteDemandes = null!;
         private VBoxContainer _boiteActivitesAttente = null!;
@@ -80,6 +82,7 @@ namespace Sahavola
             AddChild(_gps);
 
             ConstruireChampCle();
+            ConstruireMemorisation();
             ConstruireBoites();
             RemplirOptions();
             ConnecterBoutons();
@@ -153,6 +156,33 @@ namespace Sahavola
             authVBox.MoveChild(_editCle, 3);
             N<LineEdit>("EditSecret").Visible = false;
             N<Label>("LblSecretInfo").Visible = false;
+        }
+
+        private void ConstruireMemorisation()
+        {
+            VBoxContainer authVBox = N<VBoxContainer>("AuthVBox");
+            _chkMemoriser = new CheckBox
+            {
+                Text = "💾 Mahatsiarova ahy / Se souvenir de moi (pseudo)",
+                CustomMinimumSize = new Vector2(0, 40)
+            };
+            authVBox.AddChild(_chkMemoriser);
+            authVBox.MoveChild(_chkMemoriser, N<Button>("BtnLogin").GetIndex());
+
+            var config = new ConfigFile();
+            if (config.Load(FichierSession) == Error.Ok)
+            {
+                string pseudo = (string)config.GetValue("connexion", "pseudo", "");
+                N<LineEdit>("EditLoginPseudo").Text = pseudo;
+                _chkMemoriser.ButtonPressed = pseudo.Length > 0;
+            }
+        }
+
+        private void MemoriserPseudo(string pseudo)
+        {
+            var config = new ConfigFile();
+            config.SetValue("connexion", "pseudo", _chkMemoriser.ButtonPressed ? pseudo : "");
+            config.Save(FichierSession);
         }
 
         private VBoxContainer BoiteApres(string nomReference)
@@ -326,6 +356,16 @@ namespace Sahavola
             N<HBoxContainer>("BottomBar").SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
             GetNode<ScrollContainer>("RootVBox/ContentScroll").HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled;
             N<Control>("Content").SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+            foreach (string nomFormulaire in new[] { "LoginForm", "RegisterForm", "FirstForm" })
+            {
+                GridContainer formulaire = N<GridContainer>(nomFormulaire);
+                formulaire.Columns = 1;
+                foreach (Node enfant in formulaire.GetChildren())
+                {
+                    if (enfant is Label libelle) libelle.AutowrapMode = TextServer.AutowrapMode.Off;
+                    if (enfant is Control controle) controle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                }
+            }
         }
 
         private void DiagnostiquerMiseEnPage()
@@ -394,6 +434,7 @@ namespace Sahavola
             string message = _gm.Login(N<LineEdit>("EditLoginPseudo").Text, N<LineEdit>("EditLoginPass").Text);
             N<Label>("LblAuthMsg").Text = message;
             if (_gm.CurrentUser == null) return;
+            MemoriserPseudo(N<LineEdit>("EditLoginPseudo").Text.Trim());
             N<LineEdit>("EditLoginPass").Text = "";
             AppliquerSession();
         }
