@@ -34,13 +34,16 @@ jobs:
           test -f Sahavola.sln || { echo "::error::Sahavola.sln absent"; exit 1; }
 
       - name: Compiler le C#
-        run: dotnet build Sahavola.sln --configuration Debug
+        run: |
+          dotnet build Sahavola.sln --configuration Debug
 
       - name: Générer les assemblies Godot
-        run: "$GODOT_BIN" --headless --path . --build-solutions --quit
+        run: |
+          "$GODOT_BIN" --headless --path . --build-solutions --quit
 
       - name: Importer les ressources Godot
-        run: "$GODOT_BIN" --headless --path . --import
+        run: |
+          "$GODOT_BIN" --headless --path . --import
 
       - name: Démarrer la scène principale
         run: |
