@@ -340,7 +340,7 @@ namespace Sahavola
         private void AppliquerResponsive(TypeEcran type, OrientationEcran orientation, float echelle)
         {
             AdapterArbre(this);
-            CorrigerMiseEnPage();
+            Callable.From(CorrigerMiseEnPage).CallDeferred();
         }
 
         private void CorrigerMiseEnPage()
@@ -359,11 +359,22 @@ namespace Sahavola
             foreach (string nomFormulaire in new[] { "LoginForm", "RegisterForm", "FirstForm" })
             {
                 GridContainer formulaire = N<GridContainer>(nomFormulaire);
-                formulaire.Columns = 1;
                 foreach (Node enfant in formulaire.GetChildren())
                 {
-                    if (enfant is Label libelle) libelle.AutowrapMode = TextServer.AutowrapMode.Off;
-                    if (enfant is Control controle) controle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                    if (enfant is Label libelle)
+                    {
+                        libelle.CustomMinimumSize = new Vector2(240, 0);
+                        libelle.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+                    }
+                    else if (enfant is LineEdit champ)
+                    {
+                        champ.CustomMinimumSize = new Vector2(0, 40);
+                        champ.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                    }
+                    else if (enfant is Control controle)
+                    {
+                        controle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                    }
                 }
             }
         }
