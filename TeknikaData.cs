@@ -1,0 +1,86 @@
+using System.Collections.Generic;
+
+namespace Sahavola
+{
+    // Teknika Skoto — Faraka Malina — Boky fanondroana ihany.
+    // Tsy misy mpampiasa / asa noforonina avy amin'ity.
+    public static class TeknikaData
+    {
+        public static List<Teknika> All()
+        {
+            return new List<Teknika>
+            {
+                new() { Categorie="A — Kaody / Codes", Titre="1) Vigenère", Page="p.2",
+                    DescMg="Fanalahidy = teny. Ny litera tsirairay dia afindra araka ny litera amin'ny fanalahidy.",
+                    DescFr="Clé = mot. Chaque lettre est décalée par la lettre de la clé.",
+                    UsageMg="Ny mpanentana no mifidy fanalahidy, ny mpikambana no mamadika.",
+                    UsageFr="L'animateur choisit une clé, les joueurs décodent.", Code="Vigenere" },
+                new() { Categorie="A — Kaody / Codes", Titre="2) Morse", Page="p.5",
+                    DescMg="Teboka = fohy, tsipika = lava. Azo soloina amin'ny vona, zana-tsipìka, voamaina. Andro : sioly, saina, feo, setroka. Alina : jiro paosy.",
+                    DescFr="Point = court, tiret = long. Remplaçable par nœud, flèches, graines. Jour : sifflet, drapeau, voix, fumée. Nuit : lampe.",
+                    UsageMg="Morse sioly / jiro / saina. Aza afangaro ny teboka sy ny tsipika.",
+                    UsageFr="Morse sifflet / lampe / drapeau. Ne pas confondre point et tiret.", Code="Morse" },
+                new() { Categorie="A — Kaody / Codes", Titre="3) Abidia OTAN", Page="p.8",
+                    DescMg="A=Alpha, B=Bravo, C=Charlie, D=Delta, E=Echo, F=Fox, G=Golf, H=Hotel, I=India, J=Juliette, K=Kilo, L=Lima, M=Mike, N=November, O=Oscar, P=Papa, Q=Québec, R=Roméo, S=Sierra, T=Tango, U=Uniforme, V=Victor, W=Whisky, X=X-Ray, Y=Yankee. Ohatra : Tily = Tango, India, Lima, Yankee.",
+                    DescFr="A=Alpha, B=Bravo, C=Charlie, D=Delta, E=Echo, F=Fox, G=Golf, H=Hotel, I=India, J=Juliette, K=Kilo, L=Lima, M=Mike, N=November, O=Oscar, P=Papa, Q=Québec, R=Roméo, S=Sierra, T=Tango, U=Uniforme, V=Victor, W=Whisky, X=X-Ray, Y=Yankee. Ex : Tily = Tango, India, Lima, Yankee.",
+                    UsageMg="Fifandraisana amin'ny radio, fanononana tsy misy hadisoana.",
+                    UsageFr="Transmission radio, épeler sans erreur.", Code="OTAN" },
+                new() { Categorie="A — Kaody / Codes", Titre="14) Sémaphore", Page="p.25",
+                    DescMg="Noforonin'i Claude Chappe, 1793. Tanjona : mifandray haingana kokoa noho ny soavaly, hatramin'ny 5 km. Toerana fialan-tsasatra : Vonona Ve. Tsy miverina amin'ny Vonona raha tsy vita ny teny. Saina 2.",
+                    DescFr="Inventé par Claude Chappe, 1793. But : communiquer plus vite qu'un cheval, jusqu'à 5 km. Repos : Vonona Ve. On ne revient à Vonona que quand le mot est fini. 2 drapeaux.",
+                    UsageMg="Alefaso ny teny amin'ny sémaphore, saina na jiro.",
+                    UsageFr="Envoyer un mot en sémaphore, drapeaux ou lampe.", Code="Semaphore" },
+                new() { Categorie="A — Kaody / Codes", Titre="16) Kaody Q & Isa", Page="p.28",
+                    DescMg="QRA=Trano, QRB=Elanelana, QRD=Mandeha, QRE=Ora nahatongavana, QRG=Onjampeo, QRI=Feo, QRJ=Voaray tsara ve ?, QRL=Sahirana, QRM=Brouillage, QRN=Orana, QRO=Mafy tsara, QRP=Kely, QRQ=Miteny haingana, QRR=Anaran'ny station, QRRR=SOS vonjy, QRS=Miteny miadana, QRV=Vonona, QRW=Afaka miantso, QRX=Mijanona kely, QRZ=Anarana, QSA=Signal, QSJ=Vola, QSK=Afaka manohy ve, QSL=Confirmation, QSO=Resaka, QSP=Hafatra, QSY=Mifindra fantsona, QTH=Toerana, QTR=Ora, QRT=Tapitra, QRU=Tsy misy tenenina. Isa : 99=QSY, 813=Zava-pisotro, 51=Miarahaba, 73=Am-pirahalahiana, 144=Matory, 1042=Loza, 318=WC, 1043=Embouteillage, 88=Oroka, 600=Telefaonina, 10=Soava-dia.",
+                    DescFr="QRA=Trano, QRB=Elanelana, QRD=Mandeha, QRE=Ora nahatongavana, QRG=Onjampeo, QRI=Feo, QRJ=Voaray tsara ve ?, QRL=Sahirana, QRM=Brouillage, QRN=Orana, QRO=Mafy tsara, QRP=Kely, QRQ=Miteny haingana, QRR=Anaran'ny station, QRRR=SOS vonjy, QRS=Miteny miadana, QRV=Vonona, QRW=Afaka miantso, QRX=Mijanona kely, QRZ=Anarana, QSA=Signal, QSJ=Vola, QSK=Afaka manohy ve, QSL=Confirmation, QSO=Resaka, QSP=Hafatra, QSY=Mifindra fantsona, QTH=Toerana, QTR=Ora, QRT=Tapitra, QRU=Tsy misy tenenina. Chiffre : 99=QSY, 813=Zava-pisotro, 51=Miarahaba, 73=Am-pirahalahiana, 144=Matory, 1042=Loza, 318=WC, 1043=Embouteillage, 88=Oroka, 600=Telefaonina, 10=Soava-dia.",
+                    UsageMg="Radio sandoka, adikao ny Q sy ny Isa.",
+                    UsageFr="Radio fictive, traduire Q et Chiffre.", Code="Code Q" },
+                new() { Categorie="A — Kaody / Codes", Titre="18) Kaody-Kaody", Page="p.30",
+                    DescMg="Kaody iray manafina kaody iray hafa. Ohatra amin'ny dingana 3 : 1) OTAN → ETRTLRL... 2) Takelaka → Tigiaga aganaogao Jegesogosigy 3) Voanjo → 'Tia anao Jesosy'.",
+                    DescFr="Un code en cache un autre. Ex en 3 étapes : 1) OTAN → ETRTLRL... 2) Tableau → Tigiaga aganaogao Jegesogosigy 3) Voanjo → 'Tia anao Jesosy'.",
+                    UsageMg="Asa BOSS : dingana 3, ny ekipa manontolo miaraka.",
+                    UsageFr="Activité BOSS : 3 étapes, toute l'équipe.", Code="Code-Code" },
+                new() { Categorie="B — Koja / Installations", Titre="2) Fefy / Clôture", Page="p.34",
+                    DescMg="Ny vala, na zohy, na tanàna dia tsy maintsy misy fefy foana. Ny fefy dia mamaritra ny an'ny tena, tsy mifangaro amin'ny ivelany.",
+                    DescFr="Le vala / zohy / tanàna doit toujours avoir une fefy. La fefy délimite le chez-soi.",
+                    UsageMg="Manamboara fefy, farito ny tobi.", UsageFr="Construire une clôture, délimiter le camp.", Code="Koja" },
+                new() { Categorie="B — Koja / Installations", Titre="5) Kidoro / Matelas", Page="p.38",
+                    DescMg="Koja = mampiseho ny fahaizana vona koa. Kidoro amin'ny tady, mololo, hazo. Kidoro mateza, azo atory any an-dasy. 'Fampiasana ny tànana ho fampivelarana ny saina'.",
+                    DescFr="Koja = montrer le savoir-faire en nœuds. Kidoro avec tady, mololo, hazo. Solide, on peut dormir dessus.",
+                    UsageMg="Manaova kidoro amin'ny tady + mololo + hazo.", UsageFr="Fabriquer un kidoro avec corde + paille + bois.", Code="Koja" },
+                new() { Categorie="D — Vona / Nœuds", Titre="1) Vona Fisaka / Nœud Plat", Page="p.59",
+                    DescMg="Vona tena ampiasaina indrindra ary mora atao indrindra. Hamaranana ny brelage na ny tête de bigue.",
+                    DescFr="Nœud le plus utilisé, le plus facile. Pour finir un brelage ou une tête de bigue.",
+                    UsageMg="Manaova vona fisaka, hamarino fa tsy mivaha.", UsageFr="Faire un nœud plat, vérifier qu'il ne glisse pas.", Code="Vona" },
+                new() { Categorie="D — Vona / Nœuds", Titre="5) Vona Seza / Nœud de Chaise", Page="p.60",
+                    DescMg="Boribory mafy sady tsy mihenjana, toy ny vona fisaka. Ohatra : hampidinana olona avy ambony hazo na trano.",
+                    DescFr="Boucle solide qui ne se resserre pas, comme un nœud plat. Ex : descendre quelqu'un d'un arbre ou d'une maison.",
+                    UsageMg="Manaova boribory seza, fitsapana malefaka miaraka amin'ny mpitarika.",
+                    UsageFr="Faire une boucle de chaise, test doux avec le chef.", Code="Vona" },
+                new() { Categorie="D — Vona / Nœuds", Titre="10) Brelage", Page="p.62",
+                    DescMg="Natao hamatorana hazo roa. Mety ho mifanitsy na mifampita.",
+                    DescFr="Pour attacher 2 bois. Perpendiculaires ou croisés.",
+                    UsageMg="Brelage hazo roa mifanitsy, avy eo mifampita.", UsageFr="Brelage de 2 bois perpendiculaires, puis croisés.", Code="Vona" },
+                new() { Categorie="H — Vonjy Voina / Secourisme", Titre="1) Ratra / Plaie", Page="p.78",
+                    DescMg="Ratra : fery. Ny fery madio dia mora mikatona raha akambana ny vavafery. Akatona raha : latsaky ny 12 ora, tena madio, tsy afaka manatona mpitsabo iny andro iny. Fomba 2 : bandy, na fanjairana. FAMPITANDREMANA : fery efa 12 ora, maloto, kaikitr'olona / alika... dia tsy akatona.",
+                    DescFr="Plaie propre se referme si on rapproche les bords. On ferme si : moins de 12h, vraiment propre, impossible de voir un soignant le jour même. 2 façons : bande, ou couture. AVERTISSEMENT : plaie de plus de 12h, sale, morsure d'homme / chien... ne pas fermer.",
+                    UsageMg="Fampisehoana amin'ny saribakoly, tsy amin'ny fery tena izy. Mpitarika ihany.",
+                    UsageFr="Démonstration sur mannequin, jamais sur vraie plaie. Chef uniquement.", Code="Secourisme" },
+                new() { Categorie="H — Vonjy Voina / Secourisme", Titre="2) May 1er degré", Page="p.80",
+                    DescMg="May tsotra tsy mitsovaka : alona ao anaty rano mangatsiaka avy hatrany ny faritra may.",
+                    DescFr="Brûlure simple sans cloque : plonger tout de suite dans l'eau froide.",
+                    UsageMg="Inona no atao raha may kely ? Valiny : rano mangatsiaka, aza vakiana.",
+                    UsageFr="Que faire si brûlure légère ? Réponse : eau froide, ne pas percer.", Code="Secourisme" },
+                new() { Categorie="H — Vonjy Voina / Secourisme", Titre="4) May 3e degré", Page="p.80",
+                    DescMg="May lalina : faritra be, mirainkona ny hoditra, mety ahatratra nofotra sy taolana. Ento avy hatrany any amin'ny tobimpitsaboana. Eny an-dàlana : tongony avo noho ny lohany, rakofana lamba manify madio, fadio ny manetsika tsy amin'ny antony, na manala fitafy miraikitra, na mitsoka ny may.",
+                    DescFr="Brûlure profonde : zone large, peau qui se plisse, peut atteindre chair et os. Emmener tout de suite au centre. En route : pieds plus haut que la tête, couvrir d'un tissu fin propre, ne pas bouger sans raison, ne pas enlever les vêtements collés, ne pas souffler.",
+                    UsageMg="Antsoy + ento, mpitarika ihany.", UsageFr="Appel + transport, chef uniquement.", Code="Secourisme" },
+                new() { Categorie="I — Famantarana / Repères", Titre="Famantarana Avaratra", Page="p.83",
+                    DescMg="Famantarana Avaratra : fitadiavana ny avaratra. Fanondroana, masoandro, kintana, boussole.",
+                    DescFr="Trouver le Nord. Repères, soleil, étoiles, boussole.",
+                    UsageMg="Tadiavo ny avaratra tsy misy boussole, hamarino amin'ny boussole.",
+                    UsageFr="Trouver le Nord sans boussole, puis vérifier.", Code="Orientation" },
+            };
+        }
+    }
+}
