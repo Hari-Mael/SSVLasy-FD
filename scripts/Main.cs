@@ -88,6 +88,7 @@ namespace Sahavola
             _resp.OnResolutionChangee += AppliquerResponsive;
             AppliquerResponsive(_resp.TypeActuel, _resp.OrientationActuelle, _resp.FacteurEchelle);
             AppliquerSession();
+            Callable.From(DiagnostiquerMiseEnPage).CallDeferred();
         }
 
         public override void _ExitTree()
@@ -309,6 +310,39 @@ namespace Sahavola
         private void AppliquerResponsive(TypeEcran type, OrientationEcran orientation, float echelle)
         {
             AdapterArbre(this);
+            CorrigerMiseEnPage();
+        }
+
+        private void CorrigerMiseEnPage()
+        {
+            foreach (string nom in new[] { "TitreLabel", "StatusMini" })
+            {
+                Label libelle = N<Label>(nom);
+                libelle.AutowrapMode = TextServer.AutowrapMode.Off;
+                libelle.SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            }
+            N<Label>("StatusLabel").SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            N<HBoxContainer>("TopBar").SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            N<HBoxContainer>("BottomBar").SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
+            GetNode<ScrollContainer>("RootVBox/ContentScroll").HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled;
+            N<Control>("Content").SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+        }
+
+        private void DiagnostiquerMiseEnPage()
+        {
+            GD.Print("[Diag] fenêtre=" + GetViewportRect().Size);
+            foreach (string nom in new[] { "TopBar", "ContentScroll", "Content", "AuthPanel", "LoginForm", "BtnLogin" })
+            {
+                Control c = N<Control>(nom);
+                GD.Print("[Diag] " + nom + " pos=" + c.GlobalPosition + " taille=" + c.Size + " visible=" + c.IsVisibleInTree());
+            }
+            foreach (Node enfant in N<GridContainer>("LoginForm").GetChildren())
+            {
+                if (enfant is Control ctl)
+                {
+                    GD.Print("[Diag] LoginForm/" + ctl.Name + " taille=" + ctl.Size + " visible=" + ctl.IsVisibleInTree());
+                }
+            }
         }
 
         private void AdapterArbre(Node noeud)
