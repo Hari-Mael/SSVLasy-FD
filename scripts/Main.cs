@@ -10,6 +10,8 @@ namespace Sahavola
     {
         private const string Racine = "RootVBox/ContentScroll/Content/";
         private const string FichierSession = "user://sahavola_session.cfg";
+        private const float LargeurLibelle = 240f;
+        private const float HauteurChamp = 40f;
         private const string BarreOnglets = "RootVBox/TabScroll/TabBar/";
 
         private static readonly Dictionary<string, string> Panneaux = new()
@@ -356,26 +358,33 @@ namespace Sahavola
             N<HBoxContainer>("BottomBar").SizeFlagsVertical = Control.SizeFlags.ShrinkCenter;
             GetNode<ScrollContainer>("RootVBox/ContentScroll").HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled;
             N<Control>("Content").SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-            foreach (string nomFormulaire in new[] { "LoginForm", "RegisterForm", "FirstForm" })
+            StabiliserFormulaires(N<Control>("Content"));
+        }
+
+        private void StabiliserFormulaires(Node noeud)
+        {
+            foreach (Node enfant in noeud.GetChildren())
             {
-                GridContainer formulaire = N<GridContainer>(nomFormulaire);
-                foreach (Node enfant in formulaire.GetChildren())
+                if (enfant is GridContainer grille)
                 {
-                    if (enfant is Label libelle)
+                    foreach (Node element in grille.GetChildren())
                     {
-                        libelle.CustomMinimumSize = new Vector2(240, 0);
-                        libelle.AutowrapMode = TextServer.AutowrapMode.WordSmart;
-                    }
-                    else if (enfant is LineEdit champ)
-                    {
-                        champ.CustomMinimumSize = new Vector2(0, 40);
-                        champ.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
-                    }
-                    else if (enfant is Control controle)
-                    {
-                        controle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                        if (element is Label libelle)
+                        {
+                            libelle.CustomMinimumSize = new Vector2(LargeurLibelle, 0);
+                            libelle.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+                        }
+                        else if (element is Control controle)
+                        {
+                            controle.SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
+                            if (controle is LineEdit or OptionButton or SpinBox)
+                            {
+                                controle.CustomMinimumSize = new Vector2(0, HauteurChamp);
+                            }
+                        }
                     }
                 }
+                StabiliserFormulaires(enfant);
             }
         }
 
