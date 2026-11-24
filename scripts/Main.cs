@@ -63,6 +63,8 @@ namespace Sahavola
         private OptionButton _optConsult = null!;
         private Button _btnUtiliser = null!;
         private Button _btnJourSuivant = null!;
+        private Button _btnManger = null!;
+        private Button _btnMeteo = null!;
         private OptionButton _optLangue = null!;
         private Langue _langue = Langue.Francais;
         private static readonly Dictionary<string, string> AnglaisTraductions = new()
@@ -285,20 +287,20 @@ namespace Sahavola
             Control campVBox = N<Control>("CampVBox");
             _lblMeteo = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
             _lblEnergie = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
-            var boutonManger = new Button { Text = "🍲 Nihinana / Manger", CustomMinimumSize = new Vector2(0, 44) };
-            boutonManger.Pressed += OnManger;
+            _btnManger = new Button { Text = "🍲 Manger", CustomMinimumSize = new Vector2(0, 44) };
+            _btnManger.Pressed += OnManger;
             _optMeteo = new OptionButton { CustomMinimumSize = new Vector2(0, 44) };
             foreach (Meteo meteo in Enum.GetValues<Meteo>()) _optMeteo.AddItem(LibelleMeteo(meteo));
             _optMeteo.Select(0);
-            var boutonMeteo = new Button { Text = "🌦️ Ovaina ny toetr'andro / Changer la météo", CustomMinimumSize = new Vector2(0, 44) };
-            boutonMeteo.Pressed += OnChangerMeteo;
-            _btnJourSuivant = new Button { Text = "📅 Andro manaraka / Jour suivant", CustomMinimumSize = new Vector2(0, 44) };
+            _btnMeteo = new Button { Text = "🌦️ Changer la météo", CustomMinimumSize = new Vector2(0, 44) };
+            _btnMeteo.Pressed += OnChangerMeteo;
+            _btnJourSuivant = new Button { Text = "📅 Jour suivant", CustomMinimumSize = new Vector2(0, 44) };
             _btnJourSuivant.Pressed += OnJourSuivant;
             campVBox.AddChild(_lblMeteo);
             campVBox.AddChild(_lblEnergie);
-            campVBox.AddChild(boutonManger);
+            campVBox.AddChild(_btnManger);
             campVBox.AddChild(_optMeteo);
-            campVBox.AddChild(boutonMeteo);
+            campVBox.AddChild(_btnMeteo);
             campVBox.AddChild(_btnJourSuivant);
         }
 
@@ -355,7 +357,7 @@ namespace Sahavola
         {
             _langue = nouvelle;
             SauverLangue();
-            AppliquerLangue();
+            RafraichirTout();
         }
 
         private string Traduire(string source)
@@ -440,14 +442,39 @@ namespace Sahavola
             RafraichirTout();
         }
 
-        private static string LibelleMeteo(Meteo meteo) => meteo switch
+        private string T(string malagasy, string francais, string anglais) => _langue switch
         {
-            Meteo.Chaleur => "☀️ Chaleur",
-            Meteo.Pluvieux => "🌧️ Pluvieux",
-            Meteo.Venteux => "💨 Venteux",
-            Meteo.ChaudHumide => "🥵 Chaud et humide",
-            Meteo.VenteuxHumide => "🌬️ Venteux et humide",
-            Meteo.ChaudSec => "🔥 Chaud et sec",
+            Langue.Malagasy => malagasy,
+            Langue.Anglais => anglais,
+            _ => francais
+        };
+
+        private string LibelleMeteo(Meteo meteo) => meteo switch
+        {
+            Meteo.Chaleur => T("☀️ Mafana", "☀️ Chaleur", "☀️ Heat"),
+            Meteo.Pluvieux => T("🌧️ Orana", "🌧️ Pluvieux", "🌧️ Rainy"),
+            Meteo.Venteux => T("💨 Rivotra", "💨 Venteux", "💨 Windy"),
+            Meteo.ChaudHumide => T("🥵 Mafana sy mando", "🥵 Chaud et humide", "🥵 Hot and humid"),
+            Meteo.VenteuxHumide => T("🌬️ Rivotra sy mando", "🌬️ Venteux et humide", "🌬️ Windy and humid"),
+            Meteo.ChaudSec => T("🔥 Mafana sy maina", "🔥 Chaud et sec", "🔥 Hot and dry"),
+            _ => ""
+        };
+
+        private string LibelleType(TypeLasy type) => type switch
+        {
+            TypeLasy.Tselatra => T("⚡ Lasy Tselatra", "⚡ Camp Tselatra", "⚡ Tselatra camp"),
+            TypeLasy.Lehibe => T("🏕️ Lasy Lehibe", "🏕️ Camp Lehibe", "🏕️ Lehibe camp"),
+            TypeLasy.Feno => T("🌲 Lasy Feno", "🌲 Camp Feno", "🌲 Feno camp"),
+            _ => ""
+        };
+
+        private string LibelleStatut(StatutCampagne statut) => statut switch
+        {
+            StatutCampagne.Draft => T("Vonona", "Brouillon", "Draft"),
+            StatutCampagne.Scheduled => T("Voavaha", "Planifiée", "Scheduled"),
+            StatutCampagne.Running => T("Mandeha", "En cours", "Running"),
+            StatutCampagne.Paused => T("Atsaharana", "En pause", "Paused"),
+            StatutCampagne.Finished => T("Vita", "Terminée", "Finished"),
             _ => ""
         };
 
@@ -885,38 +912,60 @@ namespace Sahavola
             User? u = _gm.CurrentUser;
             if (u == null) return;
             Campagne? campagne = _gm.Data.Campagne;
-            _lblMeteo.Text = "🌦️ Toetr'andro / Météo : " + LibelleMeteo(campagne?.MeteoActuelle ?? Meteo.Chaleur);
-            _lblEnergie.Text = "⚡ Hery / Énergie : " + _gm.EnergieDe(u) + "/100 — 🍲 Sakafo / Rations : " + u.Rations;
-            _btnJourSuivant.Visible = u.Role == Role.SuperAdmin;
-            _btnJourSuivant.Disabled = campagne?.Statut != StatutCampagne.Running;
+            Meteo meteo = campagne?.MeteoActuelle ?? Meteo.Chaleur;
 
-            N<Label>("LblFeu").Text = "🔥 Afo / Feu\n" + _feu + "%";
-            N<Label>("LblEau").Text = "💧 Rano / Eau\n—";
-            N<Label>("LblBois").Text = "🪵 Kitay / Bois\n" + _bois;
-            N<Label>("LblTente").Text = "⛺ Lay / Tente\n—";
-            N<Button>("BtnNuit").Text = _nuit ? "🌞 Andro / Jour" : "🌙 Alina / Nuit";
-
+            N<Label>("CampTitre").Text = T("🏕️ Tobi", "🏕️ Camp", "🏕️ Camp");
+            N<Label>("LblFeu").Text = T("🔥 Afo", "🔥 Feu", "🔥 Fire") + "\n" + _feu + "%";
+            N<Label>("LblEau").Text = T("💧 Rano", "💧 Eau", "💧 Water") + "\n—";
+            N<Label>("LblBois").Text = T("🪵 Kitay", "🪵 Bois", "🪵 Wood") + "\n" + _bois;
+            N<Label>("LblTente").Text = T("⛺ Lay", "⛺ Tente", "⛺ Tent") + "\n—";
+            N<Button>("BtnFeu").Text = T("+ Kitay", "+ Bois", "+ Wood");
+            N<Button>("BtnNuit").Text = _nuit
+                ? T("🌞 Andro", "🌞 Jour", "🌞 Day")
+                : T("🌙 Alina", "🌙 Nuit", "🌙 Night");
+            N<Button>("BtnGps").Text = T("📍 GPS tena izy", "📍 GPS réel", "📍 Real GPS");
             N<Label>("LblGps").Text = _gps.Actif
-                ? "GPS : aktif ±" + _gps.Precision.ToString("0", CultureInfo.InvariantCulture) + " m"
-                : "GPS : tsy mbola navadika / non activé";
+                ? T("GPS : aktif", "GPS : actif", "GPS: active") + " ±" + _gps.Precision.ToString("0", CultureInfo.InvariantCulture) + " m"
+                : T("GPS : tsy mbola navadika", "GPS : non activé", "GPS: not enabled");
 
             List<Poi> zones = _gm.ZonesInterdites();
-            N<Label>("LblZone").Text = "⚠️ Faritra voarara / Zone interdite : "
-                + (zones.Count == 0 ? "Tsy misy / Aucune" : string.Join(", ", zones.Select(z => z.Nom)));
+            N<Label>("LblZone").Text = T("⚠️ Faritra voarara", "⚠️ Zone interdite", "⚠️ Restricted zone") + " : "
+                + (zones.Count == 0 ? T("Tsy misy", "Aucune", "None") : string.Join(", ", zones.Select(z => z.Nom)));
+            N<Button>("BtnSos").Text = T("🆘 SOS — SOS ihany", "🆘 SOS — seul le SOS est envoyé", "🆘 SOS — only the SOS is sent");
 
+            N<Label>("LblClassement").Text = T("📊 Filaharana", "📊 Classement", "📊 Ranking");
             var classement = _gm.Data.Progressions
                 .Where(p => p.Score > 0)
                 .OrderByDescending(p => p.Score)
                 .Select((p, i) => (i + 1) + ". " + p.Cle + " — " + p.Score + " pts");
             string listeClassement = string.Join("\n", classement);
-            N<Label>("LblClassementList").Text = listeClassement.Length == 0 ? "Tsy misy isa / Aucun score" : listeClassement;
+            N<Label>("LblClassementList").Text = listeClassement.Length == 0
+                ? T("Tsy misy isa", "Aucun score", "No score")
+                : listeClassement;
 
             List<string> badges = _gm.ProgressionCourante().Badges;
-            N<Label>("LblBadges").Text = "🎖️ Mari-pankasitrahana / Badges : " + (badges.Count == 0 ? "Tsy misy / Aucun" : string.Join(", ", badges));
+            N<Label>("LblBadges").Text = T("🎖️ Mari-pankasitrahana", "🎖️ Badges", "🎖️ Badges") + " : "
+                + (badges.Count == 0 ? T("Tsy misy", "Aucun", "None") : string.Join(", ", badges));
 
+            N<Label>("CampagneTitre").Text = T(
+                "📅 Lasy — Sokajy : Tselatra 1–3, Lehibe 1–5, Feno 1–11",
+                "📅 Camp — Type : Tselatra 1–3, Lehibe 1–5, Feno 1–11",
+                "📅 Camp — Type: Tselatra 1–3, Lehibe 1–5, Feno 1–11");
+            N<Label>("LblCampTypeInfo").Text = T(
+                "⚡ Tselatra 1–3 andro, 🏕️ Lehibe 1–5 andro, 🌲 Feno 1–11 andro",
+                "⚡ Tselatra 1–3 jours, 🏕️ Lehibe 1–5 jours, 🌲 Feno 1–11 jours",
+                "⚡ Tselatra 1–3 days, 🏕️ Lehibe 1–5 days, 🌲 Feno 1–11 days");
+            N<Label>("LblCampType").Text = T("Sokajin'ny lasy", "Type de camp", "Camp type");
+            N<Label>("LblCampJours").Text = T("Isan'ny andro (1–11)", "Nombre de jours (1–11)", "Number of days (1–11)");
+            N<Label>("LblCampDebut").Text = T("Daty fanombohana", "Date de début", "Start date");
+            N<Button>("BtnCampCreer").Text = T("✅ Mamorona lasy", "✅ Créer la campagne", "✅ Create the camp");
+            N<Button>("BtnCampPause").Text = T("⏸️ Atsaharo", "⏸️ Pause", "⏸️ Pause");
+            N<Button>("BtnCampReprendre").Text = T("▶️ Tohizo", "▶️ Reprendre", "▶️ Resume");
+            N<Button>("BtnCampFin").Text = T("🏁 Vitao", "🏁 Terminer", "🏁 End");
             N<Label>("LblCampagneInfo").Text = campagne == null
-                ? "Tsy misy lasy / Aucune campagne"
-                : campagne.NomType + " — " + campagne.Statut + " — andro " + campagne.JourActuel + "/" + campagne.Jours + " — " + campagne.Debut;
+                ? T("Tsy misy lasy", "Aucune campagne", "No camp")
+                : LibelleType(campagne.Type) + " — " + LibelleStatut(campagne.Statut) + " — "
+                    + T("andro", "jour", "day") + " " + campagne.JourActuel + "/" + campagne.Jours + " — " + campagne.Debut;
 
             bool gere = u.Role == Role.SuperAdmin || u.Role == Role.Chef;
             N<Control>("CampagneForm").Visible = gere;
@@ -926,8 +975,20 @@ namespace Sahavola
             N<Button>("BtnCampReprendre").Disabled = !(campagne?.Statut is StatutCampagne.Scheduled or StatutCampagne.Paused);
             N<Button>("BtnCampFin").Disabled = !(campagne?.Statut is StatutCampagne.Running or StatutCampagne.Paused);
 
+            _lblMeteo.Text = T("🌦️ Toetr'andro", "🌦️ Météo", "🌦️ Weather") + " : " + LibelleMeteo(meteo);
+            _lblEnergie.Text = T("⚡ Hery", "⚡ Énergie", "⚡ Energy") + " : " + _gm.EnergieDe(u) + "/100 — "
+                + T("🍲 Sakafo", "🍲 Rations", "🍲 Rations") + " : " + u.Rations;
+            _btnManger.Text = T("🍲 Nihinana", "🍲 Manger", "🍲 Eat");
+            _btnMeteo.Text = T("🌦️ Ovaina ny toetr'andro", "🌦️ Changer la météo", "🌦️ Change weather");
+            _btnJourSuivant.Text = T("📅 Andro manaraka", "📅 Jour suivant", "📅 Next day");
+            _btnJourSuivant.Visible = u.Role == Role.SuperAdmin;
+            _btnJourSuivant.Disabled = campagne?.Statut != StatutCampagne.Running;
+
+            Meteo[] valeursMeteo = Enum.GetValues<Meteo>();
+            for (int i = 0; i < valeursMeteo.Length; i++) _optMeteo.SetItemText(i, LibelleMeteo(valeursMeteo[i]));
+
             N<Control>("EndScreen").Visible = campagne?.Statut == StatutCampagne.Finished && !_finMasquee;
-            N<Label>("LblEndNom").Text = "🎉 Bravo, " + u.Pseudo + " !";
+            N<Label>("LblEndNom").Text = T("🎉 Tahafinaritra", "🎉 Bravo", "🎉 Well done") + ", " + u.Pseudo + " !";
             N<Label>("LblEndScore").Text = _gm.ScoreCourant() + " pts";
             N<Label>("LblEndTotem").Text = string.Join(", ", _gm.ProgressionCourante().Badges);
         }
