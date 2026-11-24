@@ -1069,9 +1069,9 @@ namespace Sahavola
                 return;
             }
             int index = -1;
-            for (int i = 0; i < _optNCode.ItemCount; i++)
+            for (int i = 0; i < N<OptionButton>("OptNCode").ItemCount; i++)
             {
-                if (_optNCode.GetItemText(i) == t.Code) index = i;
+                if (N<OptionButton>("OptNCode").GetItemText(i) == t.Code) index = i;
             }
             if (index < 0)
             {
@@ -1083,7 +1083,7 @@ namespace Sahavola
                 message.Text = "❌ Tsy manana fahazoan-dalana / Vous n'avez pas le droit de créer une activité";
                 return;
             }
-            _optNCode.Select(index);
+            N<OptionButton>("OptNCode").Select(index);
             ChoisirPanneau("Creer");
             message.Text = "✅ Voafidy ho an'ny asa / Code sélectionné pour l'activité : " + t.Code
                 + (t.Code == "Semaphore" ? " — cocher « Activité navale »" : "");
