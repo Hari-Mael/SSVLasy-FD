@@ -56,6 +56,10 @@ namespace Sahavola
         private ResponsiveManager _resp = null!;
         private GPS _gps = null!;
         private CheckBox _chkMemoriser = null!;
+        private OptionButton _optMeteo = null!;
+        private Label _lblMeteo = null!;
+        private Label _lblEnergie = null!;
+        private CheckBox _chkNavale = null!;
         private LineEdit _editCle = null!;
         private VBoxContainer _boiteDemandes = null!;
         private VBoxContainer _boiteActivitesAttente = null!;
@@ -86,6 +90,8 @@ namespace Sahavola
             ConstruireChampCle();
             ConstruireMemorisation();
             ConstruireBoites();
+            ConstruireEtatCamp();
+            ConstruireActiviteNavale();
             RemplirOptions();
             ConnecterBoutons();
             CacherHorsUsage();
@@ -186,6 +192,60 @@ namespace Sahavola
             config.SetValue("connexion", "pseudo", _chkMemoriser.ButtonPressed ? pseudo : "");
             config.Save(FichierSession);
         }
+
+        private void ConstruireEtatCamp()
+        {
+            Control campVBox = N<Control>("CampVBox");
+            _lblMeteo = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
+            _lblEnergie = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
+            var boutonManger = new Button { Text = "🍲 Nihinana / Manger", CustomMinimumSize = new Vector2(0, 44) };
+            boutonManger.Pressed += OnManger;
+            _optMeteo = new OptionButton { CustomMinimumSize = new Vector2(0, 44) };
+            foreach (Meteo meteo in Enum.GetValues<Meteo>()) _optMeteo.AddItem(LibelleMeteo(meteo));
+            _optMeteo.Select(0);
+            var boutonMeteo = new Button { Text = "🌦️ Ovaina ny toetr'andro / Changer la météo", CustomMinimumSize = new Vector2(0, 44) };
+            boutonMeteo.Pressed += OnChangerMeteo;
+            campVBox.AddChild(_lblMeteo);
+            campVBox.AddChild(_lblEnergie);
+            campVBox.AddChild(boutonManger);
+            campVBox.AddChild(_optMeteo);
+            campVBox.AddChild(boutonMeteo);
+        }
+
+        private void ConstruireActiviteNavale()
+        {
+            Node formulaire = N<Node>("CreerForm");
+            Node parent = formulaire.GetParent();
+            var ligne = new HBoxContainer();
+            ligne.AddChild(new Label { Text = "⚓ Asa nabo / Activité navale", AutowrapMode = TextServer.AutowrapMode.WordSmart });
+            _chkNavale = new CheckBox { Text = "Eny / Oui — obligatoire pour le sémaphore" };
+            ligne.AddChild(_chkNavale);
+            parent.AddChild(ligne);
+            parent.MoveChild(ligne, formulaire.GetIndex() + 1);
+        }
+
+        private void OnManger()
+        {
+            SetStatus(_gm.Manger());
+            RafraichirTout();
+        }
+
+        private void OnChangerMeteo()
+        {
+            SetStatus(_gm.ChangerMeteo((Meteo)Math.Max(0, _optMeteo.Selected)));
+            RafraichirTout();
+        }
+
+        private static string LibelleMeteo(Meteo meteo) => meteo switch
+        {
+            Meteo.Chaleur => "☀️ Chaleur",
+            Meteo.Pluvieux => "🌧️ Pluvieux",
+            Meteo.Venteux => "💨 Venteux",
+            Meteo.ChaudHumide => "🥵 Chaud et humide",
+            Meteo.VenteuxHumide => "🌬️ Venteux et humide",
+            Meteo.ChaudSec => "🔥 Chaud et sec",
+            _ => ""
+        };
 
         private VBoxContainer BoiteApres(string nomReference)
         {
@@ -359,6 +419,7 @@ namespace Sahavola
             GetNode<ScrollContainer>("RootVBox/ContentScroll").HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled;
             N<Control>("Content").SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
             StabiliserFormulaires(N<Control>("Content"));
+            N<SpinBox>("EditNEssais").MaxValue = 3;
         }
 
         private void StabiliserFormulaires(Node noeud)
@@ -614,6 +675,8 @@ namespace Sahavola
             User? u = _gm.CurrentUser;
             if (u == null) return;
             Campagne? campagne = _gm.Data.Campagne;
+            _lblMeteo.Text = "🌦️ Toetr'andro / Météo : " + LibelleMeteo(campagne?.MeteoActuelle ?? Meteo.Chaleur);
+            _lblEnergie.Text = "⚡ Hery / Énergie : " + _gm.EnergieDe(u) + "/100 — 🍲 Sakafo / Rations : " + u.Rations;
 
             N<Label>("LblFeu").Text = "🔥 Afo / Feu\n" + _feu + "%";
             N<Label>("LblEau").Text = "💧 Rano / Eau\n—";
@@ -1117,6 +1180,7 @@ namespace Sahavola
                 HeureFin = heure.Length > 1 ? heure[1] : "",
                 Lieu = indexLieu >= 0 && indexLieu < _nomsLieux.Count ? _nomsLieux[indexLieu] : "",
                 Teknika = N<LineEdit>("EditNTeknika").Text.Trim(),
+                ActiviteNavale = _chkNavale.ButtonPressed,
                 EssaisMax = (int)N<SpinBox>("EditNEssais").Value,
                 Variante = (Variante)Math.Max(0, N<OptionButton>("OptNVariante").Selected),
                 Indices = new List<string>
