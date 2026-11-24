@@ -20,7 +20,13 @@ namespace Sahavola
         private const string CheminDonnees = "user://sahavola.dat";
         private const int TentativesAvantVerrou = 5;
         private const int MinutesVerrouCompte = 15;
-        private const int SecondesVerrouEssai = 30;
+        private const int MaxChefs = 6;
+        private const int EssaisMaxAutorises = 3;
+        private const int RationsParJour = 2;
+        private const int EnergieMax = 100;
+        private const int EnergieParRepas = 40;
+        private static readonly int[] DureesVerrouEssaiMinutes = { 15, 10, 5 };
+        private readonly Random _aleatoire = new();
         private const int MaxTarikas = 6;
         private const int MaxEquipesParChef = 3;
         private const int MembresParEquipe = 5;
@@ -232,6 +238,8 @@ namespace Sahavola
 
             bool superAdmin = CurrentUser?.Role == Role.SuperAdmin;
             if (role == Role.SuperAdmin && !superAdmin) return "❌ Mpitantana Ambony ihany no afaka mamorona Mpitantana Ambony / Seul Super Admin peut créer un Super Admin";
+            if (role == Role.SuperAdmin && Data.Users.Exists(u => u.Role == Role.SuperAdmin)) return "❌ Mpitantana Ambony iray ihany / Un seul Super Admin";
+            if (role == Role.Chef && Data.Users.Count(u => u.Role == Role.Chef) >= MaxChefs) return "❌ Mpitarika 6 farafahakeliny / 6 chefs maximum";
             bool valide = validerDirect && superAdmin;
 
             if (role == Role.Membre)
@@ -456,9 +464,70 @@ namespace Sahavola
             if (Data.Campagne == null) return "❌ Tsy misy lasy / Aucune campagne";
             if (!TransitionsCampagne[Data.Campagne.Statut].Contains(cible))
                 return $"❌ Tsy azo atao ny fiovana {Data.Campagne.Statut} → {cible} / Transition interdite : {Data.Campagne.Statut} → {cible}";
+            if (cible == StatutCampagne.Running && Data.Campagne.Statut == StatutCampagne.Scheduled) DistribuerRations();
             Data.Campagne.Statut = cible;
             AddAudit("CHANGER_CAMPAGNE", cible.ToString());
             return "✅ Lasy : " + cible;
+        }
+
+        public string ChangerMeteo(Meteo nouvelle)
+        {
+            if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
+                return "❌ Mpitantana Ambony / Mpitarika ihany / Seul Super Admin / Chef";
+            if (Data.Campagne == null) return "❌ Tsy misy lasy / Aucune campagne";
+            Data.Campagne.MeteoActuelle = nouvelle;
+            AddAudit("CHANGER_METEO", nouvelle.ToString());
+            return "✅ Toetr'andro / Météo : " + nouvelle;
+        }
+
+        public int EnergieDe(User utilisateur)
+        {
+            ActualiserEnergie(utilisateur);
+            return utilisateur.Energie;
+        }
+
+        public string Manger()
+        {
+            if (CurrentUser == null) return "❌ Midira aloha / Connecte-toi d'abord";
+            ActualiserEnergie(CurrentUser);
+            if (CurrentUser.Rations <= 0) return "❌ Tsy misy sakafo / Plus de rations";
+            if (CurrentUser.Energie >= EnergieMax) return "✅ Feno ny hery / Énergie déjà au maximum";
+            CurrentUser.Rations--;
+            CurrentUser.Energie = Math.Min(EnergieMax, CurrentUser.Energie + EnergieParRepas);
+            CurrentUser.DerniereMaj = DateTime.UtcNow;
+            AddAudit("MANGER", CurrentUser.Pseudo);
+            return "✅ Nihinana / Repas pris : énergie " + CurrentUser.Energie + "/" + EnergieMax;
+        }
+
+        private void ActualiserEnergie(User utilisateur)
+        {
+            DateTime maintenant = DateTime.UtcNow;
+            double minutes = (maintenant - utilisateur.DerniereMaj).TotalMinutes;
+            double tauxParMinute = TauxEnergie(Data.Campagne?.MeteoActuelle ?? Meteo.Chaleur);
+            int perdu = (int)Math.Floor(minutes * tauxParMinute);
+            if (perdu <= 0) return;
+            utilisateur.Energie = Math.Max(0, utilisateur.Energie - perdu);
+            utilisateur.DerniereMaj = maintenant;
+        }
+
+        private static double TauxEnergie(Meteo meteo) => meteo switch
+        {
+            Meteo.Chaleur or Meteo.ChaudHumide or Meteo.ChaudSec => 0.15,
+            _ => 0.1
+        };
+
+        private Meteo TirerMeteo()
+        {
+            Meteo[] valeurs = Enum.GetValues<Meteo>();
+            return valeurs[_aleatoire.Next(valeurs.Length)];
+        }
+
+        private void DistribuerRations()
+        {
+            foreach (User utilisateur in Data.Users.Where(u => u.Statut == StatutCompte.Valide))
+            {
+                utilisateur.Rations += RationsParJour;
+            }
         }
 
         public string AvancerJour()
@@ -467,6 +536,8 @@ namespace Sahavola
             if (Data.Campagne == null || Data.Campagne.Statut != StatutCampagne.Running) return "❌ Tsy mandeha ny lasy / Campagne non démarrée";
             if (Data.Campagne.JourActuel >= Data.Campagne.Jours) return "❌ Farany ny andro / Dernier jour atteint";
             Data.Campagne.JourActuel++;
+            Data.Campagne.MeteoActuelle = TirerMeteo();
+            DistribuerRations();
             AddAudit("AVANCER_JOUR", Data.Campagne.JourActuel.ToString());
             return "✅ Andro " + Data.Campagne.JourActuel + " / Jour " + Data.Campagne.JourActuel;
         }
@@ -530,9 +601,10 @@ namespace Sahavola
             if (string.IsNullOrWhiteSpace(a.Titre)) return "❌ Lohateny banga / Titre vide";
             if (string.IsNullOrWhiteSpace(a.Clair)) return "❌ Hafatra mazava banga / Message en clair vide";
             if (!CodeEncoder.CodesSupportes.Contains(a.Code)) return "❌ Kaody tsy voaporofo / Code non pris en charge : " + a.Code;
+            if (a.Code == "Semaphore" && !a.ActiviteNavale) return "❌ Sémaphore : activité navale obligatoire / Réservé aux activités navales";
             if (a.Indices.Count > 3) return "❌ Toro-hevitra 3 farafahakeliny / 3 indices max";
             if (a.Points < 1 || a.Points > 100) return "❌ Isa 1 ka hatramin'ny 100 / Points de 1 à 100";
-            if (a.EssaisMax < 1 || a.EssaisMax > 5) return "❌ Andrana 1 ka 5 / Essais de 1 à 5";
+            if (a.EssaisMax < 1 || a.EssaisMax > EssaisMaxAutorises) return "❌ Andrana 1 ka 3 / Essais de 1 à 3";
             if (!HoraireValide(a.HeureDebut, a.HeureFin)) return "❌ Ora diso (HH:mm, voalohany < farany) / Horaire invalide (HH:mm, début < fin)";
             int joursMax = Data.Campagne?.Jours ?? MaxJoursCampagne;
             if (a.Jour < 1 || a.Jour > joursMax) return $"❌ Andro 1 ka {joursMax} / Jour de 1 à {joursMax}";
@@ -741,7 +813,8 @@ namespace Sahavola
 
             int essais = progression.Essais.GetValueOrDefault(cible.Id) + 1;
             progression.Essais[cible.Id] = essais;
-            progression.Verrous[cible.Id] = DateTime.UtcNow.AddSeconds(SecondesVerrouEssai);
+            int indexVerrou = Math.Min(essais, DureesVerrouEssaiMinutes.Length) - 1;
+            progression.Verrous[cible.Id] = DateTime.UtcNow.AddMinutes(DureesVerrouEssaiMinutes[indexVerrou]);
             bool epuise = essais >= cible.EssaisMax;
             if (epuise)
             {
