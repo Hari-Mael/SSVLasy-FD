@@ -61,6 +61,9 @@ namespace Sahavola
         public DateTime DateCreation { get; set; } = DateTime.UtcNow;
         public DateTime? DernierLogin { get; set; }
         public int TentativesEchouees { get; set; } = 0;
+        public int Energie { get; set; } = 100;
+        public DateTime DerniereMaj { get; set; } = DateTime.UtcNow;
+        public int Rations { get; set; }
         public DateTime? BloqueJusquA { get; set; }
         public bool ConsentementParental { get; set; }
         public string NomParent { get; set; } = "";
@@ -106,14 +109,18 @@ namespace Sahavola
         public PorteeActivite Portee { get; set; } = PorteeActivite.Tarika;
         public bool EvenementCommun { get; set; }
         public bool DemandeCrossTarika { get; set; }
+        public bool ActiviteNavale { get; set; }
         public DateTime DateCreation { get; set; } = DateTime.UtcNow;
     }
+
+    public enum Meteo { Chaleur, Pluvieux, Venteux, ChaudHumide, VenteuxHumide, ChaudSec }
 
     public sealed class Campagne
     {
         public int Jours { get; set; } = 3;
         public string Debut { get; set; } = "";
         public StatutCampagne Statut { get; set; } = StatutCampagne.Draft;
+        public Meteo MeteoActuelle { get; set; } = Meteo.Chaleur;
         public int JourActuel { get; set; } = 1;
         public TypeLasy Type { get; set; } = TypeLasy.Tselatra;
 
