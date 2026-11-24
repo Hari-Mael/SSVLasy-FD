@@ -474,6 +474,10 @@ namespace Sahavola
             GetNode<Control>(BarreOnglets + "BtnTab3D").Visible = false;
             GetNode<Control>(Racine + "DialogPanel").Visible = false;
             N<Button>("BtnInteract").Visible = false;
+            N<Control>("JoueursTitre").Visible = false;
+            N<Control>("JoueursForm").Visible = false;
+            N<Control>("BtnChoisir").Visible = false;
+            N<Control>("LblPlayers").Visible = false;
             N<Button>("BtnPurger").Disabled = true;
             N<Label>("LblTekList").Text = "";
             N<Control>("EndScreen").Visible = false;
@@ -624,6 +628,7 @@ namespace Sahavola
             N<Control>("Content").SizeFlagsHorizontal = Control.SizeFlags.ExpandFill;
             StabiliserFormulaires(N<Control>("Content"));
             N<SpinBox>("EditNEssais").MaxValue = 3;
+            GetNode<ScrollContainer>("RootVBox/ContentScroll").ScrollHorizontal = 0;
         }
 
         private void StabiliserFormulaires(Node noeud)
