@@ -60,6 +60,8 @@ namespace Sahavola
         private Label _lblMeteo = null!;
         private Label _lblEnergie = null!;
         private CheckBox _chkNavale = null!;
+        private OptionButton _optConsult = null!;
+        private Button _btnUtiliser = null!;
         private Button _btnJourSuivant = null!;
         private LineEdit _editCle = null!;
         private VBoxContainer _boiteDemandes = null!;
@@ -69,7 +71,6 @@ namespace Sahavola
         private readonly List<string> _nomsLieux = new();
         private readonly List<string> _idsTarikasCibles = new();
         private readonly List<Teknika> _teknikas = TeknikaData.All();
-        private readonly Random _rng = new();
         private Activite? _activiteAffichee;
         private bool _stockageOuvert;
         private bool _finMasquee;
@@ -93,6 +94,7 @@ namespace Sahavola
             ConstruireBoites();
             ConstruireEtatCamp();
             ConstruireActiviteNavale();
+            ConstruireConsultation();
             RemplirOptions();
             ConnecterBoutons();
             CacherHorsUsage();
@@ -395,7 +397,7 @@ namespace Sahavola
             N<Button>("BtnPoiCreer").Pressed += OnPoiCreer;
             N<Button>("BtnRepondre").Pressed += OnRepondre;
             N<Button>("BtnEncoder").Pressed += OnEncoder;
-            N<Button>("BtnQuiz").Pressed += OnNouvelleQuestion;
+            N<Button>("BtnQuiz").Pressed += OnConsulter;
             N<LineEdit>("EditTekSearch").TextChanged += texte => RafraichirTeknika();
             N<Button>("BtnTestAlerte").Pressed += OnTestAlerte;
             N<Button>("BtnVueAerienne").Pressed += () => ChoisirPanneau("Carte");
@@ -1024,32 +1026,67 @@ namespace Sahavola
             N<Label>("LblTekList").Text = texte.Length == 0 ? "Tsy hita / Aucun résultat" : texte;
         }
 
-        private void OnNouvelleQuestion()
+        private void ConstruireConsultation()
         {
-            if (_teknikas.Count < 4) return;
-            HBoxContainer options = N<HBoxContainer>("QuizOpts");
-            ViderBoite(options);
-
-            Teknika bonne = _teknikas[_rng.Next(_teknikas.Count)];
-            List<Teknika> leurres = _teknikas.Where(t => t != bonne).OrderBy(_ => _rng.Next()).Take(3).ToList();
-            List<Teknika> choix = leurres.Append(bonne).OrderBy(_ => _rng.Next()).ToList();
-
-            N<Label>("LblQuizQ").Text = "❓ Ino ny teknika ? / Quelle technique ?\n" + bonne.UsageFr;
+            Node bouton = N<Node>("BtnQuiz");
+            Node parent = bouton.GetParent();
+            N<HBoxContainer>("QuizOpts").Visible = false;
             N<Label>("LblQuizMsg").Text = "";
-            foreach (Teknika option in choix)
+            _optConsult = new OptionButton { CustomMinimumSize = new Vector2(0, 44) };
+            foreach (Teknika t in _teknikas) _optConsult.AddItem(t.Categorie + " — " + t.Titre + " — " + t.Page);
+            if (_optConsult.ItemCount > 0) _optConsult.Select(0);
+            _btnUtiliser = new Button { Text = "➡️ Ampiasao amin'ny asa / Utiliser pour une activité", CustomMinimumSize = new Vector2(0, 44) };
+            _btnUtiliser.Pressed += OnUtiliserCode;
+            parent.AddChild(_optConsult);
+            parent.MoveChild(_optConsult, bouton.GetIndex());
+            parent.AddChild(_btnUtiliser);
+            parent.MoveChild(_btnUtiliser, bouton.GetIndex() + 1);
+            N<Button>("BtnQuiz").Text = "🔍 Hitrandraka / Consulter";
+        }
+
+        private void OnConsulter()
+        {
+            if (_optConsult.ItemCount == 0 || _optConsult.Selected < 0) return;
+            Teknika t = _teknikas[_optConsult.Selected];
+            bool utilisable = CodeEncoder.CodesSupportes.Contains(t.Code);
+            N<Label>("LblQuizQ").Text = "🧭 Chemin / Toerana : Teknika Skoto > " + t.Categorie + " > " + t.Page
+                + "\n📖 " + t.Titre
+                + "\n" + t.DescFr
+                + "\n" + t.UsageFr
+                + "\n🔑 Kaody / Code : " + (string.IsNullOrEmpty(t.Code) ? "—" : t.Code)
+                + (utilisable ? " — azo ampiasaina amin'ny Mamorona / utilisable dans Créer" : " — consigne seulement / consigne uniquement");
+            N<Label>("LblQuizMsg").Text = "";
+        }
+
+        private void OnUtiliserCode()
+        {
+            if (_optConsult.ItemCount == 0 || _optConsult.Selected < 0) return;
+            Teknika t = _teknikas[_optConsult.Selected];
+            Label message = N<Label>("LblQuizMsg");
+            if (!CodeEncoder.CodesSupportes.Contains(t.Code))
             {
-                bool juste = option == bonne;
-                var bouton = new Button
-                {
-                    Text = option.Titre,
-                    SizeFlagsHorizontal = Control.SizeFlags.ExpandFill,
-                    CustomMinimumSize = new Vector2(0, 48)
-                };
-                bouton.Pressed += () => N<Label>("LblQuizMsg").Text = juste
-                    ? "✅ Marina / Bravo !"
-                    : "❌ Diso / Faux — " + bonne.Titre;
-                options.AddChild(bouton);
+                message.Text = "❌ Tsy kaody izy / Ce n'est pas un code : utilisez-le comme consigne / consigne seulement";
+                return;
             }
+            int index = -1;
+            for (int i = 0; i < _optNCode.ItemCount; i++)
+            {
+                if (_optNCode.GetItemText(i) == t.Code) index = i;
+            }
+            if (index < 0)
+            {
+                message.Text = "❌ Kaody tsy hita ao amin'ny Mamorona / Code absent de Créer";
+                return;
+            }
+            if (_gm.CurrentUser == null || (_gm.CurrentUser.Role != Role.SuperAdmin && _gm.CurrentUser.Role != Role.Chef && _gm.CurrentUser.Role != Role.Animateur))
+            {
+                message.Text = "❌ Tsy manana fahazoan-dalana / Vous n'avez pas le droit de créer une activité";
+                return;
+            }
+            _optNCode.Select(index);
+            ChoisirPanneau("Creer");
+            message.Text = "✅ Voafidy ho an'ny asa / Code sélectionné pour l'activité : " + t.Code
+                + (t.Code == "Semaphore" ? " — cocher « Activité navale »" : "");
         }
 
         private void RafraichirEquipes()
