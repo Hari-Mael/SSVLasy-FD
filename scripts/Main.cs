@@ -60,6 +60,7 @@ namespace Sahavola
         private Label _lblMeteo = null!;
         private Label _lblEnergie = null!;
         private CheckBox _chkNavale = null!;
+        private Button _btnJourSuivant = null!;
         private LineEdit _editCle = null!;
         private VBoxContainer _boiteDemandes = null!;
         private VBoxContainer _boiteActivitesAttente = null!;
@@ -205,11 +206,14 @@ namespace Sahavola
             _optMeteo.Select(0);
             var boutonMeteo = new Button { Text = "🌦️ Ovaina ny toetr'andro / Changer la météo", CustomMinimumSize = new Vector2(0, 44) };
             boutonMeteo.Pressed += OnChangerMeteo;
+            _btnJourSuivant = new Button { Text = "📅 Andro manaraka / Jour suivant", CustomMinimumSize = new Vector2(0, 44) };
+            _btnJourSuivant.Pressed += OnJourSuivant;
             campVBox.AddChild(_lblMeteo);
             campVBox.AddChild(_lblEnergie);
             campVBox.AddChild(boutonManger);
             campVBox.AddChild(_optMeteo);
             campVBox.AddChild(boutonMeteo);
+            campVBox.AddChild(_btnJourSuivant);
         }
 
         private void ConstruireActiviteNavale()
@@ -227,6 +231,12 @@ namespace Sahavola
         private void OnManger()
         {
             SetStatus(_gm.Manger());
+            RafraichirTout();
+        }
+
+        private void OnJourSuivant()
+        {
+            SetStatus(_gm.AvancerJour());
             RafraichirTout();
         }
 
@@ -677,6 +687,8 @@ namespace Sahavola
             Campagne? campagne = _gm.Data.Campagne;
             _lblMeteo.Text = "🌦️ Toetr'andro / Météo : " + LibelleMeteo(campagne?.MeteoActuelle ?? Meteo.Chaleur);
             _lblEnergie.Text = "⚡ Hery / Énergie : " + _gm.EnergieDe(u) + "/100 — 🍲 Sakafo / Rations : " + u.Rations;
+            _btnJourSuivant.Visible = u.Role == Role.SuperAdmin;
+            _btnJourSuivant.Disabled = campagne?.Statut != StatutCampagne.Running;
 
             N<Label>("LblFeu").Text = "🔥 Afo / Feu\n" + _feu + "%";
             N<Label>("LblEau").Text = "💧 Rano / Eau\n—";
