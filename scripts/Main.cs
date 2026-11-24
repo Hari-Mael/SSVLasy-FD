@@ -63,6 +63,84 @@ namespace Sahavola
         private OptionButton _optConsult = null!;
         private Button _btnUtiliser = null!;
         private Button _btnJourSuivant = null!;
+        private OptionButton _optLangue = null!;
+        private Langue _langue = Langue.Francais;
+        private static readonly Dictionary<string, string> AnglaisTraductions = new()
+        {
+            ["Fidirana / Connexion"] = "Login",
+            ["Fidirana"] = "Login",
+            ["Connexion"] = "Login",
+            ["Mivoaha / Déconnexion"] = "Logout",
+            ["Déconnexion"] = "Logout",
+            ["Mamorona kaonty / Créer un compte"] = "Create an account",
+            ["Mamorona kaonty"] = "Create an account",
+            ["Créer un compte"] = "Create an account",
+            ["Mangataka famoronana / Demander la création"] = "Request an account",
+            ["Mangataka famoronana"] = "Request an account",
+            ["Mpitantana Ambony voalohany / Premier Super Admin"] = "First Super Admin",
+            ["Mamorona ny Mpitantana Ambony voalohany / Créer le premier Super Admin"] = "Create the first Super Admin",
+            ["Lakile fanafenana / Clé de chiffrement — angatahina alohanina / obligatoire d'abord"] = "Encryption key — required first",
+            ["Lakile / Clé"] = "Key",
+            ["Anarana fidirana / Pseudo"] = "Login name / Username",
+            ["Tenimiafina / Mot de passe"] = "Password",
+            ["Miditra / Se connecter"] = "Log in",
+            ["Tobi / Camp"] = "Camp",
+            ["Camp"] = "Camp",
+            ["Ny mpilalaoko / Mon joueur"] = "My player",
+            ["Mon joueur"] = "My player",
+            ["Ny mpilalaoko"] = "My player",
+            ["Tarika / Groupe"] = "Team / Group",
+            ["Tarika"] = "Team",
+            ["Groupe"] = "Group",
+            ["Kaonty / Comptes"] = "Accounts",
+            ["Kaonty"] = "Accounts",
+            ["Comptes"] = "Accounts",
+            ["Sarintany / Carte"] = "Map",
+            ["Carte"] = "Map",
+            ["Asa / Activités"] = "Activities",
+            ["Activités"] = "Activities",
+            ["Kaody / Codes"] = "Codes",
+            ["Codes"] = "Codes",
+            ["Teknika Skoto"] = "Skoto Techniques",
+            ["Ekipa / Équipes"] = "Teams",
+            ["Équipes"] = "Teams",
+            ["Mpitarika / Chef"] = "Leader / Chief",
+            ["Chef"] = "Chief",
+            ["Mamorona / Créer"] = "Create",
+            ["Créer"] = "Create",
+            ["Rafitra ambadika / Backend"] = "Backend settings",
+            ["Backend"] = "Backend",
+            ["Fandraisana / Accueil"] = "Home",
+            ["Accueil"] = "Home",
+            ["GPS"] = "GPS",
+            ["Kitapo / Inventaire"] = "Inventory",
+            ["Inventaire"] = "Inventory",
+            ["Diarin'ny dia / Journal"] = "Journal",
+            ["Journal"] = "Journal",
+            ["Vonona / Prêt"] = "Ready",
+            ["Prêt"] = "Ready",
+            ["Enregistrer"] = "Save",
+            ["Sauvegarder"] = "Save",
+            ["Créer une activité"] = "Create an activity",
+            ["Mamorona asa / Créer une activité — Double permission"] = "Create an activity — dual permission",
+            ["Activité navale"] = "Naval activity",
+            ["Jour suivant"] = "Next day",
+            ["Andro manaraka / Jour suivant"] = "Next day",
+            ["Nihinana / Manger"] = "Eat",
+            ["Manger"] = "Eat",
+            ["Mahatsiarova ahy / Se souvenir de moi (pseudo)"] = "Remember me (username)",
+            ["Se souvenir de moi"] = "Remember me",
+            ["Consulter"] = "Consult",
+            ["Hitrandraka / Consulter"] = "Consult",
+            ["Utiliser pour une activité"] = "Use for an activity",
+            ["Ampiasao amin'ny asa / Utiliser pour une activité"] = "Use for an activity",
+            ["Météo"] = "Weather",
+            ["Énergie"] = "Energy",
+            ["Rations"] = "Rations",
+            ["Langue"] = "Language",
+        };
+
+        private enum Langue { Francais, Malagasy, Anglais }
         private LineEdit _editCle = null!;
         private VBoxContainer _boiteDemandes = null!;
         private VBoxContainer _boiteActivitesAttente = null!;
@@ -95,6 +173,8 @@ namespace Sahavola
             ConstruireEtatCamp();
             ConstruireActiviteNavale();
             ConstruireConsultation();
+            ChargerLangue();
+            ConstruireLangue();
             RemplirOptions();
             ConnecterBoutons();
             CacherHorsUsage();
@@ -125,7 +205,11 @@ namespace Sahavola
 
         private Label Statut() => GetNode<Label>("RootVBox/StatusLabel");
 
-        private void SetStatus(string texte) => Statut().Text = texte;
+        private void SetStatus(string texte)
+        {
+            Statut().Text = texte;
+            AppliquerLangue();
+        }
 
         private static string Texte(OptionButton option) =>
             option.Selected >= 0 ? option.GetItemText(option.Selected) : "";
@@ -234,6 +318,114 @@ namespace Sahavola
         {
             SetStatus(_gm.Manger());
             RafraichirTout();
+        }
+
+        private void ChargerLangue()
+        {
+            var config = new ConfigFile();
+            if (config.Load(FichierSession) == Error.Ok)
+            {
+                _langue = (Langue)(int)config.GetValue("reglages", "langue", 0);
+            }
+        }
+
+        private void SauverLangue()
+        {
+            var config = new ConfigFile();
+            config.Load(FichierSession);
+            config.SetValue("reglages", "langue", (int)_langue);
+            config.Save(FichierSession);
+        }
+
+        private void ConstruireLangue()
+        {
+            _optLangue = new OptionButton { CustomMinimumSize = new Vector2(150, 40) };
+            _optLangue.AddItem("Français");
+            _optLangue.AddItem("Malagasy");
+            _optLangue.AddItem("English");
+            _optLangue.Select((int)_langue);
+            _optLangue.ItemSelected += index => ChangerLangue((Langue)index);
+            Node deconnexion = N<Node>("BtnDeconnexion");
+            Node barre = deconnexion.GetParent();
+            barre.AddChild(_optLangue);
+            barre.MoveChild(_optLangue, deconnexion.GetIndex());
+        }
+
+        private void ChangerLangue(Langue nouvelle)
+        {
+            _langue = nouvelle;
+            SauverLangue();
+            AppliquerLangue();
+        }
+
+        private string Traduire(string source)
+        {
+            return string.Join("\n", source.Split('\n').Select(TraduireLigne));
+        }
+
+        private string TraduireLigne(string ligne)
+        {
+            if (string.IsNullOrWhiteSpace(ligne)) return ligne;
+            int separateur = ligne.IndexOf(" / ", StringComparison.Ordinal);
+            if (separateur < 0)
+            {
+                return _langue == Langue.Anglais && AnglaisTraductions.TryGetValue(ligne.Trim(), out string? seule)
+                    ? seule
+                    : ligne;
+            }
+            string gauche = ligne[..separateur];
+            string droite = ligne[(separateur + 3)..].Trim();
+            string prefixe = new string(gauche.TakeWhile(c => !char.IsLetterOrDigit(c)).ToArray());
+            string malagasy = gauche[prefixe.Length..].Trim();
+            return _langue switch
+            {
+                Langue.Malagasy => prefixe + malagasy,
+                Langue.Anglais => prefixe + (AnglaisTraductions.TryGetValue(droite, out string? anglais) ? anglais : droite),
+                _ => prefixe + droite
+            };
+        }
+
+        private void AppliquerLangue() => AppliquerLangueSur(this);
+
+        private void AppliquerLangueSur(Node noeud)
+        {
+            foreach (Node enfant in noeud.GetChildren())
+            {
+                if (enfant is OptionButton option)
+                {
+                    for (int i = 0; i < option.ItemCount; i++)
+                    {
+                        int index = i;
+                        TraduireMeta(option, "_" + index, option.GetItemText(index), t => option.SetItemText(index, t));
+                    }
+                }
+                else if (enfant is Button bouton)
+                {
+                    TraduireMeta(bouton, "", bouton.Text, t => bouton.Text = t);
+                }
+                else if (enfant is Label libelle)
+                {
+                    TraduireMeta(libelle, "", libelle.Text, t => libelle.Text = t);
+                }
+                else if (enfant is LineEdit champ)
+                {
+                    TraduireMeta(champ, "", champ.PlaceholderText, t => champ.PlaceholderText = t);
+                }
+                AppliquerLangueSur(enfant);
+            }
+        }
+
+        private void TraduireMeta(Node noeud, string cle, string actuel, Action<string> appliquer)
+        {
+            string nomSource = "src" + cle;
+            string nomSortie = "out" + cle;
+            string source = noeud.HasMeta(nomSortie) && (string)noeud.GetMeta(nomSortie) == actuel
+                ? (string)noeud.GetMeta(nomSource)
+                : actuel;
+            string traduit = Traduire(source);
+            noeud.SetMeta(nomSource, source);
+            noeud.SetMeta(nomSortie, traduit);
+            if (traduit != actuel) appliquer(traduit);
         }
 
         private void OnJourSuivant()
@@ -637,6 +829,7 @@ namespace Sahavola
             RafraichirChef();
             RafraichirCreer();
             RafraichirBackend();
+            AppliquerLangue();
         }
 
         private void RafraichirEntete()
