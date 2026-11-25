@@ -31,6 +31,20 @@ namespace Sahavola
         private const int MaxEquipesParChef = 3;
         private const int MembresParEquipe = 5;
         private const int MaxJoursCampagne = 11;
+        private const int MaxActivitesParJour = 7;
+        private const int RendementKitay = 45;
+        private const int RendementRano = 30;
+        private const int RendementSakafo = 15;
+        private const int KitayParRepas = 10;
+        private const int RanoParRepas = 10;
+        private const int SakafoParRepas = 5;
+        private const int KitayReserveNuit = 15;
+        private const int RepasParJour = 3;
+        private const int EnergieParRepasEquipe = 20;
+        private const int PerteEnergieRepasManque = 25;
+        private const int JoursSansRepasBlocage = 2;
+        private const int MinutesAvantNotification = 15;
+        private const int MinutesAvantMaladie = 30;
         private static readonly JsonSerializerOptions OptionsJson = new();
         private static readonly Dictionary<StatutCampagne, StatutCampagne[]> TransitionsCampagne = new()
         {
@@ -530,12 +544,138 @@ namespace Sahavola
             }
         }
 
+        public bool CampagneEnCours() => Data.Campagne?.Statut == StatutCampagne.Running;
+
+        public (int Kitay, int Rano, int Sakafo) CapaciteStocks()
+        {
+            TypeLasy type = Data.Campagne?.Type ?? TypeLasy.Tselatra;
+            return type switch
+            {
+                TypeLasy.Lehibe => (135, 90, 45),
+                TypeLasy.Feno => (180, 120, 60),
+                _ => (90, 60, 30)
+            };
+        }
+
+        public string EtatEquipe(TeamProgress p)
+        {
+            if (p.Malade) return "malade";
+            if (p.BloqueDepuis is not DateTime depuis) return "normal";
+            double minutes = (DateTime.UtcNow - depuis).TotalMinutes;
+            if (minutes >= MinutesAvantMaladie)
+            {
+                p.Malade = true;
+                return "malade";
+            }
+            return minutes >= MinutesAvantNotification ? "notif" : "bloque";
+        }
+
+        public string Collecter(string ressource)
+        {
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
+            if (!CampagneEnCours()) return "⏸️ Tsy mandeha ny lasy ‖ ⏸️ Campagne non démarrée ou en pause ‖ ⏸️ Camp not running or paused";
+            TeamProgress p = ProgressionCourante();
+            if (EtatEquipe(p) != "normal") return "🚫 Ekipa voabalaka ‖ 🚫 Équipe bloquée ou malade : contacter le chef ‖ 🚫 Team blocked or sick: contact the chief";
+            if (p.ActionsDuJour.Contains(ressource)) return "✅ Efa vita androany ‖ ✅ Déjà fait aujourd'hui ‖ ✅ Already done today";
+
+            var cap = CapaciteStocks();
+            int actuel;
+            int max;
+            int rendement;
+            switch (ressource)
+            {
+                case "kitay":
+                    actuel = p.Kitay; max = cap.Kitay; rendement = RendementKitay;
+                    break;
+                case "rano":
+                    actuel = p.Rano; max = cap.Rano; rendement = RendementRano;
+                    break;
+                default:
+                    actuel = p.Sakafo; max = cap.Sakafo; rendement = RendementSakafo;
+                    break;
+            }
+            int gain = Math.Min(rendement, max - actuel);
+            if (gain <= 0) return "⚠️ Feno ny fitehirizana ‖ ⚠️ Stock plein ‖ ⚠️ Storage full";
+
+            if (ressource == "kitay") p.Kitay += gain;
+            else if (ressource == "rano") p.Rano += gain;
+            else p.Sakafo += gain;
+            p.ActionsDuJour.Add(ressource);
+            AddAudit("COLLECTE", ressource + " +" + gain + " equipe=" + CleEquipe(CurrentUser));
+            return $"✅ Nahazo +{gain} ‖ ✅ Récolté : +{gain} ‖ ✅ Collected: +{gain}";
+        }
+
+        public string DebloquerEquipes()
+        {
+            if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
+                return "❌ Mpitarika ihany ‖ ❌ Seul le chef ou le Super Admin ‖ ❌ Chief or Super Admin only";
+            int nombre = 0;
+            foreach (TeamProgress p in Data.Progressions)
+            {
+                bool autorisee = CurrentUser.Role == Role.SuperAdmin || p.Cle.StartsWith(CurrentUser.Pseudo + "/", StringComparison.Ordinal);
+                if (!autorisee || (p.BloqueDepuis == null && !p.Malade)) continue;
+                p.BloqueDepuis = null;
+                p.Malade = false;
+                p.RepasManques = 0;
+                nombre++;
+            }
+            AddAudit("DEBLOQUER_EQUIPE", nombre.ToString());
+            return nombre == 0
+                ? "ℹ️ Tsy misy ekipa voabalaka ‖ ℹ️ Aucune équipe bloquée ‖ ℹ️ No blocked team"
+                : $"✅ Ekipa {nombre} voavaly ‖ ✅ {nombre} équipe(s) débloquée(s) ‖ ✅ {nombre} team(s) unblocked";
+        }
+
+        private TeamProgress ProgressionPour(string cle)
+        {
+            TeamProgress? p = Data.Progressions.Find(x => x.Cle == cle);
+            if (p == null)
+            {
+                p = new TeamProgress { Cle = cle };
+                Data.Progressions.Add(p);
+            }
+            return p;
+        }
+
+        private void TraiterRepasDuJour()
+        {
+            var cles = Data.Users.Where(u => u.Role == Role.Membre).Select(CleEquipe).Distinct().ToList();
+            foreach (string cle in cles)
+            {
+                TeamProgress p = ProgressionPour(cle);
+                int repas = Math.Min(RepasParJour, Math.Min(Math.Max(0, p.Kitay - KitayReserveNuit) / KitayParRepas,
+                    Math.Min(p.Rano / RanoParRepas, p.Sakafo / SakafoParRepas)));
+                p.Kitay -= repas * KitayParRepas;
+                p.Rano -= repas * RanoParRepas;
+                p.Sakafo -= repas * SakafoParRepas;
+                int manques = RepasParJour - repas;
+
+                foreach (User membre in Data.Users.Where(u => u.Role == Role.Membre && CleEquipe(u) == cle))
+                {
+                    ActualiserEnergie(membre);
+                    membre.Energie = Math.Clamp(membre.Energie + repas * EnergieParRepasEquipe - manques * PerteEnergieRepasManque, 0, EnergieMax);
+                    membre.DerniereMaj = DateTime.UtcNow;
+                }
+
+                p.RepasManques = repas == 0 ? p.RepasManques + 1 : 0;
+                if (p.RepasManques >= JoursSansRepasBlocage && p.BloqueDepuis == null && !p.Malade)
+                {
+                    p.BloqueDepuis = DateTime.UtcNow;
+                }
+                p.ActionsDuJour.Clear();
+            }
+            foreach (TeamProgress p in Data.Progressions.Where(x => !cles.Contains(x.Cle)))
+            {
+                p.ActionsDuJour.Clear();
+            }
+        }
+
         public string AvancerJour()
         {
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul Super Admin ‖ ❌ Super Admin only";
             if (Data.Campagne == null || Data.Campagne.Statut != StatutCampagne.Running) return "❌ Tsy mandeha ny lasy ‖ ❌ Campagne non démarrée ‖ ❌ Camp not started";
             if (Data.Campagne.JourActuel >= Data.Campagne.Jours) return "❌ Farany ny andro ‖ ❌ Dernier jour atteint ‖ ❌ Last day reached";
             Data.Campagne.JourActuel++;
+            TraiterRepasDuJour();
             Data.Campagne.MeteoActuelle = TirerMeteo();
             DistribuerRations();
             AddAudit("AVANCER_JOUR", Data.Campagne.JourActuel.ToString());
@@ -607,6 +747,8 @@ namespace Sahavola
             if (a.EssaisMax < 1 || a.EssaisMax > EssaisMaxAutorises) return "❌ Andrana 1 ka 3 ‖ ❌ Essais de 1 à 3 ‖ ❌ Attempts from 1 to 3";
             if (!HoraireValide(a.HeureDebut, a.HeureFin)) return "❌ Ora diso (HH:mm, voalohany < farany) ‖ ❌ Horaire invalide (HH:mm, début < fin) ‖ ❌ Invalid time (HH:mm, start < end)";
             int joursMax = Data.Campagne?.Jours ?? MaxJoursCampagne;
+            if (Data.Activites.Count(x => x.Jour == a.Jour && x.Statut != "refusee") >= MaxActivitesParJour)
+                return "❌ Maksimum 7 asa isan'andro ‖ ❌ Maximum 7 activités par jour ‖ ❌ Maximum 7 activities per day";
             if (a.Jour < 1 || a.Jour > joursMax) return $"❌ Andro 1 ka {joursMax} ‖ ❌ Jour de 1 à {joursMax} ‖ ❌ Day from 1 to {joursMax}";
 
             a.Id = Guid.NewGuid().ToString("N");
@@ -837,6 +979,11 @@ namespace Sahavola
         private bool ActiviteJouable(Activite a, TeamProgress progression, out string motif)
         {
             motif = "";
+            if (progression.Malade || progression.BloqueDepuis != null)
+            {
+                motif = "🚫 Ekipa voabalaka ‖ 🚫 Équipe bloquée ou malade ‖ 🚫 Team blocked or sick";
+                return false;
+            }
             if (a.Statut != "publiee")
             {
                 motif = "❌ Tsy navoaka ‖ ❌ Activité non publiée ‖ ❌ Activity not published";
