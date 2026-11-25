@@ -232,8 +232,10 @@ namespace Sahavola
         public string Page { get; set; } = "";
         public string DescMg { get; set; } = "";
         public string DescFr { get; set; } = "";
+        public string DescEn { get; set; } = "";
         public string UsageMg { get; set; } = "";
         public string UsageFr { get; set; } = "";
+        public string UsageEn { get; set; } = "";
         public string Code { get; set; } = "";
     }
 }
