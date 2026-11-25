@@ -188,6 +188,13 @@ namespace Sahavola
         public List<string> Terminees { get; set; } = new();
         public Dictionary<string, int> Essais { get; set; } = new();
         public Dictionary<string, DateTime> Verrous { get; set; } = new();
+        public int Kitay { get; set; }
+        public int Rano { get; set; }
+        public int Sakafo { get; set; }
+        public List<string> ActionsDuJour { get; set; } = new();
+        public int RepasManques { get; set; }
+        public DateTime? BloqueDepuis { get; set; }
+        public bool Malade { get; set; }
     }
 
     public sealed class SosEnregistre
