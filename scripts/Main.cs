@@ -864,6 +864,7 @@ namespace Sahavola
             RafraichirCreer();
             RafraichirBackend();
             TexteNavigation();
+            TexteMonJoueurActivitesCodes();
             AppliquerLangue();
         }
 
@@ -883,6 +884,32 @@ namespace Sahavola
             Role.SuperAdmin => T("Mpitantana Ambony", "Super Admin", "Super Admin"),
             _ => ""
         };
+
+        private void TexteMonJoueurActivitesCodes()
+        {
+            N<Label>("PersoTitre").Text = T("🎮 Ny mpilalaoko", "🎮 Mon joueur", "🎮 My player");
+            N<Label>("LblPersoNom").Text = T("Anarana ny mpilalao", "Nom du personnage", "Character name");
+            N<LineEdit>("EditPersoNom").PlaceholderText = T("Anarana…", "Nom…", "Name…");
+            N<Label>("LblPersoAvatar").Text = T("Avatar / Emoji", "Avatar / Emoji", "Avatar / Emoji");
+            N<Label>("LblPersoTenue").Text = T("Akanjo", "Tenue", "Outfit");
+            N<Label>("LblPersoFoulard").Text = T("Foulard — loko", "Foulard — couleur", "Scarf — colour");
+            N<Label>("LblPersoArme").Text = T("Fitaovana", "Équipement", "Equipment");
+            N<Label>("LblPersoTaille").Text = T("Habe (1.50 — 2.00 m)", "Taille (1.50 — 2.00 m)", "Height (1.50 — 2.00 m)");
+            N<Label>("LblPersoGenre").Text = T("Lahy/vavy", "Genre", "Gender");
+            N<Label>("LblPersoCheveux").Text = T("Volo", "Cheveux", "Hair");
+            N<Button>("BtnPersoSauver").Text = T("💾 Tehirizo ny mpilalaoko", "💾 Sauvegarder mon joueur", "💾 Save my player");
+
+            N<Label>("JouerTitre").Text = T("▶️ Milalao", "▶️ Jouer", "▶️ Play");
+            N<Button>("BtnRepondre").Text = T("✅ Hamarino (HMAC)", "✅ Valider (HMAC)", "✅ Validate (HMAC)");
+            N<Label>("CodesTitre").Text = T("🔐 Kaody — Teknika Skoto A, p.1–30", "🔐 Codes — Teknika Skoto A, p.1–30", "🔐 Codes — Teknika Skoto A, p.1–30");
+            N<Label>("CodesNote").Text = T("Ny kaody no miaro ny tsiambaratelo, mila mamadika azy.", "Le code protège le secret, il faut le décrypter.", "The code protects the secret; it must be decoded.");
+            N<Label>("LblMsgClair").Text = T("Hafatra mazava", "Message en clair", "Plain message");
+            N<LineEdit>("EditMsgClair").PlaceholderText = T("Hafatra mazava", "Message en clair", "Plain message");
+            N<Label>("LblCodeChoix").Text = T("Kaody", "Code", "Code");
+            N<Label>("LblParam").Text = T("Fepetra : elanelana na teny fanalahidy", "Décalage : nombre ou mot-clé", "Shift: number or keyword");
+            N<LineEdit>("EditParam").PlaceholderText = T("3 na CLE", "3 ou CLE", "3 or KEY");
+            N<Button>("BtnEncoder").Text = T("🔐 Kaody — Hanoratra", "🔐 Encoder", "🔐 Encode");
+        }
 
         private void TexteNavigation()
         {
@@ -1290,14 +1317,14 @@ namespace Sahavola
 
             List<Activite> visibles = _gm.GetActivitesVisibles(u);
             N<Label>("LblActivitesList").Text = visibles.Count == 0
-                ? "Tsy misy asa / Aucune activité — Ny mpanentana no mamorona / L'animateur en crée"
+                ? T("Tsy misy asa — ny mpanentana no mamorona", "Aucune activité — l'animateur en crée", "No activity — the organiser creates them")
                 : string.Join("\n", visibles.Select(a =>
                     "[" + a.Statut + "] J" + a.Jour + " " + a.Titre + " — " + a.Points + " pts — " + a.TarikaNom));
 
             _activiteAffichee = _gm.ActiviteActuelle();
             if (_activiteAffichee == null)
             {
-                N<Label>("LblEnigme").Text = "⏳ Tsy misy asa azo atao amin'izao / Aucune activité jouable maintenant (lasy, andro ou ora)";
+                N<Label>("LblEnigme").Text = T("⏳ Tsy misy asa azo atao amin'izao", "⏳ Aucune activité jouable maintenant (camp, jour ou horaire)", "⏳ No activity can be played right now (camp, day or time)");
                 N<Label>("LblEssais").Text = "";
                 return;
             }
@@ -1305,20 +1332,20 @@ namespace Sahavola
             Activite a = _activiteAffichee;
             N<Label>("LblEnigme").Text = "🎯 " + a.Titre + " — Jour " + a.Jour + "\n🔐 " + a.TexteCode;
             int essais = _gm.ProgressionCourante().Essais.GetValueOrDefault(a.Id);
-            N<Label>("LblEssais").Text = "Andrana / Essais : " + essais + " / " + a.EssaisMax;
+            N<Label>("LblEssais").Text = T("Andrana", "Essais", "Attempts") + " : " + essais + " / " + a.EssaisMax;
         }
 
         private void OnRepondre()
         {
             if (_activiteAffichee == null)
             {
-                N<Label>("LblReponseMsg").Text = "❌ Tsy misy asa / Aucune activité";
+                N<Label>("LblReponseMsg").Text = T("❌ Tsy misy asa", "❌ Aucune activité", "❌ No activity");
                 return;
             }
             string reponse = N<LineEdit>("EditReponse").Text;
             if (string.IsNullOrWhiteSpace(reponse))
             {
-                N<Label>("LblReponseMsg").Text = "❌ Valiny banga / Réponse vide";
+                N<Label>("LblReponseMsg").Text = T("❌ Valiny banga", "❌ Réponse vide", "❌ Empty answer");
                 return;
             }
             _gm.Repondre(_activiteAffichee, reponse, out string retour, out _);
@@ -1334,7 +1361,7 @@ namespace Sahavola
             {
                 string resultat = CodeEncoder.Encode(code, N<LineEdit>("EditMsgClair").Text, N<LineEdit>("EditParam").Text);
                 N<Label>("LblCodeResult").Text = resultat.Length == 0 ? "…" : resultat;
-                N<Label>("LblCodeAide").Text = "Kaody / Code : " + code;
+                N<Label>("LblCodeAide").Text = T("Kaody", "Code", "Code") + " : " + code;
             }
             catch (NotSupportedException ex)
             {
