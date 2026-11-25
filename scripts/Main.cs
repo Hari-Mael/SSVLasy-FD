@@ -370,6 +370,17 @@ namespace Sahavola
         private string TraduireLigne(string ligne)
         {
             if (string.IsNullOrWhiteSpace(ligne)) return ligne;
+            if (ligne.Contains('‖'))
+            {
+                string[] versions = ligne.Split('‖').Select(v => v.Trim()).ToArray();
+                int index = _langue switch
+                {
+                    Langue.Malagasy => 0,
+                    Langue.Anglais => 2,
+                    _ => 1
+                };
+                return versions[Math.Min(index, versions.Length - 1)];
+            }
             int separateur = ligne.IndexOf(" / ", StringComparison.Ordinal);
             if (separateur < 0)
             {
