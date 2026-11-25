@@ -49,7 +49,7 @@ namespace Sahavola
         {
             if (string.IsNullOrEmpty(secret))
             {
-                ErreurStockage = "Lakile banga / Clé vide";
+                ErreurStockage = "Lakile banga ‖ Clé vide ‖ Key empty";
                 return;
             }
             _secret = secret;
@@ -81,7 +81,7 @@ namespace Sahavola
                 default:
                     Data = new SaveData();
                     LectureSeule = true;
-                    ErreurStockage = "Lakile diso — tsy voatahiry / Clé incorrecte — sauvegarde désactivée";
+                    ErreurStockage = "Lakile diso — tsy voatahiry ‖ Clé incorrecte — sauvegarde désactivée ‖ Wrong key — saving disabled";
                     break;
             }
         }
@@ -137,9 +137,9 @@ namespace Sahavola
 
         public string CreateFirstSuperAdmin(string pseudo, string pass)
         {
-            if (Data.Users.Count > 0) return "❌ Efa misy kaonty / Un compte existe déjà";
+            if (Data.Users.Count > 0) return "❌ Efa misy kaonty ‖ ❌ Un compte existe déjà ‖ ❌ An account already exists";
             string p = (pseudo ?? "").Trim();
-            if (p.Length == 0) return "❌ Anarana banga / Pseudo vide";
+            if (p.Length == 0) return "❌ Anarana banga ‖ ❌ Pseudo vide ‖ ❌ Username empty";
             if (!Security.IsPasswordFort(pass, out string err)) return "❌ " + err;
 
             string salt = Security.NewSalt();
@@ -161,12 +161,12 @@ namespace Sahavola
         {
             string identifiant = (pseudo ?? "").Trim();
             User? u = Data.Users.Find(x => x.Pseudo.Equals(identifiant, StringComparison.OrdinalIgnoreCase));
-            if (u == null) return "❌ Tenimiafina diso / Identifiants incorrects";
+            if (u == null) return "❌ Tenimiafina diso ‖ ❌ Identifiants incorrects ‖ ❌ Incorrect credentials";
 
             if (u.BloqueJusquA is DateTime fin && fin > DateTime.UtcNow)
             {
                 int minutes = (int)Math.Ceiling((fin - DateTime.UtcNow).TotalMinutes);
-                return $"❌ Kaonty voahidy {minutes} min / Compte verrouillé {minutes} min";
+                return $"❌ Kaonty voahidy {minutes} min ‖ ❌ Compte verrouillé {minutes} min ‖ ❌ Account locked for {minutes} min";
             }
 
             if (!Security.Verify(pass, u.Salt, u.PassHash))
@@ -177,14 +177,14 @@ namespace Sahavola
                     u.BloqueJusquA = DateTime.UtcNow.AddMinutes(MinutesVerrouCompte);
                     u.TentativesEchouees = 0;
                     AddAudit("LOGIN_ECHEC", u.Pseudo + " verrouillé");
-                    return $"❌ Kaonty voahidy {MinutesVerrouCompte} min / Compte verrouillé {MinutesVerrouCompte} min";
+                    return $"❌ Kaonty voahidy {MinutesVerrouCompte} min ‖ ❌ Compte verrouillé {MinutesVerrouCompte} min ‖ ❌ Account locked for {MinutesVerrouCompte} min";
                 }
                 AddAudit("LOGIN_ECHEC", u.Pseudo);
-                return "❌ Tenimiafina diso / Identifiants incorrects";
+                return "❌ Tenimiafina diso ‖ ❌ Identifiants incorrects ‖ ❌ Incorrect credentials";
             }
 
-            if (u.Statut == StatutCompte.EnAttente) return "⏳ Miandry fanamarinana / En attente de validation";
-            if (u.Statut == StatutCompte.Suspendu) return "❌ Kaonty mihantona / Compte suspendu";
+            if (u.Statut == StatutCompte.EnAttente) return "⏳ Miandry fanamarinana ‖ ⏳ En attente de validation ‖ ⏳ Waiting for approval";
+            if (u.Statut == StatutCompte.Suspendu) return "❌ Kaonty mihantona ‖ ❌ Compte suspendu ‖ ❌ Account suspended";
 
             u.TentativesEchouees = 0;
             u.BloqueJusquA = null;
@@ -205,7 +205,7 @@ namespace Sahavola
             err = "";
             string nomEquipe = (equipe ?? "").Trim();
             string chef = parrain ?? "";
-            if (nomEquipe.Length == 0) { err = "Ekipa banga / Équipe vide"; return false; }
+            if (nomEquipe.Length == 0) { err = "Ekipa banga ‖ Équipe vide ‖ Team empty"; return false; }
 
             var equipesDuChef = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             int membresDansEquipe = 0;
@@ -217,12 +217,12 @@ namespace Sahavola
             }
             if (!equipesDuChef.Contains(nomEquipe) && equipesDuChef.Count >= MaxEquipesParChef)
             {
-                err = "Ekipa 3 farafahabetsany isaky ny mpitarika / 3 équipes max par chef";
+                err = "Ekipa 3 farafahabetsany isaky ny mpitarika ‖ 3 équipes max par chef ‖ Max 3 teams per chief";
                 return false;
             }
             if (membresDansEquipe >= MembresParEquipe)
             {
-                err = "Ekipa feno (5/5) / Équipe pleine (5/5)";
+                err = "Ekipa feno (5/5) ‖ Équipe pleine (5/5) ‖ Team full (5/5)";
                 return false;
             }
             return true;
@@ -231,24 +231,24 @@ namespace Sahavola
         public string CreateUser(string pseudo, string pass, Role role, string equipe, string roleEquipe, string parrain, bool validerDirect, bool consentement, string nomParent, string contactParent)
         {
             string p = (pseudo ?? "").Trim();
-            if (p.Length == 0) return "❌ Anarana banga / Pseudo vide";
-            if (p.Length > 32) return "❌ Anarana lava loatra / Pseudo trop long (32 max)";
-            if (Data.Users.Exists(u => u.Pseudo.Equals(p, StringComparison.OrdinalIgnoreCase))) return "❌ Anarana efa misy / Pseudo déjà pris";
+            if (p.Length == 0) return "❌ Anarana banga ‖ ❌ Pseudo vide ‖ ❌ Username empty";
+            if (p.Length > 32) return "❌ Anarana lava loatra ‖ ❌ Pseudo trop long (32 max) ‖ ❌ Username too long (32 max)";
+            if (Data.Users.Exists(u => u.Pseudo.Equals(p, StringComparison.OrdinalIgnoreCase))) return "❌ Anarana efa misy ‖ ❌ Pseudo déjà pris ‖ ❌ Username already taken";
             if (!Security.IsPasswordFort(pass, out string errPass)) return "❌ " + errPass;
 
             bool superAdmin = CurrentUser?.Role == Role.SuperAdmin;
-            if (role == Role.SuperAdmin && !superAdmin) return "❌ Mpitantana Ambony ihany no afaka mamorona Mpitantana Ambony / Seul Super Admin peut créer un Super Admin";
-            if (role == Role.SuperAdmin && Data.Users.Exists(u => u.Role == Role.SuperAdmin)) return "❌ Mpitantana Ambony iray ihany / Un seul Super Admin";
-            if (role == Role.Chef && Data.Users.Count(u => u.Role == Role.Chef) >= MaxChefs) return "❌ Mpitarika 6 farafahakeliny / 6 chefs maximum";
+            if (role == Role.SuperAdmin && !superAdmin) return "❌ Mpitantana Ambony ihany no afaka mamorona Mpitantana Ambony ‖ ❌ Seul un Super Admin peut créer un Super Admin ‖ ❌ Only a Super Admin can create a Super Admin";
+            if (role == Role.SuperAdmin && Data.Users.Exists(u => u.Role == Role.SuperAdmin)) return "❌ Mpitantana Ambony iray ihany ‖ ❌ Un seul Super Admin ‖ ❌ Only one Super Admin";
+            if (role == Role.Chef && Data.Users.Count(u => u.Role == Role.Chef) >= MaxChefs) return "❌ Mpitarika 6 farafahakeliny ‖ ❌ 6 chefs maximum ‖ ❌ 6 chiefs maximum";
             bool valide = validerDirect && superAdmin;
 
             if (role == Role.Membre)
             {
-                if (!consentement) return "❌ Tsy maintsy misy fanomezan-dalan'ny ray aman-dreny / Consentement parental obligatoire";
+                if (!consentement) return "❌ Tsy maintsy misy fanomezan-dalan'ny ray aman-dreny ‖ ❌ Consentement parental obligatoire ‖ ❌ Parental consent required";
                 if (string.IsNullOrWhiteSpace(nomParent) || string.IsNullOrWhiteSpace(contactParent))
-                    return "❌ Anaran'ny ray aman-dreny sy contact angatahina / Nom et contact du parent obligatoires";
+                    return "❌ Anaran'ny ray aman-dreny sy contact angatahina ‖ ❌ Nom et contact du parent obligatoires ‖ ❌ Parent's name and contact required";
                 string chef = (parrain ?? "").Trim();
-                if (!Data.Users.Exists(u => u.Role == Role.Chef && u.Pseudo == chef)) return "❌ Mpitarika tsy hita / Chef introuvable";
+                if (!Data.Users.Exists(u => u.Role == Role.Chef && u.Pseudo == chef)) return "❌ Mpitarika tsy hita ‖ ❌ Chef introuvable ‖ ❌ Chief not found";
                 if (!CheckQuota(equipe, chef, out string errQuota)) return "❌ " + errQuota;
             }
 
@@ -302,9 +302,9 @@ namespace Sahavola
 
         public string ValiderUser(string pseudo, bool valider)
         {
-            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany / Seul Super Admin";
+            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul Super Admin ‖ ❌ Super Admin only";
             User? u = Data.Users.Find(x => x.Pseudo == pseudo);
-            if (u == null) return "❌ Kaonty tsy hita / Compte introuvable";
+            if (u == null) return "❌ Kaonty tsy hita ‖ ❌ Compte introuvable ‖ ❌ Account not found";
             u.Statut = valider ? StatutCompte.Valide : StatutCompte.Suspendu;
             AddAudit(valider ? "VALIDER_USER" : "REFUSER_USER", pseudo);
             return valider ? "✅ " + pseudo + " voamarina / validé" : "❌ " + pseudo + " nolavina / refusé";
@@ -315,7 +315,7 @@ namespace Sahavola
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany";
             User? u = Data.Users.Find(x => x.Pseudo == pseudo);
             if (u == null) return "❌ Kaonty tsy hita";
-            if (u.Pseudo == CurrentUser.Pseudo) return "❌ Tsy azo atao ny manala ny tenanao / Impossible de te suspendre toi-même";
+            if (u.Pseudo == CurrentUser.Pseudo) return "❌ Tsy azo atao ny manala ny tenanao ‖ ❌ Impossible de te suspendre toi-même ‖ ❌ You cannot suspend yourself";
             u.Statut = StatutCompte.Suspendu;
             AddAudit("SUSPENDRE_USER", pseudo);
             return "✅ " + pseudo + " mihantona / suspendu";
@@ -326,9 +326,9 @@ namespace Sahavola
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany";
             User? u = Data.Users.Find(x => x.Pseudo == pseudo);
             if (u == null) return "❌ Kaonty tsy hita";
-            if (u.Pseudo == CurrentUser.Pseudo) return "❌ Tsy azo atao ny mamafa ny tenanao / Tu ne peux pas supprimer ton propre compte";
+            if (u.Pseudo == CurrentUser.Pseudo) return "❌ Tsy azo atao ny mamafa ny tenanao ‖ ❌ Tu ne peux pas supprimer ton propre compte ‖ ❌ You cannot delete your own account";
             if (u.Role == Role.SuperAdmin && Data.Users.Count(x => x.Role == Role.SuperAdmin) <= 1)
-                return "❌ Tsy azo fafana ny Mpitantana Ambony farany / Impossible de supprimer le dernier Super Admin";
+                return "❌ Tsy azo fafana ny Mpitantana Ambony farany ‖ ❌ Impossible de supprimer le dernier Super Admin ‖ ❌ Cannot delete the last Super Admin";
 
             if (u.Role == Role.Chef)
             {
@@ -342,13 +342,13 @@ namespace Sahavola
 
         public string CreerTarika(string nom, string chefPseudo, string couleur, string embleme, string devise)
         {
-            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany / Seul le Super Admin";
+            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul le Super Admin ‖ ❌ Super Admin only";
             string nomNettoye = (nom ?? "").Trim();
-            if (nomNettoye.Length == 0) return "❌ Anaran'ny tarika banga / Nom du groupe vide";
-            if (Data.Tarikas.Count >= MaxTarikas) return "❌ Tarika 6 farafahabetsany / 6 groupes maximum";
-            if (Data.Tarikas.Exists(t => t.ChefPseudo == chefPseudo)) return "❌ Efa manana tarika io mpitarika io / Ce chef a déjà un groupe";
+            if (nomNettoye.Length == 0) return "❌ Anaran'ny tarika banga ‖ ❌ Nom du groupe vide ‖ ❌ Group name empty";
+            if (Data.Tarikas.Count >= MaxTarikas) return "❌ Tarika 6 farafahabetsany ‖ ❌ 6 groupes maximum ‖ ❌ 6 groups maximum";
+            if (Data.Tarikas.Exists(t => t.ChefPseudo == chefPseudo)) return "❌ Efa manana tarika io mpitarika io ‖ ❌ Ce chef a déjà un groupe ‖ ❌ This leader already has a group";
             User? chef = Data.Users.Find(u => u.Pseudo == chefPseudo);
-            if (chef == null || chef.Role != Role.Chef) return "❌ Mpitarika tsy hita / Chef introuvable";
+            if (chef == null || chef.Role != Role.Chef) return "❌ Mpitarika tsy hita ‖ ❌ Chef introuvable ‖ ❌ Chief not found";
 
             var nouvelleTarika = new Tarika
             {
@@ -385,7 +385,7 @@ namespace Sahavola
         {
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany";
             Tarika? t = Data.Tarikas.Find(x => x.Id == tarikaId);
-            if (t == null) return "❌ Tarika tsy hita / Groupe introuvable";
+            if (t == null) return "❌ Tarika tsy hita ‖ ❌ Groupe introuvable ‖ ❌ Group not found";
             string nom = t.Nom;
             DetacherTarika(tarikaId);
             AddAudit("DELETE_TARIKA", nom);
@@ -404,9 +404,9 @@ namespace Sahavola
         public string SauverPersonnalisation(string pseudo, Personnalisation perso)
         {
             User? u = Data.Users.Find(x => x.Pseudo == pseudo);
-            if (u == null) return "❌ Kaonty tsy hita / Compte introuvable";
+            if (u == null) return "❌ Kaonty tsy hita ‖ ❌ Compte introuvable ‖ ❌ Account not found";
             if (CurrentUser == null || (CurrentUser.Pseudo != pseudo && CurrentUser.Role != Role.SuperAdmin))
-                return "❌ Ny anao ihany no afaka ovaina / Tu ne peux modifier que le tien";
+                return "❌ Ny anao ihany no afaka ovaina ‖ ❌ Tu ne peux modifier que le tien ‖ ❌ You can only edit your own";
 
             if (string.IsNullOrWhiteSpace(perso.NomPersonnage)) perso.NomPersonnage = pseudo;
             perso.Taille = float.IsNaN(perso.Taille) ? 1.75f : Math.Clamp(perso.Taille, 1.5f, 2.0f);
@@ -425,33 +425,33 @@ namespace Sahavola
         public string CreerCampagne(int jours, string debut, TypeLasy? typeChoisi = null)
         {
             if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
-                return "❌ Mpitantana Ambony / Mpitarika ihany / Seul Super Admin / Chef";
+                return "❌ Mpitantana Ambony na Mpitarika ihany ‖ ❌ Seul Super Admin ou Chef ‖ ❌ Super Admin or Chief only";
             if (Data.Campagne != null && Data.Campagne.Statut != StatutCampagne.Finished)
-                return "❌ Efa misy lasy mandeha / Une campagne est déjà en cours";
-            if (jours < 1 || jours > MaxJoursCampagne) return "❌ 1 ka hatramin'ny 11 andro / 1 à 11 jours";
+                return "❌ Efa misy lasy mandeha ‖ ❌ Une campagne est déjà en cours ‖ ❌ A camp is already running";
+            if (jours < 1 || jours > MaxJoursCampagne) return "❌ 1 ka hatramin'ny 11 andro ‖ ❌ 1 à 11 jours ‖ ❌ 1 to 11 days";
             if (!DateOnly.TryParseExact(debut, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                return "❌ Daty diso (AAAA-MM-JJ) / Date invalide (AAAA-MM-JJ)";
+                return "❌ Daty diso (AAAA-MM-JJ) ‖ ❌ Date invalide (AAAA-MM-JJ) ‖ ❌ Invalid date (YYYY-MM-DD)";
 
             TypeLasy type = typeChoisi ?? Campagne.TypeDepuisJours(jours);
             if (!Campagne.JoursValidePourType(jours, type))
             {
                 int max = new Campagne { Type = type }.JoursMax;
-                return $"❌ {jours} andro dia mihoatra ny {max} andro max / {jours} jours dépassent {max} jours max — Fidio sokajy hafa na ahenao ny andro / Choisis un autre type ou réduis les jours";
+                return $"❌ {jours} andro dia mihoatra ny {max} andro max — fidio sokajy hafa na ahenao ny andro ‖ ❌ {jours} jours dépassent {max} jours max — choisis un autre type ou réduis les jours ‖ ❌ {jours} days exceed the {max}-day max — choose another type or reduce the days";
             }
 
             Data.Campagne = new Campagne { Jours = jours, Debut = debut, Statut = StatutCampagne.Scheduled, JourActuel = 1, Type = type };
             AddAudit("CREATE_CAMPAGNE", $"{type} {jours} jours debut={debut}");
-            return $"✅ {Data.Campagne.NomType} noforonina / Campagne créée : {jours} andro / jours — {Data.Campagne.DescriptionType}";
+            return $"✅ {Data.Campagne.NomType} noforonina : {jours} andro — {Data.Campagne.DescriptionType} ‖ ✅ {Data.Campagne.NomType} créée : {jours} jours — {Data.Campagne.DescriptionType} ‖ ✅ {Data.Campagne.NomType} created: {jours} days — {Data.Campagne.DescriptionType}";
         }
 
         public string ChangerTypeLasy(TypeLasy nouveauType)
         {
-            if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef)) return "❌ Mpitantana Ambony / Mpitarika ihany";
-            if (Data.Campagne == null) return "❌ Tsy misy lasy / Aucune campagne";
+            if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef)) return "❌ Mpitantana Ambony na Mpitarika ihany ‖ ❌ Seul Super Admin ou Chef ‖ ❌ Super Admin or Chief only";
+            if (Data.Campagne == null) return "❌ Tsy misy lasy ‖ ❌ Aucune campagne ‖ ❌ No camp";
             if (Data.Campagne.Statut != StatutCampagne.Draft && Data.Campagne.Statut != StatutCampagne.Scheduled)
-                return "❌ Tsy azo ovaina rehefa efa nanomboka / Impossible à changer une fois la campagne lancée";
+                return "❌ Tsy azo ovaina rehefa efa nanomboka ‖ ❌ Impossible à changer une fois la campagne lancée ‖ ❌ Cannot be changed once the camp has started";
             if (!Campagne.JoursValidePourType(Data.Campagne.Jours, nouveauType))
-                return $"❌ Tsy mifanaraka — {Data.Campagne.Jours} andro dia mihoatra ny max ho an'ity sokajy ity / Incompatible — {Data.Campagne.Jours} jours dépassent le max pour ce type";
+                return $"❌ Tsy mifanaraka — {Data.Campagne.Jours} andro dia mihoatra ny max ho an'ity sokajy ity ‖ ❌ Incompatible — {Data.Campagne.Jours} jours dépassent le max pour ce type ‖ ❌ Incompatible — {Data.Campagne.Jours} days exceed the max for this type";
             Data.Campagne.Type = nouveauType;
             AddAudit("CHANGER_TYPE_LASY", nouveauType.ToString());
             return "✅ Sokajin'ny lasy novaina / Type de camp changé : " + Data.Campagne.NomType;
@@ -460,10 +460,10 @@ namespace Sahavola
         public string ChangerStatutCampagne(StatutCampagne cible)
         {
             if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
-                return "❌ Mpitantana Ambony / Mpitarika ihany / Seul Super Admin / Chef";
-            if (Data.Campagne == null) return "❌ Tsy misy lasy / Aucune campagne";
+                return "❌ Mpitantana Ambony na Mpitarika ihany ‖ ❌ Seul Super Admin ou Chef ‖ ❌ Super Admin or Chief only";
+            if (Data.Campagne == null) return "❌ Tsy misy lasy ‖ ❌ Aucune campagne ‖ ❌ No camp";
             if (!TransitionsCampagne[Data.Campagne.Statut].Contains(cible))
-                return $"❌ Tsy azo atao ny fiovana {Data.Campagne.Statut} → {cible} / Transition interdite : {Data.Campagne.Statut} → {cible}";
+                return $"❌ Tsy azo atao ny fiovana {Data.Campagne.Statut} → {cible} ‖ ❌ Transition interdite : {Data.Campagne.Statut} → {cible} ‖ ❌ Transition not allowed: {Data.Campagne.Statut} → {cible}";
             if (cible == StatutCampagne.Running && Data.Campagne.Statut == StatutCampagne.Scheduled) DistribuerRations();
             Data.Campagne.Statut = cible;
             AddAudit("CHANGER_CAMPAGNE", cible.ToString());
@@ -473,8 +473,8 @@ namespace Sahavola
         public string ChangerMeteo(Meteo nouvelle)
         {
             if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
-                return "❌ Mpitantana Ambony / Mpitarika ihany / Seul Super Admin / Chef";
-            if (Data.Campagne == null) return "❌ Tsy misy lasy / Aucune campagne";
+                return "❌ Mpitantana Ambony na Mpitarika ihany ‖ ❌ Seul Super Admin ou Chef ‖ ❌ Super Admin or Chief only";
+            if (Data.Campagne == null) return "❌ Tsy misy lasy ‖ ❌ Aucune campagne ‖ ❌ No camp";
             Data.Campagne.MeteoActuelle = nouvelle;
             AddAudit("CHANGER_METEO", nouvelle.ToString());
             return "✅ Toetr'andro / Météo : " + nouvelle;
@@ -488,10 +488,10 @@ namespace Sahavola
 
         public string Manger()
         {
-            if (CurrentUser == null) return "❌ Midira aloha / Connecte-toi d'abord";
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
             ActualiserEnergie(CurrentUser);
-            if (CurrentUser.Rations <= 0) return "❌ Tsy misy sakafo / Plus de rations";
-            if (CurrentUser.Energie >= EnergieMax) return "✅ Feno ny hery / Énergie déjà au maximum";
+            if (CurrentUser.Rations <= 0) return "❌ Tsy misy sakafo ‖ ❌ Plus de rations ‖ ❌ No rations left";
+            if (CurrentUser.Energie >= EnergieMax) return "✅ Feno ny hery ‖ ✅ Énergie déjà au maximum ‖ ✅ Energy already at maximum";
             CurrentUser.Rations--;
             CurrentUser.Energie = Math.Min(EnergieMax, CurrentUser.Energie + EnergieParRepas);
             CurrentUser.DerniereMaj = DateTime.UtcNow;
@@ -532,9 +532,9 @@ namespace Sahavola
 
         public string AvancerJour()
         {
-            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany / Seul Super Admin";
-            if (Data.Campagne == null || Data.Campagne.Statut != StatutCampagne.Running) return "❌ Tsy mandeha ny lasy / Campagne non démarrée";
-            if (Data.Campagne.JourActuel >= Data.Campagne.Jours) return "❌ Farany ny andro / Dernier jour atteint";
+            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul Super Admin ‖ ❌ Super Admin only";
+            if (Data.Campagne == null || Data.Campagne.Statut != StatutCampagne.Running) return "❌ Tsy mandeha ny lasy ‖ ❌ Campagne non démarrée ‖ ❌ Camp not started";
+            if (Data.Campagne.JourActuel >= Data.Campagne.Jours) return "❌ Farany ny andro ‖ ❌ Dernier jour atteint ‖ ❌ Last day reached";
             Data.Campagne.JourActuel++;
             Data.Campagne.MeteoActuelle = TirerMeteo();
             DistribuerRations();
@@ -545,11 +545,11 @@ namespace Sahavola
         public string CreerPoi(string nom, double lat, double lon, bool interdit, string desc)
         {
             if (CurrentUser == null || (CurrentUser.Role != Role.SuperAdmin && CurrentUser.Role != Role.Chef))
-                return "❌ Mpitarika / Mpitantana ihany / Seul Chef / Super Admin";
+                return "❌ Mpitarika na Mpitantana ihany ‖ ❌ Seul Chef ou Super Admin ‖ ❌ Chief or Super Admin only";
             string nomNettoye = (nom ?? "").Trim();
-            if (nomNettoye.Length == 0) return "❌ Anarana banga / Nom vide";
+            if (nomNettoye.Length == 0) return "❌ Anarana banga ‖ ❌ Nom vide ‖ ❌ Name empty";
             if (double.IsNaN(lat) || double.IsNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180)
-                return "❌ Latitude / Longitude diso / incorrect";
+                return "❌ Latitude / Longitude diso ‖ ❌ Latitude / Longitude incorrecte ‖ ❌ Invalid latitude / longitude";
 
             var poi = new Poi
             {
@@ -594,20 +594,20 @@ namespace Sahavola
 
         public string CreerActivite(Activite a, string tarikaCibleId = "", PorteeActivite portee = PorteeActivite.Tarika, bool evenementCommun = false)
         {
-            if (CurrentUser == null) return "❌ Midira aloha / Connecte-toi d'abord";
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
             Role role = CurrentUser.Role;
             if (role != Role.Animateur && role != Role.Chef && role != Role.SuperAdmin)
-                return "❌ Mpanentana / Mpitarika / Mpitantana Ambony ihany / Seul Animateur / Chef / Super Admin";
-            if (string.IsNullOrWhiteSpace(a.Titre)) return "❌ Lohateny banga / Titre vide";
-            if (string.IsNullOrWhiteSpace(a.Clair)) return "❌ Hafatra mazava banga / Message en clair vide";
+                return "❌ Mpanentana, Mpitarika, Mpitantana Ambony ihany ‖ ❌ Seul Animateur, Chef ou Super Admin ‖ ❌ Only Animator, Chief or Super Admin";
+            if (string.IsNullOrWhiteSpace(a.Titre)) return "❌ Lohateny banga ‖ ❌ Titre vide ‖ ❌ Title empty";
+            if (string.IsNullOrWhiteSpace(a.Clair)) return "❌ Hafatra mazava banga ‖ ❌ Message en clair vide ‖ ❌ Plain message empty";
             if (!CodeEncoder.CodesSupportes.Contains(a.Code)) return "❌ Kaody tsy voaporofo / Code non pris en charge : " + a.Code;
-            if (a.Code == "Semaphore" && !a.ActiviteNavale) return "❌ Sémaphore : activité navale obligatoire / Réservé aux activités navales";
-            if (a.Indices.Count > 3) return "❌ Toro-hevitra 3 farafahakeliny / 3 indices max";
-            if (a.Points < 1 || a.Points > 100) return "❌ Isa 1 ka hatramin'ny 100 / Points de 1 à 100";
-            if (a.EssaisMax < 1 || a.EssaisMax > EssaisMaxAutorises) return "❌ Andrana 1 ka 3 / Essais de 1 à 3";
-            if (!HoraireValide(a.HeureDebut, a.HeureFin)) return "❌ Ora diso (HH:mm, voalohany < farany) / Horaire invalide (HH:mm, début < fin)";
+            if (a.Code == "Semaphore" && !a.ActiviteNavale) return "❌ Sémaphore : activité navale obligatoire ‖ ❌ Réservé aux activités navales ‖ ❌ Semaphore: naval activity required";
+            if (a.Indices.Count > 3) return "❌ Toro-hevitra 3 farafahakeliny ‖ ❌ 3 indices max ‖ ❌ 3 hints maximum";
+            if (a.Points < 1 || a.Points > 100) return "❌ Isa 1 ka hatramin'ny 100 ‖ ❌ Points de 1 à 100 ‖ ❌ Points from 1 to 100";
+            if (a.EssaisMax < 1 || a.EssaisMax > EssaisMaxAutorises) return "❌ Andrana 1 ka 3 ‖ ❌ Essais de 1 à 3 ‖ ❌ Attempts from 1 to 3";
+            if (!HoraireValide(a.HeureDebut, a.HeureFin)) return "❌ Ora diso (HH:mm, voalohany < farany) ‖ ❌ Horaire invalide (HH:mm, début < fin) ‖ ❌ Invalid time (HH:mm, start < end)";
             int joursMax = Data.Campagne?.Jours ?? MaxJoursCampagne;
-            if (a.Jour < 1 || a.Jour > joursMax) return $"❌ Andro 1 ka {joursMax} / Jour de 1 à {joursMax}";
+            if (a.Jour < 1 || a.Jour > joursMax) return $"❌ Andro 1 ka {joursMax} ‖ ❌ Jour de 1 à {joursMax} ‖ ❌ Day from 1 to {joursMax}";
 
             a.Id = Guid.NewGuid().ToString("N");
             a.CreePar = CurrentUser.Pseudo;
@@ -630,7 +630,7 @@ namespace Sahavola
                 else
                 {
                     Tarika? cible = Data.Tarikas.Find(t => t.Id == tarikaCibleId);
-                    if (cible == null) return "❌ Fidio ny tarika kendrena / Choisis le groupe cible";
+                    if (cible == null) return "❌ Fidio ny tarika kendrena ‖ ❌ Choisis le groupe cible ‖ ❌ Choose the target group";
                     a.TarikaId = cible.Id;
                     a.TarikaNom = cible.Nom;
                 }
@@ -641,7 +641,7 @@ namespace Sahavola
             Tarika? monTarika = Data.Tarikas.Find(t => t.Id == CurrentUser.TarikaId);
             if (portee == PorteeActivite.Tarika)
             {
-                if (monTarika == null) return "❌ Tsy manana tarika ianao / Tu n'as pas encore de groupe";
+                if (monTarika == null) return "❌ Tsy manana tarika ianao ‖ ❌ Tu n'as pas encore de groupe ‖ ❌ You don't have a group yet";
                 a.TarikaId = monTarika.Id;
                 a.TarikaNom = monTarika.Nom;
                 a.Statut = "publiee";
@@ -650,10 +650,10 @@ namespace Sahavola
 
             if (portee == PorteeActivite.Rehetra)
             {
-                if (!evenementCommun) return "❌ Tsy misy hetsika iombonana / Pas d'évènement commun — Fidio 'Asa Tarika' fa tsy 'Asa Rehetra'.";
+                if (!evenementCommun) return "❌ Tsy misy hetsika iombonana — fidio 'Asa Tarika' ‖ ❌ Pas d'évènement commun — choisis 'Activité de groupe' ‖ ❌ No common event — choose 'Group activity'";
                 int deja = CompterAsaRehetraCetteSemaine(CurrentUser.Pseudo);
                 if (deja >= QUOTA_ASA_REHETRA_PAR_SEMAINE)
-                    return $"❌ Quota feno / Quota atteint — Asa Rehetra {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} tamin'ity herinandro ity / cette semaine";
+                    return $"❌ Quota feno — Asa Rehetra {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} tamin'ity herinandro ity ‖ ❌ Quota atteint — Asa Rehetra {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} cette semaine ‖ ❌ Quota reached — common activities {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} this week";
                 a.TarikaId = "";
                 a.TarikaNom = "Rehetra / Tous";
                 a.Statut = "en_attente_validation";
@@ -662,8 +662,8 @@ namespace Sahavola
             }
 
             Tarika? tarikaCross = Data.Tarikas.Find(t => t.Id == tarikaCibleId);
-            if (tarikaCross == null) return "❌ Fidio ny tarika kendrena / Choisis le groupe cible";
-            if (monTarika != null && tarikaCross.Id == monTarika.Id) return "❌ Io no tarikanao — fidio 'Asa Tarika' / C'est ton groupe — choisis 'Activité Groupe'";
+            if (tarikaCross == null) return "❌ Fidio ny tarika kendrena ‖ ❌ Choisis le groupe cible ‖ ❌ Choose the target group";
+            if (monTarika != null && tarikaCross.Id == monTarika.Id) return "❌ Io no tarikanao — fidio 'Asa Tarika' ‖ ❌ C'est ton groupe — choisis 'Activité de groupe' ‖ ❌ It's your group — choose 'Group activity'";
             a.TarikaId = tarikaCross.Id;
             a.TarikaNom = tarikaCross.Nom;
             a.Statut = "en_attente_validation";
@@ -679,17 +679,17 @@ namespace Sahavola
             {
                 "publiee" => "✅ Asa navoaka / Activité publiée : " + a.Titre + " — " + a.TarikaNom,
                 "brouillon" => "✅ Brouillon noforonina / Brouillon créé : " + a.Titre + " — publie-le quand il est prêt",
-                _ => "⏳ Fangatahana nalefa — Miandry fanamarinana Super Admin / Demande envoyée — En attente Super Admin"
+                _ => "⏳ Fangatahana nalefa — miandry fanamarinana SA ‖ ⏳ Demande envoyée — en attente du Super Admin ‖ ⏳ Request sent — waiting for the Super Admin"
             };
         }
 
         public string PublierActivite(string activiteId)
         {
-            if (CurrentUser == null) return "❌ Midira aloha / Connecte-toi d'abord";
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
             Activite? a = Data.Activites.Find(x => x.Id == activiteId);
-            if (a == null) return "❌ Asa tsy hita / Activité introuvable";
-            if (CurrentUser.Role != Role.SuperAdmin && a.CreePar != CurrentUser.Pseudo) return "❌ Tsy azo atao / Non autorisé";
-            if (a.Statut != "brouillon") return "❌ Tsy brouillon / Pas un brouillon";
+            if (a == null) return "❌ Asa tsy hita ‖ ❌ Activité introuvable ‖ ❌ Activity not found";
+            if (CurrentUser.Role != Role.SuperAdmin && a.CreePar != CurrentUser.Pseudo) return "❌ Tsy azo atao ‖ ❌ Non autorisé ‖ ❌ Not allowed";
+            if (a.Statut != "brouillon") return "❌ Tsy brouillon ‖ ❌ Pas un brouillon ‖ ❌ Not a draft";
             a.Statut = "publiee";
             AddAudit("PUBLIER_ACTIVITE", a.Titre);
             return "✅ Asa navoaka / Activité publiée : " + a.Titre;
@@ -729,10 +729,10 @@ namespace Sahavola
 
         public string ValiderDemandeActivite(string activiteId, bool valider)
         {
-            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany / Seul Super Admin";
+            if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul Super Admin ‖ ❌ Super Admin only";
             Activite? a = Data.Activites.Find(x => x.Id == activiteId);
-            if (a == null) return "❌ Asa tsy hita / Activité introuvable";
-            if (a.Statut != "en_attente_validation") return "❌ Tsy fangatahana miandry / Pas une demande en attente";
+            if (a == null) return "❌ Asa tsy hita ‖ ❌ Activité introuvable ‖ ❌ Activity not found";
+            if (a.Statut != "en_attente_validation") return "❌ Tsy fangatahana miandry ‖ ❌ Pas une demande en attente ‖ ❌ Not a pending request";
 
             a.Statut = valider ? "publiee" : "refusee";
             a.DemandeCrossTarika = false;
@@ -747,10 +747,10 @@ namespace Sahavola
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany";
             Activite? a = Data.Activites.Find(x => x.Id == activiteId);
             if (a == null) return "❌ Asa tsy hita";
-            if (a.Statut != "refusee") return "❌ Tsy nolavina ilay asa / Activité non refusée";
+            if (a.Statut != "refusee") return "❌ Tsy nolavina ilay asa ‖ ❌ Activité non refusée ‖ ❌ Activity not rejected";
             Data.Activites.Remove(a);
             AddAudit("SUPPRIMER_DEMANDE", a.Titre);
-            return "✅ Fangatahana voafafa / Demande supprimée";
+            return "✅ Fangatahana voafafa ‖ ✅ Demande supprimée ‖ ✅ Request deleted";
         }
 
         public TeamProgress ProgressionCourante()
@@ -784,14 +784,14 @@ namespace Sahavola
             points = 0;
             if (CurrentUser == null)
             {
-                retour = "❌ Midira aloha / Connecte-toi d'abord";
+                retour = "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
                 return false;
             }
 
             Activite? cible = GetActivitesVisibles(CurrentUser).Find(x => x.Id == a.Id);
             if (cible == null)
             {
-                retour = "❌ Asa tsy hita / Activité introuvable";
+                retour = "❌ Asa tsy hita ‖ ❌ Activité introuvable ‖ ❌ Activity not found";
                 return false;
             }
 
@@ -835,12 +835,12 @@ namespace Sahavola
             motif = "";
             if (a.Statut != "publiee")
             {
-                motif = "❌ Tsy navoaka / Activité non publiée";
+                motif = "❌ Tsy navoaka ‖ ❌ Activité non publiée ‖ ❌ Activity not published";
                 return false;
             }
             if (Data.Campagne == null || Data.Campagne.Statut != StatutCampagne.Running)
             {
-                motif = "⏸️ Tsy mandeha ny lasy / Campagne non démarrée ou en pause";
+                motif = "⏸️ Tsy mandeha ny lasy ‖ ⏸️ Campagne non démarrée ou en pause ‖ ⏸️ Camp not running or paused";
                 return false;
             }
             if (a.Jour > Data.Campagne.JourActuel)
@@ -855,12 +855,12 @@ namespace Sahavola
             }
             if (progression.Terminees.Contains(a.Id))
             {
-                motif = "✅ Efa vita / Déjà terminée";
+                motif = "✅ Efa vita ‖ ✅ Déjà terminée ‖ ✅ Already completed";
                 return false;
             }
             if (progression.Verrous.TryGetValue(a.Id, out DateTime jusquA) && jusquA > DateTime.UtcNow)
             {
-                motif = "⏳ Miandry kely / Attends un instant";
+                motif = "⏳ Miandry kely ‖ ⏳ Attends un instant ‖ ⏳ Please wait a moment";
                 return false;
             }
             return true;
