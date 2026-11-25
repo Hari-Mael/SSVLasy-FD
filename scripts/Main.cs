@@ -865,6 +865,7 @@ namespace Sahavola
             RafraichirBackend();
             TexteNavigation();
             TexteMonJoueurActivitesCodes();
+            TexteTarikaCarteEquipesBackend();
             AppliquerLangue();
         }
 
@@ -909,6 +910,42 @@ namespace Sahavola
             N<Label>("LblParam").Text = T("Fepetra : elanelana na teny fanalahidy", "Décalage : nombre ou mot-clé", "Shift: number or keyword");
             N<LineEdit>("EditParam").PlaceholderText = T("3 na CLE", "3 ou CLE", "3 or KEY");
             N<Button>("BtnEncoder").Text = T("🔐 Kaody — Hanoratra", "🔐 Encoder", "🔐 Encode");
+        }
+
+        private void TexteTarikaCarteEquipesBackend()
+        {
+            N<Label>("TarikaTitre").Text = T("🏕️ Tarika / Groupe", "🏕️ Groupe", "🏕️ Group");
+            N<Label>("LblTarikaNom").Text = T("Anaran'ny tarika", "Nom du groupe", "Group name");
+            N<LineEdit>("EditTarikaNom").PlaceholderText = T("Tarika…", "Nom du groupe…", "Group name…");
+            N<Label>("LblTarikaChef").Text = T("Mpitarika", "Chef", "Leader");
+            N<Label>("LblTarikaEmbleme").Text = T("Marika", "Emblème", "Emblem");
+            N<Label>("LblTarikaDevise").Text = T("Teny filamatra", "Devise", "Motto");
+            N<LineEdit>("EditTarikaDevise").PlaceholderText = T("Vonona foana !", "Toujours prêt !", "Always ready!");
+            N<Button>("BtnTarikaCreer").Text = T("➕ Mamorona tarika", "➕ Créer un groupe", "➕ Create a group");
+
+            N<Label>("CarteTitre").Text = T("🗺️ Sarintany 2D — Toerana noforoninao", "🗺️ Carte 2D — Lieux créés par toi", "🗺️ 2D map — places you created");
+            N<Label>("CarteInfo").Text = T("Sarintany 2D — tsindrio ny toerana", "Carte 2D — clique sur un lieu", "2D map — click a place");
+            N<Label>("LblPoiNom").Text = T("Anarana", "Nom", "Name");
+            N<LineEdit>("EditPoiNom").PlaceholderText = T("Anarana", "Nom", "Name");
+            N<Label>("LblPoiInterdit").Text = T("Faritra", "Zone", "Zone");
+            N<Label>("LblPoiDesc").Text = T("Famaritana", "Description", "Description");
+            N<LineEdit>("EditPoiDesc").PlaceholderText = T("Famaritana", "Description", "Description");
+            N<Button>("BtnPoiCreer").Text = T("➕ Mamorona toerana", "➕ Créer un lieu", "➕ Create a place");
+
+            N<Label>("EquipesTitre").Text = T("👥 Ekipa", "👥 Équipes", "👥 Teams");
+            N<Label>("EquipesNote").Text = T("Isaky ny mpitarika : ekipa 3 farafahabetsany, mpikambana 5 isaky ny ekipa.",
+                "Par chef : 3 équipes maximum, 5 membres par équipe.",
+                "Per leader: 3 teams maximum, 5 members per team.");
+
+            N<Label>("BackendTitre").Text = T("⚙️ Rafitra ambadika", "⚙️ Backend", "⚙️ Backend");
+            N<Label>("LblBackendUrl").Text = "URL Backend";
+            N<Label>("LblEquipeId").Text = T("Ekipa", "Équipe", "Team");
+            N<LineEdit>("EditEquipeId").PlaceholderText = T("Ekipa", "Équipe", "Team");
+            N<Label>("LblPseudoBackend").Text = T("Pseudo", "Pseudo", "Username");
+            N<LineEdit>("EditPseudoBackend").PlaceholderText = T("Pseudo", "Pseudo", "Username");
+            N<Button>("BtnSaveBackend").Text = T("💾 Tehirizo", "💾 Sauvegarder", "💾 Save");
+            N<Button>("BtnLoginBackend").Text = T("🔐 Fidirana", "🔐 Connexion", "🔐 Login");
+            N<Button>("BtnTestBackend").Text = T("🧪 Fitsapana", "🧪 Tester", "🧪 Test");
         }
 
         private void TexteNavigation()
@@ -1246,9 +1283,9 @@ namespace Sahavola
             if (u == null) return;
 
             N<Label>("LblTarikaList").Text = _gm.Data.Tarikas.Count == 0
-                ? "Tsy misy tarika / Aucun groupe"
+                ? T("Tsy misy tarika", "Aucun groupe", "No group")
                 : string.Join("\n", _gm.Data.Tarikas.Select(t =>
-                    t.Embleme + " " + t.Nom + " — chef " + t.ChefPseudo + " — " + _gm.CompterTarika(t.Id) + " olona / personnes"));
+                    t.Embleme + " " + t.Nom + " — " + T("mpitarika", "chef", "leader") + " " + t.ChefPseudo + " — " + _gm.CompterTarika(t.Id) + " " + T("olona", "personnes", "people")));
 
             OptionButton chefs = N<OptionButton>("OptTarikaChef");
             chefs.Clear();
@@ -1276,8 +1313,8 @@ namespace Sahavola
             if (u == null) return;
 
             N<Label>("LblPoiList").Text = _gm.Data.Pois.Count == 0
-                ? "📍 Toerana / Lieux : Tsy misy / Aucun"
-                : "📍 Toerana / Lieux :\n" + string.Join("\n", _gm.Data.Pois.Select(p =>
+                ? T("📍 Toerana : tsy misy", "📍 Lieux : aucun", "📍 Places: none")
+                : T("📍 Toerana :", "📍 Lieux :", "📍 Places:") + "\n" + string.Join("\n", _gm.Data.Pois.Select(p =>
                     (p.Interdit ? "🔴 " : "🟢 ") + p.Nom + " (" + p.Lat.ToString("0.0000", CultureInfo.InvariantCulture)
                     + ", " + p.Lon.ToString("0.0000", CultureInfo.InvariantCulture) + ")"));
 
@@ -1461,7 +1498,7 @@ namespace Sahavola
                     lignes.Add("   👥 " + equipe.Key + " : " + string.Join(", ", equipe.Select(m => m.Pseudo)));
                 }
             }
-            N<Label>("LblEquipesList").Text = lignes.Count == 0 ? "Tsy misy ekipa / Aucune équipe" : string.Join("\n", lignes);
+            N<Label>("LblEquipesList").Text = lignes.Count == 0 ? T("Tsy misy ekipa", "Aucune équipe", "No team") : string.Join("\n", lignes);
         }
 
         private void RafraichirChef()
@@ -1615,7 +1652,7 @@ namespace Sahavola
             _backendCampagne = N<LineEdit>("EditCampagneId").Text.Trim();
             _backendEquipe = N<LineEdit>("EditEquipeId").Text.Trim();
             _backendPseudo = N<LineEdit>("EditPseudoBackend").Text.Trim();
-            N<Label>("LblBackendTest").Text = "💾 Tehirizo ao an-tsaina / Sauvegardé en mémoire";
+            N<Label>("LblBackendTest").Text = T("💾 Voatahiry ao an-tsaina", "💾 Sauvegardé en mémoire", "💾 Saved in memory");
         }
 
         private void OnTesterBackend()
@@ -1624,8 +1661,8 @@ namespace Sahavola
             bool valide = Uri.TryCreate(url, UriKind.Absolute, out Uri? uri)
                 && (uri!.Scheme == "http" || uri.Scheme == "https");
             N<Label>("LblBackendTest").Text = valide
-                ? "✅ Adiresy mety / URL valide — backend tsy mbola voafatotra / backend non connecté dans cette version"
-                : "❌ URL diso / URL invalide";
+                ? T("✅ Adiresy mety — backend tsy mbola voafatotra", "✅ URL valide — backend non connecté dans cette version", "✅ Valid URL — backend not connected in this version")
+                : T("❌ Adiresy diso", "❌ URL invalide", "❌ Invalid URL");
         }
 
         private void RafraichirBackend()
