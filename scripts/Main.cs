@@ -64,6 +64,7 @@ namespace Sahavola
         private Button _btnUtiliser = null!;
         private Button _btnJourSuivant = null!;
         private Button _btnManger = null!;
+        private Label _libelleCle = null!;
         private Button _btnMeteo = null!;
         private OptionButton _optLangue = null!;
         private Langue _langue = Langue.Francais;
@@ -247,6 +248,7 @@ namespace Sahavola
                 PlaceholderText = "Lakile / Clé",
                 CustomMinimumSize = new Vector2(0, 48)
             };
+            _libelleCle = libelle;
             authVBox.AddChild(libelle);
             authVBox.AddChild(_editCle);
             authVBox.MoveChild(libelle, 2);
@@ -861,15 +863,83 @@ namespace Sahavola
             RafraichirChef();
             RafraichirCreer();
             RafraichirBackend();
+            TexteNavigation();
             AppliquerLangue();
         }
 
         private void RafraichirEntete()
         {
-            Statut().Text = _gm.ErreurStockage ?? "Vonona / Prêt";
+            Statut().Text = _gm.ErreurStockage ?? T("Prêt", "Prêt", "Ready");
             N<Label>("StatusMini").Text = _gm.CurrentUser == null
-                ? "Vonona / Prêt"
-                : _gm.CurrentUser.Pseudo + " — " + _gm.CurrentUser.Role;
+                ? T("Vonona", "Prêt", "Ready")
+                : _gm.CurrentUser.Pseudo + " — " + LibelleRole(_gm.CurrentUser.Role);
+        }
+
+        private string LibelleRole(Role role) => role switch
+        {
+            Role.Membre => T("Mpikambana", "Membre", "Member"),
+            Role.Chef => T("Mpitarika", "Chef", "Chief"),
+            Role.Animateur => T("Mpanentana", "Animateur", "Animator"),
+            Role.SuperAdmin => T("Mpitantana Ambony", "Super Admin", "Super Admin"),
+            _ => ""
+        };
+
+        private void TexteNavigation()
+        {
+            N<Label>("TitreLabel").Text = T("🌲 SAHAVOLA — Lasy Skoto", "🌲 SAHAVOLA — Camp Scout", "🌲 SAHAVOLA — Scout Camp");
+            N<Button>("BtnDeconnexion").Text = T("🚪 Mivoaha", "🚪 Déconnexion", "🚪 Log out");
+
+            N<Button>("BtnTabCamp").Text = T("🏕️ Tobi", "🏕️ Camp", "🏕️ Camp");
+            N<Button>("BtnTabPerso").Text = T("🎮 Ny mpilalaoko", "🎮 Mon joueur", "🎮 My player");
+            N<Button>("BtnTabTarika").Text = T("⛺ Tarika", "⛺ Groupe", "⛺ Team");
+            N<Button>("BtnTabComptes").Text = T("👑 Kaonty", "👑 Comptes", "👑 Accounts");
+            N<Button>("BtnTabCarte").Text = T("🗺️ Sarintany", "🗺️ Carte", "🗺️ Map");
+            N<Button>("BtnTabActivites").Text = T("🎯 Asa", "🎯 Activités", "🎯 Activities");
+            N<Button>("BtnTabCodes").Text = T("🔐 Kaody", "🔐 Codes", "🔐 Codes");
+            N<Button>("BtnTabTeknika").Text = T("📖 Teknika Skoto", "📖 Teknika Skoto", "📖 Teknika Skoto");
+            N<Button>("BtnTabEquipes").Text = T("👥 Ekipa", "👥 Équipes", "👥 Teams");
+            N<Button>("BtnTabChef").Text = T("🧭 Mpitarika", "🧭 Chef", "🧭 Leader");
+            N<Button>("BtnTabCreer").Text = T("➕ Mamorona", "➕ Créer", "➕ Create");
+            N<Button>("BtnTabBackend").Text = T("⚙️ Rafitra ambadika", "⚙️ Backend", "⚙️ Backend");
+
+            N<Button>("BtnBGps").Text = "📍 GPS";
+            N<Button>("BtnBInv").Text = T("🎒 Kitapo", "🎒 Inventaire", "🎒 Inventory");
+            N<Button>("BtnBJournal").Text = T("📓 Diarin'ny dia", "📓 Journal", "📓 Journal");
+            N<Button>("BtnBCarte").Text = T("🗺️ Sarintany", "🗺️ Carte", "🗺️ Map");
+            N<Button>("BtnBCodes").Text = T("🔐 Kaody", "🔐 Codes", "🔐 Codes");
+            N<Button>("BtnBSos").Text = "🆘 SOS";
+            N<Button>("BtnBHome").Text = T("🏠 Fandraisana", "🏠 Accueil", "🏠 Home");
+
+            N<Label>("AuthTitre").Text = T("🔐 Fidirana — tsy misy kaonty voasoratra mialoha", "🔐 Connexion — aucun compte pré-rempli", "🔐 Login — no account pre-filled");
+            N<Button>("BtnAuthLogin").Text = T("Fidirana", "Connexion", "Login");
+            N<Button>("BtnAuthRegister").Text = T("Mamorona kaonty", "Créer un compte", "Create an account");
+            N<Button>("BtnAuthFirst").Text = T("Mpitantana Ambony voalohany", "Premier Super Admin", "First Super Admin");
+            _libelleCle.Text = T("Lakile fanafenana — angatahina alohanina", "Clé de chiffrement — obligatoire d'abord", "Encryption key — required first");
+            _editCle.PlaceholderText = T("Lakile", "Clé", "Key");
+            N<Label>("LblLoginPseudo").Text = T("Anarana fidirana", "Pseudo", "Username");
+            N<LineEdit>("EditLoginPseudo").PlaceholderText = T("Anarana", "Pseudo", "Username");
+            N<Label>("LblLoginPass").Text = T("Tenimiafina — 8 litera farafahakeliny", "Mot de passe — 8 caractères minimum", "Password — 8 characters minimum");
+            N<LineEdit>("EditLoginPass").PlaceholderText = T("Tenimiafina", "Mot de passe", "Password");
+            N<Button>("BtnLogin").Text = T("🔐 Miditra", "🔐 Se connecter", "🔐 Log in");
+            N<Label>("LblLoginHint").Text = T("Tsy misy kaonty ? Mamorona aloha ny Mpitantana Ambony voalohany.", "Aucun compte ? Créez d'abord le premier Super Admin.", "No account? Create the first Super Admin first.");
+            N<Label>("LblRegPseudo").Text = T("Anarana fidirana", "Pseudo", "Username");
+            N<LineEdit>("EditRegPseudo").PlaceholderText = T("Anarana", "Pseudo", "Username");
+            N<Label>("LblRegPass").Text = T("Tenimiafina", "Mot de passe", "Password");
+            N<LineEdit>("EditRegPass").PlaceholderText = T("Tenimiafina", "Mot de passe", "Password");
+            N<Label>("LblRegRole").Text = T("Andraikitra angatahina", "Rôle demandé", "Requested role");
+            OptionButton roles = N<OptionButton>("OptRegRole");
+            roles.SetItemText(0, T("🧑 Mpikambana", "🧑 Membre", "🧑 Member"));
+            roles.SetItemText(1, T("🧭 Mpitarika", "🧭 Chef", "🧭 Chief"));
+            roles.SetItemText(2, T("🎭 Mpanentana", "🎭 Animateur", "🎭 Animator"));
+            N<Label>("LblRegEquipe").Text = T("Ekipa (anarana malalaka)", "Équipe (nom libre)", "Team (free name)");
+            N<Label>("LblRegRoleEq").Text = T("Andraikitra ao amin'ny ekipa", "Rôle dans l'équipe", "Role in the team");
+            N<Label>("LblRegParrain").Text = T("Iza no nanasa anao ? Anaran'ny mpitarika", "Qui t'a invité ? Nom du chef", "Who invited you? Chief's name");
+            N<Label>("LblRegParent").Text = T("Ray aman-dreny — anarana sy contact", "Parent — nom et contact", "Parent — name and contact");
+            N<CheckBox>("CheckConsentement").Text = T("✅ Manaiky ny ray aman-dreny — tsy maintsy misy", "✅ Consentement parental — obligatoire", "✅ Parental consent — required");
+            N<Button>("BtnRegister").Text = T("➕ Mangataka famoronana", "➕ Demander la création", "➕ Request an account");
+            N<Label>("LblFirstPseudo").Text = T("Anaran'ny Mpitantana Ambony voalohany", "Pseudo du premier Super Admin", "First Super Admin username");
+            N<Label>("LblFirstPass").Text = T("Tenimiafina", "Mot de passe", "Password");
+            N<Button>("BtnFirst").Text = T("👑 Mamorona ny Mpitantana Ambony voalohany", "👑 Créer le premier Super Admin", "👑 Create the first Super Admin");
         }
 
         private void ChargerPerso()
