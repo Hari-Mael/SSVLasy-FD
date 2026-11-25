@@ -65,6 +65,11 @@ namespace Sahavola
         private Button _btnJourSuivant = null!;
         private Button _btnManger = null!;
         private Label _libelleCle = null!;
+        private Label _lblEquipe = null!;
+        private Button _btnKitay = null!;
+        private Button _btnRano = null!;
+        private Button _btnSakafo = null!;
+        private Button _btnDebloquer = null!;
         private Button _btnMeteo = null!;
         private OptionButton _optLangue = null!;
         private Langue _langue = Langue.Francais;
@@ -304,6 +309,20 @@ namespace Sahavola
             campVBox.AddChild(_optMeteo);
             campVBox.AddChild(_btnMeteo);
             campVBox.AddChild(_btnJourSuivant);
+            _lblEquipe = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
+            _btnKitay = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnKitay.Pressed += () => OnCollecter("kitay");
+            _btnRano = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnRano.Pressed += () => OnCollecter("rano");
+            _btnSakafo = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnSakafo.Pressed += () => OnCollecter("sakafo");
+            _btnDebloquer = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnDebloquer.Pressed += OnDebloquer;
+            campVBox.AddChild(_lblEquipe);
+            campVBox.AddChild(_btnKitay);
+            campVBox.AddChild(_btnRano);
+            campVBox.AddChild(_btnSakafo);
+            campVBox.AddChild(_btnDebloquer);
         }
 
         private void ConstruireActiviteNavale()
@@ -442,6 +461,53 @@ namespace Sahavola
             noeud.SetMeta(nomSortie, traduit);
             if (traduit != actuel) appliquer(traduit);
         }
+
+        private void OnCollecter(string ressource)
+        {
+            SetStatus(_gm.Collecter(ressource));
+            RafraichirTout();
+        }
+
+        private void OnDebloquer()
+        {
+            SetStatus(_gm.DebloquerEquipes());
+            RafraichirTout();
+        }
+
+        private void RafraichirVieEquipe()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            TeamProgress p = _gm.ProgressionCourante();
+            var cap = _gm.CapaciteStocks();
+            string etat = _gm.EtatEquipe(p);
+            _lblEquipe.Text = T("🏕️ Ekipa", "🏕️ Équipe", "🏕️ Team") + " — "
+                + T("🪵 Kitay", "🪵 Bois", "🪵 Wood") + " " + p.Kitay + "/" + cap.Kitay + " · "
+                + T("💧 Rano", "💧 Eau", "💧 Water") + " " + p.Rano + "/" + cap.Rano + " · "
+                + T("🍞 Sakafo", "🍞 Nourriture", "🍞 Food") + " " + p.Sakafo + "/" + cap.Sakafo + "\n"
+                + LibelleEtatEquipe(etat);
+
+            bool peut = etat == "normal" && _gm.CampagneEnCours();
+            _btnKitay.Text = T("🌲 Mitady kitay", "🌲 Ramasser du bois", "🌲 Gather wood") + (p.ActionsDuJour.Contains("kitay") ? " ✅" : "");
+            _btnRano.Text = T("💧 Mitady rano", "💧 Chercher de l'eau", "💧 Fetch water") + (p.ActionsDuJour.Contains("rano") ? " ✅" : "");
+            _btnSakafo.Text = T("🍞 Mividy sakafo", "🍞 Chercher de la nourriture", "🍞 Get food") + (p.ActionsDuJour.Contains("sakafo") ? " ✅" : "");
+            _btnKitay.Disabled = !peut || p.ActionsDuJour.Contains("kitay");
+            _btnRano.Disabled = !peut || p.ActionsDuJour.Contains("rano");
+            _btnSakafo.Disabled = !peut || p.ActionsDuJour.Contains("sakafo");
+
+            bool chef = u.Role == Role.Chef || u.Role == Role.SuperAdmin;
+            _btnDebloquer.Visible = chef;
+            _btnDebloquer.Text = T("🔓 Hanafaka ny ekipa", "🔓 Débloquer l'équipe", "🔓 Unblock the team");
+            _btnDebloquer.Disabled = etat == "normal";
+        }
+
+        private string LibelleEtatEquipe(string etat) => etat switch
+        {
+            "bloque" => T("⏳ Blokao — miandry ny mpitarika", "⏳ Bloquée — en attente du chef", "⏳ Blocked — waiting for the chief"),
+            "notif" => T("🔔 Hafatra : mifandraisa amin'ny mpitarika", "🔔 Notification : contactez votre chef pour débloquer", "🔔 Notification: contact your chief to unblock"),
+            "malade" => T("🤒 Marary", "🤒 Malade", "🤒 Sick"),
+            _ => T("✅ Ekipa mahavita", "✅ Équipe en forme", "✅ Team in good shape")
+        };
 
         private void OnJourSuivant()
         {
@@ -1221,6 +1287,7 @@ namespace Sahavola
             _btnJourSuivant.Text = T("📅 Andro manaraka", "📅 Jour suivant", "📅 Next day");
             _btnJourSuivant.Visible = u.Role == Role.SuperAdmin;
             _btnJourSuivant.Disabled = campagne?.Statut != StatutCampagne.Running;
+            RafraichirVieEquipe();
 
             Meteo[] valeursMeteo = Enum.GetValues<Meteo>();
             for (int i = 0; i < valeursMeteo.Length; i++) _optMeteo.SetItemText(i, LibelleMeteo(valeursMeteo[i]));
