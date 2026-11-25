@@ -866,6 +866,7 @@ namespace Sahavola
             TexteNavigation();
             TexteMonJoueurActivitesCodes();
             TexteTarikaCarteEquipesBackend();
+            TexteComptesChefCreer();
             AppliquerLangue();
         }
 
@@ -946,6 +947,73 @@ namespace Sahavola
             N<Button>("BtnSaveBackend").Text = T("💾 Tehirizo", "💾 Sauvegarder", "💾 Save");
             N<Button>("BtnLoginBackend").Text = T("🔐 Fidirana", "🔐 Connexion", "🔐 Login");
             N<Button>("BtnTestBackend").Text = T("🧪 Fitsapana", "🧪 Tester", "🧪 Test");
+        }
+
+        private void TexteComptesChefCreer()
+        {
+            N<Label>("ComptesTitre").Text = T("👑 Kaonty", "👑 Comptes", "👑 Accounts");
+            N<Label>("LblSuper").Text = T("👑 Mpitantana Ambony — mitantana ny zava-drehetra", "👑 Super Admin — gère tout", "👑 Super Admin — manages everything");
+            N<Label>("LblSaPseudo").Text = T("Pseudo", "Pseudo", "Username");
+            N<LineEdit>("EditSaPseudo").PlaceholderText = T("Pseudo", "Pseudo", "Username");
+            N<Label>("LblSaPass").Text = T("Tenimiafina", "Mot de passe", "Password");
+            N<LineEdit>("EditSaPass").PlaceholderText = T("Tenimiafina", "Mot de passe", "Password");
+            N<Label>("LblSaRole").Text = T("Andraikitra", "Rôle", "Role");
+            N<Label>("LblSaEquipe").Text = T("Ekipa", "Équipe", "Team");
+            N<LineEdit>("EditSaEquipe").PlaceholderText = T("Ekipa", "Équipe", "Team");
+            N<Button>("BtnSuperCreer").Text = T("👑 Mamorona sy manamarina", "👑 Créer et valider", "👑 Create and validate");
+            N<Label>("LblChefPseudo").Text = T("Pseudo", "Pseudo", "Username");
+            N<LineEdit>("EditChefPseudo").PlaceholderText = T("Pseudo", "Pseudo", "Username");
+            N<Label>("LblChefPass").Text = T("Tenimiafina", "Mot de passe", "Password");
+            N<LineEdit>("EditChefPass").PlaceholderText = T("Tenimiafina", "Mot de passe", "Password");
+            N<Button>("BtnLogout").Text = T("🚪 Mivoaha", "🚪 Déconnexion", "🚪 Log out");
+
+            OptionButton roles = N<OptionButton>("OptSaRole");
+            roles.SetItemText(0, T("🧭 Mpitarika", "🧭 Chef", "🧭 Leader"));
+            roles.SetItemText(1, T("🎭 Mpanentana", "🎭 Animateur", "🎭 Animator"));
+            roles.SetItemText(2, T("👑 Mpitantana Ambony", "👑 Super Admin", "👑 Super Admin"));
+
+            N<Label>("ChefTitre").Text = T("🧭 Toeran'ny mpitarika", "🧭 Poste Chef", "🧭 Leader's post");
+            N<Label>("AlertesTitre").Text = T("🚨 Fampitandremana", "🚨 Alertes", "🚨 Alerts");
+            N<Button>("BtnTestAlerte").Text = T("🧪 Fitsapana", "🧪 Tester", "🧪 Test");
+            N<Button>("BtnPurger").Text = T("🧹 Fafao", "🧹 Purger", "🧹 Purge");
+            N<Button>("BtnVueAerienne").Text = T("🎮 Fijerena avy eny ambony", "🎮 Vue aérienne", "🎮 Aerial view");
+            N<Label>("AuditTitre").Text = T("📋 Audit — iza no nanao inona ?", "📋 Audit — qui a fait quoi ?", "📋 Audit — who did what?");
+            N<Button>("BtnVoirAudit").Text = T("📋 Jereo ny audit", "📋 Voir l'audit", "📋 View audit");
+
+            N<Label>("CreerTitre").Text = T("➕ Mamorona asa — fahazoan-dalana roa", "➕ Créer une activité — double permission", "➕ Create an activity — dual permission");
+            N<Label>("LblNTitre").Text = T("Lohateny", "Titre", "Title");
+            N<LineEdit>("EditNTitre").PlaceholderText = T("Lohateny", "Titre", "Title");
+            N<Label>("LblNModele").Text = T("Modely", "Modèle", "Model");
+            N<Label>("LblNCode").Text = T("Kaody", "Code", "Code");
+            N<Label>("LblNClair").Text = T("Hafatra mazava", "Message en clair", "Plain message");
+            N<LineEdit>("EditNClair").PlaceholderText = T("Hafatra mazava", "Message en clair", "Plain message");
+            N<Label>("LblNPoints").Text = T("Isa", "Points", "Points");
+            N<Label>("LblNJour").Text = T("Andro (1–11) — araka ny sokajin'ny lasy", "Jour (1–11) — selon le type de camp", "Day (1–11) — depends on camp type");
+            N<Label>("LblNHeure").Text = T("Ora", "Horaire", "Time");
+            N<Label>("LblNLieu").Text = T("Toerana", "Lieu", "Place");
+            N<Label>("LblNTeknika").Text = T("Teknika", "Technique", "Technique");
+            N<LineEdit>("EditNTeknika").PlaceholderText = T("Vona Seza", "Nœud de chaise", "Chair knot");
+            N<Label>("LblNReponses").Text = T("Valiny ekena (sarahina amin'ny ;)", "Réponses acceptées (séparées par ;)", "Accepted answers (separated by ;)");
+            N<Label>("LblNIndices").Text = T("Toro-hevitra (3 farafahakeliny)", "Indices (3 maximum)", "Hints (3 maximum)");
+            N<Label>("LblNEssais").Text = T("Isan'ny andrana", "Nombre d'essais", "Number of attempts");
+            N<Label>("LblNVariante").Text = T("Karazana", "Variante", "Variant");
+            N<Label>("LblNPortee").Text = T("Ho an'iza ?", "Pour qui ?", "For whom?");
+            N<Label>("LblNTarikaCible").Text = T("Tarika kendrena (raha Cross-Tarika)", "Groupe cible (si cross-groupe)", "Target group (if cross-group)");
+            N<Label>("LblNEvenement").Text = T("Hetsika iombonana ?", "Évènement commun ?", "Common event?");
+            N<CheckBox>("CheckNEvenementCommun").Text = T("✅ Hetsika iombonana", "✅ Évènement commun", "✅ Common event");
+            N<Button>("BtnCreerAct").Text = T("✅ Mamorona volavola", "✅ Créer un brouillon", "✅ Create a draft");
+
+            OptionButton variantes = N<OptionButton>("OptNVariante");
+            variantes.SetItemText(0, T("An-tany", "Terrain", "Field"));
+            variantes.SetItemText(1, T("Virtoaly", "Virtuel", "Virtual"));
+            variantes.SetItemText(2, T("Mifangaro", "Hybride", "Hybrid"));
+            OptionButton portees = N<OptionButton>("OptNPortee");
+            portees.SetItemText(0, T("🏕️ Asa tarika — tarikako ihany", "🏕️ Activité de groupe — mon groupe", "🏕️ Group activity — my group"));
+            portees.SetItemText(1, T("🌍 Asa rehetra — mangata + SA", "🌍 Activité commune — validation SA", "🌍 Common activity — SA validation"));
+            portees.SetItemText(2, T("🔀 Cross-tarika — tarika hafa", "🔀 Cross-groupe — autre groupe", "🔀 Cross-group — another group"));
+            OptionButton poi = N<OptionButton>("OptPoiInterdit");
+            poi.SetItemText(0, T("🟢 Avela", "🟢 Autorisé", "🟢 Allowed"));
+            poi.SetItemText(1, T("🔴 Voarara (géofence)", "🔴 Interdit (géofence)", "🔴 Forbidden (geofence)"));
         }
 
         private void TexteNavigation()
@@ -1183,14 +1251,14 @@ namespace Sahavola
             if (u == null) return;
             bool sa = u.Role == Role.SuperAdmin;
 
-            N<Label>("LblCompteInfo").Text = "👤 " + u.Pseudo + " — " + u.Role + " (" + u.Statut + ")";
+            N<Label>("LblCompteInfo").Text = "👤 " + u.Pseudo + " — " + LibelleRole(u.Role) + " (" + u.Statut + ")";
             N<Control>("SuperPanel").Visible = sa;
             GetNode<Control>(Racine + "ComptesPanel/ComptesVBox/ChefPanel").Visible = u.Role == Role.Chef;
 
             ViderBoite(_boiteDemandes);
             ViderBoite(_boiteActivitesAttente);
             List<User> attente = _gm.Data.Users.Where(x => x.Statut == StatutCompte.EnAttente).ToList();
-            N<Label>("LblAttente").Text = "⏳ Miandry / En attente (" + attente.Count + ")";
+            N<Label>("LblAttente").Text = T("⏳ Miandry", "⏳ En attente", "⏳ Pending") + " (" + attente.Count + ")";
             if (sa)
             {
                 foreach (User demande in attente)
@@ -1208,18 +1276,19 @@ namespace Sahavola
                         () => { SetStatus(_gm.ValiderDemandeActivite(id, false)); RafraichirTout(); });
                 }
             }
-            N<Label>("LblDemandes").Text = attente.Count == 0 ? "Tsy misy fangatahana / Aucune demande" : "";
-            N<Label>("LblDemandesActivites").Text = "⏳ Fangatahana Asa / Demandes d'activités";
+            N<Label>("LblDemandes").Text = attente.Count == 0 ? T("Tsy misy fangatahana", "Aucune demande", "No request") : "";
+            N<Label>("LblDemandesActivites").Text = T("⏳ Fangatahana asa", "⏳ Demandes d'activités", "⏳ Activity requests");
             N<Label>("LblDemandesActivitesList").Visible = false;
 
             List<User> tous = _gm.Data.Users;
-            N<Label>("LblUsers").Text = "👥 Mpampiasa rehetra / Tous les utilisateurs (" + tous.Count + ")";
+            N<Label>("LblUsers").Text = T("👥 Mpampiasa rehetra", "👥 Tous les utilisateurs", "👥 All users") + " (" + tous.Count + ")";
             N<Label>("LblUsersList").Text = string.Join("\n", tous.Select(x => x.Pseudo + " — " + x.Role + " — " + x.Statut));
 
-            N<Label>("LblMesCreations").Text = "Ny mpikambanako / Mes membres : "
+            N<Label>("LblMesCreations").Text = T("Ny mpikambanako : ", "Mes membres : ", "My members: ")
                 + string.Join(", ", tous.Where(x => x.Parrain == u.Pseudo).Select(x => x.Pseudo));
             N<Button>("BtnChefCreer").Disabled = true;
-            N<Label>("LblChef").Text = "🧭 Mpitarika — Ny fisoratra no mamorona mpikambana / Chef — les membres s'inscrivent eux-mêmes";
+            N<Label>("LblChef").Text = T("🧭 Mpitarika — ny fisoratra no mamorona mpikambana", "🧭 Chef — les membres s'inscrivent eux-mêmes", "🧭 Leader — members register themselves");
+            N<Button>("BtnChefCreer").Text = T("🧭 Miandry fanamarinana", "🧭 Créer (en attente)", "🧭 Create (pending)");
         }
 
         private static void AjouterLigneValidation(VBoxContainer boite, string texte, Action valider, Action refuser)
@@ -1293,7 +1362,7 @@ namespace Sahavola
             {
                 chefs.AddItem(c.Pseudo);
             }
-            if (chefs.ItemCount == 0) chefs.AddItem("Tsy misy mpitarika tsy manan-tarika / Aucun chef sans groupe");
+            if (chefs.ItemCount == 0) chefs.AddItem(T("Tsy misy mpitarika tsy manan-tarika", "Aucun chef sans groupe", "No leader without a group"));
         }
 
         private void OnTarikaCreer()
@@ -1326,7 +1395,7 @@ namespace Sahavola
                 _nomsLieux.Add(p.Nom);
                 lieux.AddItem(p.Nom);
             }
-            if (lieux.ItemCount == 0) lieux.AddItem("Tsy misy toerana / Aucun lieu — crée-en d'abord");
+            if (lieux.ItemCount == 0) lieux.AddItem(T("Tsy misy toerana", "Aucun lieu — crées-en d'abord", "No place — create one first"));
         }
 
         private void OnPoiCreer()
@@ -1416,7 +1485,7 @@ namespace Sahavola
                     || t.Categorie.Contains(filtre, StringComparison.OrdinalIgnoreCase))
                 .Select(t => t.Titre + " — " + t.Categorie + " (" + t.Page + ")");
             string texte = string.Join("\n", lignes);
-            N<Label>("LblTekList").Text = texte.Length == 0 ? "Tsy hita / Aucun résultat" : texte;
+            N<Label>("LblTekList").Text = texte.Length == 0 ? T("Tsy hita", "Aucun résultat", "No result") : texte;
         }
 
         private void ConstruireConsultation()
@@ -1509,11 +1578,11 @@ namespace Sahavola
             N<Label>("LblPositions").Text = _gm.Data.DernierSos is SosEnregistre s
                 ? "🆘 " + s.Equipe + " — " + s.Date.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture)
                     + " — (" + s.Lat.ToString("0.0000", CultureInfo.InvariantCulture) + ", " + s.Lon.ToString("0.0000", CultureInfo.InvariantCulture) + ")"
-                : "Tsy misy SOS / Aucun SOS";
+                : T("Tsy misy SOS", "Aucun SOS", "No SOS");
 
             List<AuditLog> alertes = _gm.GetAudit().Where(l => l.Action == "ALERTE_ZONE").TakeLast(5).ToList();
             N<Label>("LblAlertes").Text = alertes.Count == 0
-                ? "Tsy misy / Aucune"
+                ? T("Tsy misy", "Aucune", "None")
                 : string.Join("\n", alertes.Select(l => l.Date.ToLocalTime().ToString("HH:mm", CultureInfo.InvariantCulture) + " — " + l.Detail));
         }
 
@@ -1527,7 +1596,7 @@ namespace Sahavola
         {
             List<AuditLog> journal = _gm.GetAudit().TakeLast(20).Reverse().ToList();
             N<Label>("LblAudit").Text = journal.Count == 0
-                ? "Tsy misy audit / Aucun audit"
+                ? T("Tsy misy audit", "Aucun audit", "No audit")
                 : string.Join("\n", journal.Select(l =>
                     l.Date.ToLocalTime().ToString("dd/MM HH:mm", CultureInfo.InvariantCulture) + " — " + l.Pseudo + " — " + l.Action + " — " + l.Detail));
         }
@@ -1539,31 +1608,31 @@ namespace Sahavola
 
             string droit = u.Role switch
             {
-                Role.SuperAdmin => "👑 Mamorona sy manamarina ny asa rehetra / Tout créer et valider",
-                Role.Chef => "🧭 Asa tarika avy hatrany ; Asa rehetra sy cross → fanamarinana SA",
-                Role.Animateur => "🎭 Mamorona brouillon, mampiditra avy eo / Crée des brouillons puis publie",
-                _ => "🚫 Tsy manana fahazoan-dalana / Pas de droit de création"
+                Role.SuperAdmin => T("👑 Mamorona sy manamarina ny asa rehetra", "👑 Tout créer et valider", "👑 Create and validate all activities"),
+                Role.Chef => T("🧭 Asa tarika avy hatrany ; asa rehetra sy cross → fanamarinana SA", "🧭 Activités de groupe immédiates ; rehetra et cross → validation SA", "🧭 Group activities immediate; all and cross → Super Admin validation"),
+                Role.Animateur => T("🎭 Mamorona brouillon, avy eo mampiditra", "🎭 Crée des brouillons puis publie", "🎭 Create drafts, then publish"),
+                _ => T("🚫 Tsy manana fahazoan-dalana", "🚫 Pas de droit de création", "🚫 No permission to create")
             };
             N<Label>("LblCreerDroit").Text = droit;
             N<Label>("LblCreerQuota").Text = u.Role == Role.Chef
-                ? "Quota Asa Rehetra : " + _gm.CompterAsaRehetraCetteSemaine(u.Pseudo) + " / "
-                    + GameManager.QUOTA_ASA_REHETRA_PAR_SEMAINE + " tamin'ity herinandro ity / cette semaine"
+                ? T("Quota asa rehetra", "Quota activités tous", "All-groups quota") + " : " + _gm.CompterAsaRehetraCetteSemaine(u.Pseudo) + " / "
+                    + GameManager.QUOTA_ASA_REHETRA_PAR_SEMAINE + T(" tamin'ity herinandro ity", " cette semaine", " this week")
                 : "";
 
             ViderBoite(_boiteBrouillons);
             foreach (Activite a in _gm.Data.Activites.Where(x => x.Statut == "brouillon" && (u.Role == Role.SuperAdmin || x.CreePar == u.Pseudo)))
             {
                 string id = a.Id;
-                AjouterLigneSimple(_boiteBrouillons, a.Titre + " — J" + a.Jour, "📢 Navoaka / Publier", () =>
+                AjouterLigneSimple(_boiteBrouillons, a.Titre + " — J" + a.Jour, T("📢 Navoaka", "📢 Publier", "📢 Publish"), () =>
                 {
                     SetStatus(_gm.PublierActivite(id));
                     RafraichirTout();
                 });
             }
-            N<Label>("LblBrouillons").Text = "📝 Ny volavolako / Mes brouillons";
+            N<Label>("LblBrouillons").Text = T("📝 Ny volavolako", "📝 Mes brouillons", "📝 My drafts");
 
             int attente = _gm.Data.Activites.Count(x => x.Statut == "en_attente_validation" && x.CreePar == u.Pseudo);
-            N<Label>("LblDemandesValidation").Text = "⏳ Fangatahana miandry / Demandes en attente : " + attente;
+            N<Label>("LblDemandesValidation").Text = T("⏳ Fangatahana miandry", "⏳ Demandes en attente", "⏳ Pending requests") + " : " + attente;
 
             OptionButton tarikaCible = N<OptionButton>("OptNTarikaCible");
             tarikaCible.Clear();
@@ -1573,7 +1642,7 @@ namespace Sahavola
                 _idsTarikasCibles.Add(t.Id);
                 tarikaCible.AddItem(t.Embleme + " " + t.Nom + " — " + t.ChefPseudo);
             }
-            if (tarikaCible.ItemCount == 0) tarikaCible.AddItem("Tsy misy tarika / Aucun groupe");
+            if (tarikaCible.ItemCount == 0) tarikaCible.AddItem(T("Tsy misy tarika", "Aucun groupe", "No group"));
 
             RafraichirApercu();
         }
