@@ -1027,6 +1027,31 @@ namespace Sahavola
             poi.SetItemText(1, T("🔴 Voarara (géofence)", "🔴 Interdit (géofence)", "🔴 Forbidden (geofence)"));
         }
 
+        private string Pick(string triple)
+        {
+            string[] versions = triple.Split('‖').Select(v => v.Trim()).ToArray();
+            int index = _langue switch
+            {
+                Langue.Malagasy => 0,
+                Langue.Anglais => 2,
+                _ => 1
+            };
+            return versions[Math.Min(index, versions.Length - 1)];
+        }
+
+        private static string SansBarre(string texte) => texte.Replace(" / ", " ; ");
+
+        private void RafraichirOptionsTeknika()
+        {
+            int selection = _optConsult.Selected;
+            _optConsult.Clear();
+            foreach (Teknika t in _teknikas)
+            {
+                _optConsult.AddItem(Pick(t.Categorie) + " — " + Pick(t.Titre) + " — " + t.Page);
+            }
+            if (_optConsult.ItemCount > 0) _optConsult.Select(Math.Max(0, selection));
+        }
+
         private void TexteNavigation()
         {
             N<Label>("TitreLabel").Text = T("🌲 SAHAVOLA — Lasy Skoto", "🌲 SAHAVOLA — Camp Scout", "🌲 SAHAVOLA — Scout Camp");
@@ -1489,12 +1514,13 @@ namespace Sahavola
 
         private void RafraichirTeknika()
         {
+            RafraichirOptionsTeknika();
             string filtre = N<LineEdit>("EditTekSearch").Text.Trim();
             var lignes = _teknikas
                 .Where(t => filtre.Length == 0
                     || t.Titre.Contains(filtre, StringComparison.OrdinalIgnoreCase)
                     || t.Categorie.Contains(filtre, StringComparison.OrdinalIgnoreCase))
-                .Select(t => t.Titre + " — " + t.Categorie + " (" + t.Page + ")");
+                .Select(t => Pick(t.Titre) + " — " + Pick(t.Categorie) + " (" + t.Page + ")");
             string texte = string.Join("\n", lignes);
             N<Label>("LblTekList").Text = texte.Length == 0 ? T("Tsy hita", "Aucun résultat", "No result") : texte;
         }
@@ -1522,12 +1548,15 @@ namespace Sahavola
             if (_optConsult.ItemCount == 0 || _optConsult.Selected < 0) return;
             Teknika t = _teknikas[_optConsult.Selected];
             bool utilisable = CodeEncoder.CodesSupportes.Contains(t.Code);
-            N<Label>("LblQuizQ").Text = "🧭 Chemin / Toerana : Teknika Skoto > " + t.Categorie + " > " + t.Page
-                + "\n📖 " + t.Titre
-                + "\n" + t.DescFr
-                + "\n" + t.UsageFr
-                + "\n🔑 Kaody / Code : " + (string.IsNullOrEmpty(t.Code) ? "—" : t.Code)
-                + (utilisable ? " — azo ampiasaina amin'ny Mamorona / utilisable dans Créer" : " — consigne seulement / consigne uniquement");
+            N<Label>("LblQuizQ").Text = T("🧭 Toerana : Teknika Skoto", "🧭 Chemin : Teknika Skoto", "🧭 Path: Teknika Skoto")
+                + " > " + Pick(t.Categorie) + " > " + t.Page
+                + "\n📖 " + Pick(t.Titre)
+                + "\n" + SansBarre(T(t.DescMg, t.DescFr, t.DescEn))
+                + "\n" + SansBarre(T(t.UsageMg, t.UsageFr, t.UsageEn))
+                + "\n🔑 " + T("Kaody", "Code", "Code") + " : " + (string.IsNullOrEmpty(t.Code) ? "—" : t.Code)
+                + (utilisable
+                    ? T(" — azo ampiasaina amin'ny Mamorona", " — utilisable dans Créer", " — usable in Create")
+                    : T(" — consigne ihany", " — consigne seulement", " — instruction only"));
             N<Label>("LblQuizMsg").Text = "";
         }
 
