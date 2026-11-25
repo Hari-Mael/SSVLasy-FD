@@ -154,7 +154,7 @@ namespace Sahavola
                 Perso = new Personnalisation { NomPersonnage = p, AvatarEmoji = "👑" }
             });
             AddAudit("CREATE_FIRST_SUPERADMIN", p);
-            return "✅ Mpitantana Ambony voalohany noforonina / Premier Super Admin créé : " + p;
+            return $"✅ Mpitantana Ambony voalohany noforonina : {p} ‖ ✅ Premier Super Admin créé : {p} ‖ ✅ First Super Admin created: {p}";
         }
 
         public string Login(string pseudo, string pass)
@@ -191,7 +191,7 @@ namespace Sahavola
             u.DernierLogin = DateTime.UtcNow;
             CurrentUser = u;
             AddAudit("LOGIN", u.Pseudo);
-            return "✅ Tongasoa / Bienvenue " + u.Pseudo + " — " + u.Role;
+            return $"✅ Tongasoa, {u.Pseudo} — {u.Role} ‖ ✅ Bienvenue {u.Pseudo} — {u.Role} ‖ ✅ Welcome {u.Pseudo} — {u.Role}";
         }
 
         public void Logout()
@@ -289,8 +289,8 @@ namespace Sahavola
             Data.Users.Add(nouveau);
             AddAudit("CREATE_USER", $"{p} {role} parrain={nouveau.Parrain} statut={nouveau.Statut}");
             return valide
-                ? "✅ " + p + " noforonina sy voamarina / créé et validé"
-                : "⏳ " + p + " — Fangatahana nalefa, miandry fanamarinana / Demande envoyée, en attente";
+                ? $"✅ {p} noforonina sy voamarina ‖ ✅ {p} créé et validé ‖ ✅ {p} created and validated"
+                : $"⏳ {p} — Fangatahana nalefa, miandry fanamarinana ‖ ⏳ {p} — Demande envoyée, en attente ‖ ⏳ {p} — Request sent, pending";
         }
 
         public bool PeutVoirUser(User viewer, User cible)
@@ -307,7 +307,7 @@ namespace Sahavola
             if (u == null) return "❌ Kaonty tsy hita ‖ ❌ Compte introuvable ‖ ❌ Account not found";
             u.Statut = valider ? StatutCompte.Valide : StatutCompte.Suspendu;
             AddAudit(valider ? "VALIDER_USER" : "REFUSER_USER", pseudo);
-            return valider ? "✅ " + pseudo + " voamarina / validé" : "❌ " + pseudo + " nolavina / refusé";
+            return valider ? $"✅ {pseudo} voamarina ‖ ✅ {pseudo} validé ‖ ✅ {pseudo} approved" : $"❌ {pseudo} nolavina ‖ ❌ {pseudo} refusé ‖ ❌ {pseudo} rejected";
         }
 
         public string SuspendreUser(string pseudo)
@@ -318,7 +318,7 @@ namespace Sahavola
             if (u.Pseudo == CurrentUser.Pseudo) return "❌ Tsy azo atao ny manala ny tenanao ‖ ❌ Impossible de te suspendre toi-même ‖ ❌ You cannot suspend yourself";
             u.Statut = StatutCompte.Suspendu;
             AddAudit("SUSPENDRE_USER", pseudo);
-            return "✅ " + pseudo + " mihantona / suspendu";
+            return $"✅ {pseudo} mihantona ‖ ✅ {pseudo} suspendu ‖ ✅ {pseudo} suspended";
         }
 
         public string SupprimerUser(string pseudo)
@@ -337,7 +337,7 @@ namespace Sahavola
             }
             Data.Users.Remove(u);
             AddAudit("SUPPRIMER_USER", pseudo);
-            return "✅ " + pseudo + " voafafa / supprimé";
+            return $"✅ {pseudo} voafafa ‖ ✅ {pseudo} supprimé ‖ ✅ {pseudo} deleted";
         }
 
         public string CreerTarika(string nom, string chefPseudo, string couleur, string embleme, string devise)
@@ -367,7 +367,7 @@ namespace Sahavola
                 if (membre.Parrain == chefPseudo && string.IsNullOrEmpty(membre.TarikaId)) membre.TarikaId = nouvelleTarika.Id;
             }
             AddAudit("CREATE_TARIKA", $"{nomNettoye} chef={chefPseudo}");
-            return "✅ Tarika noforonina / Groupe créé : " + nomNettoye + " " + embleme;
+            return $"✅ Tarika noforonina : {nomNettoye} {embleme} ‖ ✅ Groupe créé : {nomNettoye} {embleme} ‖ ✅ Group created: {nomNettoye} {embleme}";
         }
 
         public Tarika? GetTarikaDe(string pseudo)
@@ -389,7 +389,7 @@ namespace Sahavola
             string nom = t.Nom;
             DetacherTarika(tarikaId);
             AddAudit("DELETE_TARIKA", nom);
-            return "✅ Tarika voafafa / Groupe supprimé : " + nom;
+            return $"✅ Tarika voafafa : {nom} ‖ ✅ Groupe supprimé : {nom} ‖ ✅ Group deleted: {nom}";
         }
 
         private void DetacherTarika(string tarikaId)
@@ -413,7 +413,7 @@ namespace Sahavola
             perso.AvatarImagePath = "";
             u.Perso = perso;
             AddAudit("SAVE_PERSO", pseudo);
-            return "✅ Mpilalao voatahiry / Joueur sauvegardé : " + perso.NomPersonnage + " " + perso.AvatarEmoji;
+            return $"✅ Mpilalao voatahiry : {perso.NomPersonnage} {perso.AvatarEmoji} ‖ ✅ Joueur sauvegardé : {perso.NomPersonnage} {perso.AvatarEmoji} ‖ ✅ Player saved: {perso.NomPersonnage} {perso.AvatarEmoji}";
         }
 
         public Personnalisation GetPerso(string pseudo)
@@ -454,7 +454,7 @@ namespace Sahavola
                 return $"❌ Tsy mifanaraka — {Data.Campagne.Jours} andro dia mihoatra ny max ho an'ity sokajy ity ‖ ❌ Incompatible — {Data.Campagne.Jours} jours dépassent le max pour ce type ‖ ❌ Incompatible — {Data.Campagne.Jours} days exceed the max for this type";
             Data.Campagne.Type = nouveauType;
             AddAudit("CHANGER_TYPE_LASY", nouveauType.ToString());
-            return "✅ Sokajin'ny lasy novaina / Type de camp changé : " + Data.Campagne.NomType;
+            return $"✅ Sokajin'ny lasy novaina : {Data.Campagne.NomType} ‖ ✅ Type de camp changé : {Data.Campagne.NomType} ‖ ✅ Camp type changed: {Data.Campagne.NomType}";
         }
 
         public string ChangerStatutCampagne(StatutCampagne cible)
@@ -477,7 +477,7 @@ namespace Sahavola
             if (Data.Campagne == null) return "❌ Tsy misy lasy ‖ ❌ Aucune campagne ‖ ❌ No camp";
             Data.Campagne.MeteoActuelle = nouvelle;
             AddAudit("CHANGER_METEO", nouvelle.ToString());
-            return "✅ Toetr'andro / Météo : " + nouvelle;
+            return $"✅ Toetr'andro : {nouvelle} ‖ ✅ Météo : {nouvelle} ‖ ✅ Weather: {nouvelle}";
         }
 
         public int EnergieDe(User utilisateur)
@@ -496,7 +496,7 @@ namespace Sahavola
             CurrentUser.Energie = Math.Min(EnergieMax, CurrentUser.Energie + EnergieParRepas);
             CurrentUser.DerniereMaj = DateTime.UtcNow;
             AddAudit("MANGER", CurrentUser.Pseudo);
-            return "✅ Nihinana / Repas pris : énergie " + CurrentUser.Energie + "/" + EnergieMax;
+            return $"✅ Nihinana : hery {CurrentUser.Energie}/{EnergieMax} ‖ ✅ Repas pris : énergie {CurrentUser.Energie}/{EnergieMax} ‖ ✅ Meal eaten: energy {CurrentUser.Energie}/{EnergieMax}";
         }
 
         private void ActualiserEnergie(User utilisateur)
@@ -539,7 +539,7 @@ namespace Sahavola
             Data.Campagne.MeteoActuelle = TirerMeteo();
             DistribuerRations();
             AddAudit("AVANCER_JOUR", Data.Campagne.JourActuel.ToString());
-            return "✅ Andro " + Data.Campagne.JourActuel + " / Jour " + Data.Campagne.JourActuel;
+            return $"✅ Andro {Data.Campagne.JourActuel} ‖ ✅ Jour {Data.Campagne.JourActuel} ‖ ✅ Day {Data.Campagne.JourActuel}";
         }
 
         public string CreerPoi(string nom, double lat, double lon, bool interdit, string desc)
@@ -562,7 +562,7 @@ namespace Sahavola
             };
             Data.Pois.Add(poi);
             AddAudit("CREATE_POI", $"{nomNettoye} interdit={interdit}");
-            return "✅ Toerana noforonina / Lieu créé : " + nomNettoye;
+            return $"✅ Toerana noforonina : {nomNettoye} ‖ ✅ Lieu créé : {nomNettoye} ‖ ✅ Place created: {nomNettoye}";
         }
 
         public List<Poi> ZonesInterdites() => Data.Pois.Where(p => p.Interdit).ToList();
@@ -600,7 +600,7 @@ namespace Sahavola
                 return "❌ Mpanentana, Mpitarika, Mpitantana Ambony ihany ‖ ❌ Seul Animateur, Chef ou Super Admin ‖ ❌ Only Animator, Chief or Super Admin";
             if (string.IsNullOrWhiteSpace(a.Titre)) return "❌ Lohateny banga ‖ ❌ Titre vide ‖ ❌ Title empty";
             if (string.IsNullOrWhiteSpace(a.Clair)) return "❌ Hafatra mazava banga ‖ ❌ Message en clair vide ‖ ❌ Plain message empty";
-            if (!CodeEncoder.CodesSupportes.Contains(a.Code)) return "❌ Kaody tsy voaporofo / Code non pris en charge : " + a.Code;
+            if (!CodeEncoder.CodesSupportes.Contains(a.Code)) return $"❌ Kaody tsy voaporofo : {a.Code} ‖ ❌ Code non pris en charge : {a.Code} ‖ ❌ Code not supported: {a.Code}";
             if (a.Code == "Semaphore" && !a.ActiviteNavale) return "❌ Sémaphore : activité navale obligatoire ‖ ❌ Réservé aux activités navales ‖ ❌ Semaphore: naval activity required";
             if (a.Indices.Count > 3) return "❌ Toro-hevitra 3 farafahakeliny ‖ ❌ 3 indices max ‖ ❌ 3 hints maximum";
             if (a.Points < 1 || a.Points > 100) return "❌ Isa 1 ka hatramin'ny 100 ‖ ❌ Points de 1 à 100 ‖ ❌ Points from 1 to 100";
@@ -625,7 +625,7 @@ namespace Sahavola
                 if (portee == PorteeActivite.Rehetra)
                 {
                     a.TarikaId = "";
-                    a.TarikaNom = "Rehetra / Tous";
+                    a.TarikaNom = "Rehetra ‖ Tous ‖ All";
                 }
                 else
                 {
@@ -655,7 +655,7 @@ namespace Sahavola
                 if (deja >= QUOTA_ASA_REHETRA_PAR_SEMAINE)
                     return $"❌ Quota feno — Asa Rehetra {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} tamin'ity herinandro ity ‖ ❌ Quota atteint — Asa Rehetra {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} cette semaine ‖ ❌ Quota reached — common activities {deja}/{QUOTA_ASA_REHETRA_PAR_SEMAINE} this week";
                 a.TarikaId = "";
-                a.TarikaNom = "Rehetra / Tous";
+                a.TarikaNom = "Rehetra ‖ Tous ‖ All";
                 a.Statut = "en_attente_validation";
                 a.DemandeCrossTarika = true;
                 return AjouterActivite(a, "DEMANDE_ASA_REHETRA");
@@ -677,8 +677,8 @@ namespace Sahavola
             AddAudit(action, $"{a.Titre} J{a.Jour} {a.Code} {a.Points}pts portee={a.Portee} tarika={a.TarikaNom}");
             return a.Statut switch
             {
-                "publiee" => "✅ Asa navoaka / Activité publiée : " + a.Titre + " — " + a.TarikaNom,
-                "brouillon" => "✅ Brouillon noforonina / Brouillon créé : " + a.Titre + " — publie-le quand il est prêt",
+                "publiee" => $"✅ Asa navoaka : {a.Titre} — {a.TarikaNom} ‖ ✅ Activité publiée : {a.Titre} — {a.TarikaNom} ‖ ✅ Activity published: {a.Titre} — {a.TarikaNom}",
+                "brouillon" => $"✅ Brouillon noforonina : {a.Titre} — navoaka rehefa vonona ‖ ✅ Brouillon créé : {a.Titre} — publie-le quand il est prêt ‖ ✅ Draft created: {a.Titre} — publish when ready",
                 _ => "⏳ Fangatahana nalefa — miandry fanamarinana SA ‖ ⏳ Demande envoyée — en attente du Super Admin ‖ ⏳ Request sent — waiting for the Super Admin"
             };
         }
@@ -692,7 +692,7 @@ namespace Sahavola
             if (a.Statut != "brouillon") return "❌ Tsy brouillon ‖ ❌ Pas un brouillon ‖ ❌ Not a draft";
             a.Statut = "publiee";
             AddAudit("PUBLIER_ACTIVITE", a.Titre);
-            return "✅ Asa navoaka / Activité publiée : " + a.Titre;
+            return $"✅ Asa navoaka : {a.Titre} ‖ ✅ Activité publiée : {a.Titre} ‖ ✅ Activity published: {a.Titre}";
         }
 
         public List<Activite> GetActivitesVisibles(User viewer)
@@ -738,8 +738,8 @@ namespace Sahavola
             a.DemandeCrossTarika = false;
             AddAudit(valider ? "VALIDER_DEMANDE_ACTIVITE" : "REFUSER_DEMANDE_ACTIVITE", $"{a.Titre} portee={a.Portee} tarika={a.TarikaNom}");
             return valider
-                ? "✅ Fangatahana voamarina / Demande validée : " + a.Titre + " — " + a.TarikaNom
-                : "❌ Fangatahana nolavina / Demande refusée : " + a.Titre;
+                ? $"✅ Fangatahana voamarina : {a.Titre} — {a.TarikaNom} ‖ ✅ Demande validée : {a.Titre} — {a.TarikaNom} ‖ ✅ Request approved: {a.Titre} — {a.TarikaNom}"
+                : $"❌ Fangatahana nolavina : {a.Titre} ‖ ❌ Demande refusée : {a.Titre} ‖ ❌ Request rejected: {a.Titre}";
         }
 
         public string SupprimerDemandeRefusee(string activiteId)
@@ -807,7 +807,7 @@ namespace Sahavola
                 progression.Verrous.Remove(cible.Id);
                 MettreAJourBadges(progression);
                 AddAudit("REPONSE_OK", $"{cible.Titre} +{points}pts equipe={progression.Cle}");
-                retour = "✅ Marina / Bonne réponse : +" + points + " pts";
+                retour = $"✅ Marina : +{points} pts ‖ ✅ Bonne réponse : +{points} pts ‖ ✅ Correct answer: +{points} pts";
                 return true;
             }
 
@@ -823,9 +823,13 @@ namespace Sahavola
             }
 
             string indice = essais <= cible.Indices.Count ? cible.Indices[essais - 1] : "";
-            retour = "❌ Diso / Faux (" + essais + "/" + cible.EssaisMax + ")"
-                + (indice.Length > 0 ? " — Toro-hevitra / Indice : " + indice : "")
-                + (epuise ? " — Vita / Terminé" : "");
+            string indiceMg = indice.Length > 0 ? " — Toro-hevitra : " + indice : "";
+            string indiceFr = indice.Length > 0 ? " — Indice : " + indice : "";
+            string indiceEn = indice.Length > 0 ? " — Hint: " + indice : "";
+            string finMg = epuise ? " — Vita" : "";
+            string finFr = epuise ? " — Terminé" : "";
+            string finEn = epuise ? " — Finished" : "";
+            retour = $"❌ Diso ({essais}/{cible.EssaisMax}){indiceMg}{finMg} ‖ ❌ Faux ({essais}/{cible.EssaisMax}){indiceFr}{finFr} ‖ ❌ Wrong ({essais}/{cible.EssaisMax}){indiceEn}{finEn}";
             AddAudit("REPONSE_KO", $"{cible.Titre} essai={essais}/{cible.EssaisMax} equipe={progression.Cle}");
             return false;
         }
@@ -845,12 +849,12 @@ namespace Sahavola
             }
             if (a.Jour > Data.Campagne.JourActuel)
             {
-                motif = "🔒 Tsy mbola misokatra / Pas encore débloquée (jour " + a.Jour + ")";
+                motif = $"🔒 Tsy mbola misokatra (andro {a.Jour}) ‖ 🔒 Pas encore débloquée (jour {a.Jour}) ‖ 🔒 Not unlocked yet (day {a.Jour})";
                 return false;
             }
             if (!DansFenetreHoraire(a))
             {
-                motif = "⏰ Hors horaire / Hors horaire : " + a.HeureDebut + " – " + a.HeureFin;
+                motif = $"⏰ Ora tsy mety : {a.HeureDebut} – {a.HeureFin} ‖ ⏰ Hors horaire : {a.HeureDebut} – {a.HeureFin} ‖ ⏰ Outside hours: {a.HeureDebut} – {a.HeureFin}";
                 return false;
             }
             if (progression.Terminees.Contains(a.Id))
