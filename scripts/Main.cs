@@ -70,6 +70,11 @@ namespace Sahavola
         private Button _btnRano = null!;
         private Button _btnSakafo = null!;
         private Button _btnDebloquer = null!;
+        private Button _btnRefaire = null!;
+        private Button _btnPasser = null!;
+        private LineEdit _editRapport = null!;
+        private Button _btnRapport = null!;
+        private Label _lblRapports = null!;
         private Button _btnMeteo = null!;
         private OptionButton _optLangue = null!;
         private Langue _langue = Langue.Francais;
@@ -323,6 +328,20 @@ namespace Sahavola
             campVBox.AddChild(_btnRano);
             campVBox.AddChild(_btnSakafo);
             campVBox.AddChild(_btnDebloquer);
+            _editRapport = new LineEdit { CustomMinimumSize = new Vector2(0, 44) };
+            _btnRapport = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnRapport.Pressed += OnRapport;
+            _lblRapports = new Label { AutowrapMode = TextServer.AutowrapMode.WordSmart };
+            campVBox.AddChild(_editRapport);
+            campVBox.AddChild(_btnRapport);
+            campVBox.AddChild(_lblRapports);
+            Control activitesVBox = N<Control>("ActivitesVBox");
+            _btnRefaire = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnRefaire.Pressed += OnRefaire;
+            _btnPasser = new Button { CustomMinimumSize = new Vector2(0, 44) };
+            _btnPasser.Pressed += OnPasser;
+            activitesVBox.AddChild(_btnRefaire);
+            activitesVBox.AddChild(_btnPasser);
         }
 
         private void ConstruireActiviteNavale()
@@ -468,6 +487,43 @@ namespace Sahavola
             RafraichirTout();
         }
 
+        private void OnRefaire()
+        {
+            Activite? a = _gm.ActiviteActuelle();
+            if (a == null) return;
+            SetStatus(_gm.Refaire(a.Id));
+            RafraichirTout();
+        }
+
+        private void OnPasser()
+        {
+            Activite? a = _gm.ActiviteActuelle();
+            if (a == null) return;
+            SetStatus(_gm.Passer(a.Id));
+            RafraichirTout();
+        }
+
+        private void OnRapport()
+        {
+            SetStatus(_gm.EnvoyerRapport(_editRapport.Text));
+            _editRapport.Text = "";
+            RafraichirTout();
+        }
+
+        private void RafraichirBoutonsChoix()
+        {
+            User? u = _gm.CurrentUser;
+            if (u == null) return;
+            Activite? a = _gm.ActiviteActuelle();
+            TeamProgress p = _gm.ProgressionCourante();
+            int essais = a == null ? 0 : p.Essais.GetValueOrDefault(a.Id);
+            string choix = a != null && p.Choix.TryGetValue(a.Id, out string? c) ? c ?? "" : "";
+            _btnRefaire.Visible = a != null && essais > 0 && choix == "";
+            _btnRefaire.Text = T("🔁 Refaire (tsy misy fara andro)", "🔁 Refaire (sans délai)", "🔁 Retry (no delay)");
+            _btnPasser.Visible = a != null && essais > 0 && choix != "passer";
+            _btnPasser.Text = T("⏭️ Lany — manaraka", "⏭️ Passer à l'étape suivante", "⏭️ Skip to next step");
+        }
+
         private void OnDebloquer()
         {
             SetStatus(_gm.DebloquerEquipes());
@@ -499,6 +555,17 @@ namespace Sahavola
             _btnDebloquer.Visible = chef;
             _btnDebloquer.Text = T("🔓 Hanafaka ny ekipa", "🔓 Débloquer l'équipe", "🔓 Unblock the team");
             _btnDebloquer.Disabled = etat == "normal";
+
+            bool membre = u.Role == Role.Membre;
+            _editRapport.Visible = membre;
+            _btnRapport.Visible = membre;
+            _btnRapport.Text = T("📝 Tafiray ny rapporta", "📝 Envoyer le rapport du jour", "📝 Send today's report");
+            _btnRapport.Disabled = !_gm.RapportOuvert();
+            _editRapport.PlaceholderText = T("Rapporta (19h–20h)", "Rapport (19h–20h)", "Report (19:00–20:00)");
+            _lblRapports.Visible = u.Role == Role.Chef;
+            List<string> manquants = u.Role == Role.Chef ? _gm.RapportsManquants(u.Pseudo) : new List<string>();
+            _lblRapports.Text = T("📝 Rapporta tsy voaray", "📝 Rapports manquants", "📝 Missing reports") + " : "
+                + (manquants.Count == 0 ? T("tsy misy", "aucun", "none") : string.Join(", ", manquants));
         }
 
         private string LibelleEtatEquipe(string etat) => etat switch
@@ -942,6 +1009,7 @@ namespace Sahavola
             RafraichirBackend();
             TexteNavigation();
             TexteMonJoueurActivitesCodes();
+            RafraichirBoutonsChoix();
             TexteTarikaCarteEquipesBackend();
             TexteComptesChefCreer();
             AppliquerLangue();
