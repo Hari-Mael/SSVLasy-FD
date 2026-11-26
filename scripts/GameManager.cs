@@ -20,14 +20,15 @@ namespace Sahavola
         private const string CheminDonnees = "user://sahavola.dat";
         private const int TentativesAvantVerrou = 5;
         private const int MinutesVerrouCompte = 15;
-        private const int MaxChefs = 6;
+        private const int MaxChefs = 100;
+        private const int MaxSuperAdmin = 10;
         private const int EssaisMaxAutorises = 3;
         private const int RationsParJour = 2;
         private const int EnergieMax = 100;
         private const int EnergieParRepas = 40;
         private static readonly int[] DureesVerrouEssaiMinutes = { 15, 10, 5 };
         private readonly Random _aleatoire = new();
-        private const int MaxTarikas = 6;
+        private const int MaxTarikas = 100;
         private const int MaxEquipesParChef = 3;
         private const int MembresParEquipe = 5;
         private const int MaxJoursCampagne = 11;
@@ -252,8 +253,8 @@ namespace Sahavola
 
             bool superAdmin = CurrentUser?.Role == Role.SuperAdmin;
             if (role == Role.SuperAdmin && !superAdmin) return "❌ Mpitantana Ambony ihany no afaka mamorona Mpitantana Ambony ‖ ❌ Seul un Super Admin peut créer un Super Admin ‖ ❌ Only a Super Admin can create a Super Admin";
-            if (role == Role.SuperAdmin && Data.Users.Exists(u => u.Role == Role.SuperAdmin)) return "❌ Mpitantana Ambony iray ihany ‖ ❌ Un seul Super Admin ‖ ❌ Only one Super Admin";
-            if (role == Role.Chef && Data.Users.Count(u => u.Role == Role.Chef) >= MaxChefs) return "❌ Mpitarika 6 farafahakeliny ‖ ❌ 6 chefs maximum ‖ ❌ 6 chiefs maximum";
+            if (role == Role.SuperAdmin && Data.Users.Count(u => u.Role == Role.SuperAdmin) >= MaxSuperAdmin) return "❌ Mpitantana Ambony 10 farafahakeliny ‖ ❌ 10 Super Admin maximum ‖ ❌ 10 Super Admins maximum";
+            if (role == Role.Chef && Data.Users.Count(u => u.Role == Role.Chef) >= MaxChefs) return "❌ Mpitarika 100 farafahakeliny ‖ ❌ 100 chefs maximum ‖ ❌ 100 chiefs maximum";
             bool valide = validerDirect && superAdmin;
 
             if (role == Role.Membre)
@@ -359,7 +360,7 @@ namespace Sahavola
             if (CurrentUser == null || CurrentUser.Role != Role.SuperAdmin) return "❌ Mpitantana Ambony ihany ‖ ❌ Seul le Super Admin ‖ ❌ Super Admin only";
             string nomNettoye = (nom ?? "").Trim();
             if (nomNettoye.Length == 0) return "❌ Anaran'ny tarika banga ‖ ❌ Nom du groupe vide ‖ ❌ Group name empty";
-            if (Data.Tarikas.Count >= MaxTarikas) return "❌ Tarika 6 farafahabetsany ‖ ❌ 6 groupes maximum ‖ ❌ 6 groups maximum";
+            if (Data.Tarikas.Count >= MaxTarikas) return "❌ Tarika 100 farafahabetsany ‖ ❌ 100 groupes maximum ‖ ❌ 100 groups maximum";
             if (Data.Tarikas.Exists(t => t.ChefPseudo == chefPseudo)) return "❌ Efa manana tarika io mpitarika io ‖ ❌ Ce chef a déjà un groupe ‖ ❌ This leader already has a group";
             User? chef = Data.Users.Find(u => u.Pseudo == chefPseudo);
             if (chef == null || chef.Role != Role.Chef) return "❌ Mpitarika tsy hita ‖ ❌ Chef introuvable ‖ ❌ Chief not found";
@@ -542,6 +543,62 @@ namespace Sahavola
             {
                 utilisateur.Rations += RationsParJour;
             }
+        }
+
+        public string Refaire(string activiteId)
+        {
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
+            TeamProgress p = ProgressionCourante();
+            if (p.Essais.GetValueOrDefault(activiteId) == 0) return "❌ Tsy mbola nisy diso ‖ ❌ Aucune erreur pour l'instant ‖ ❌ No wrong answer yet";
+            if (p.Choix.TryGetValue(activiteId, out string? choix) && !string.IsNullOrEmpty(choix)) return "❌ Efa nisafidy ‖ ❌ Choix déjà fait ‖ ❌ Choice already made";
+            p.Choix[activiteId] = "refaire";
+            p.Verrous.Remove(activiteId);
+            AddAudit("REFAIRE", activiteId);
+            return "🔁 Refaire : tsy misy fara andro ‖ 🔁 Refaire : sans délai ‖ 🔁 Retry: no delay";
+        }
+
+        public string Passer(string activiteId)
+        {
+            if (CurrentUser == null) return "❌ Midira aloha ‖ ❌ Connecte-toi d'abord ‖ ❌ Log in first";
+            TeamProgress p = ProgressionCourante();
+            if (p.Essais.GetValueOrDefault(activiteId) == 0) return "❌ Passer aorian'ny diso ihany ‖ ❌ Passer seulement après une erreur ‖ ❌ Skip only after a wrong answer";
+            p.Choix[activiteId] = "passer";
+            if (!p.Terminees.Contains(activiteId)) p.Terminees.Add(activiteId);
+            p.Verrous.Remove(activiteId);
+            AddAudit("PASSER", activiteId);
+            return "⏭️ Nandao ‖ ⏭️ Passé à l'étape suivante ‖ ⏭️ Skipped to the next step";
+        }
+
+        public bool RapportOuvert()
+        {
+            TimeSpan heure = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, FuseauCamp()).TimeOfDay;
+            return heure >= new TimeSpan(19, 0, 0) && heure < new TimeSpan(20, 0, 0);
+        }
+
+        public string EnvoyerRapport(string texte)
+        {
+            if (CurrentUser == null || CurrentUser.Role != Role.Membre) return "❌ Mpikambana ihany ‖ ❌ Réservé aux membres ‖ ❌ Members only";
+            if (!RapportOuvert()) return "⏰ Ora tsy mety ‖ ⏰ Rapport ouvert de 19h à 20h ‖ ⏰ Report open from 19:00 to 20:00";
+            if (string.IsNullOrWhiteSpace(texte)) return "❌ Rapport banga ‖ ❌ Rapport vide ‖ ❌ Empty report";
+            TeamProgress p = ProgressionCourante();
+            int jour = Data.Campagne?.JourActuel ?? 1;
+            p.RapportJour = jour;
+            p.RapportTexte = texte.Trim();
+            AddAudit("RAPPORT", CleEquipe(CurrentUser) + " jour=" + jour);
+            return "✅ Voaray ny rapporta ‖ ✅ Rapport envoyé au chef ‖ ✅ Report sent to the chief";
+        }
+
+        public List<string> RapportsManquants(string chef)
+        {
+            int jour = Data.Campagne?.JourActuel ?? 1;
+            var cles = Data.Users.Where(u => u.Role == Role.Membre && u.Parrain == chef).Select(CleEquipe).Distinct().ToList();
+            var manquants = new List<string>();
+            foreach (string cle in cles)
+            {
+                TeamProgress p = ProgressionPour(cle);
+                if (p.RapportJour != jour && EtatEquipe(p) == "normal") manquants.Add(cle);
+            }
+            return manquants;
         }
 
         public bool CampagneEnCours() => Data.Campagne?.Statut == StatutCampagne.Running;
@@ -955,8 +1012,17 @@ namespace Sahavola
 
             int essais = progression.Essais.GetValueOrDefault(cible.Id) + 1;
             progression.Essais[cible.Id] = essais;
-            int indexVerrou = Math.Min(essais, DureesVerrouEssaiMinutes.Length) - 1;
-            progression.Verrous[cible.Id] = DateTime.UtcNow.AddMinutes(DureesVerrouEssaiMinutes[indexVerrou]);
+            string choixActuel = progression.Choix.GetValueOrDefault(cible.Id) ?? "";
+            if (choixActuel == "refaire")
+            {
+                progression.Choix[cible.Id] = "echec_refaire";
+                progression.Verrous.Remove(cible.Id);
+            }
+            else
+            {
+                int indexVerrou = Math.Min(essais, DureesVerrouEssaiMinutes.Length) - 1;
+                progression.Verrous[cible.Id] = DateTime.UtcNow.AddMinutes(DureesVerrouEssaiMinutes[indexVerrou]);
+            }
             bool epuise = essais >= cible.EssaisMax;
             if (epuise)
             {
@@ -1002,6 +1068,11 @@ namespace Sahavola
             if (!DansFenetreHoraire(a))
             {
                 motif = $"⏰ Ora tsy mety : {a.HeureDebut} – {a.HeureFin} ‖ ⏰ Hors horaire : {a.HeureDebut} – {a.HeureFin} ‖ ⏰ Outside hours: {a.HeureDebut} – {a.HeureFin}";
+                return false;
+            }
+            if (progression.Choix.GetValueOrDefault(a.Id) == "echec_refaire")
+            {
+                motif = "⏭️ Passer ihany ‖ ⏭️ Seul « Passer » est possible ‖ ⏭️ Only « Skip » is possible";
                 return false;
             }
             if (progression.Terminees.Contains(a.Id))
