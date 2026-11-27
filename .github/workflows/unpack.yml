@@ -1,21 +1,26 @@
 name: Dézipper le backend
+
 on:
   push:
     paths: ["SSVLasy-FD-backend.zip"]
   workflow_dispatch:
+
 permissions:
   contents: write
+
 jobs:
   unpack:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Dézipper l'archive
+
+      - name: Dézipper l'archive (sans toucher aux workflows)
         run: |
-          test -f SSVLasy-FD-backend.zip || exit 0
-          unzip -o SSVLasy-FD-backend.zip -d .
+          test -f SSVLasy-FD-backend.zip || { echo "Archive absente, rien à faire"; exit 0; }
+          unzip -o SSVLasy-FD-backend.zip -d . -x ".github/workflows/*"
           rm SSVLasy-FD-backend.zip
-      - name: Enregistrer
+
+      - name: Enregistrer les fichiers extraits
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
