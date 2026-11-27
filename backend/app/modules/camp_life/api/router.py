@@ -49,7 +49,17 @@ class CampViewResponse(BaseModel):
 
     @classmethod
     def from_view(cls, view: CampView) -> "CampViewResponse":
-        return cls(**view.__dict__)
+        return cls(
+            campaign_id=view.campaign_id,
+            day=view.day,
+            weather=view.weather,
+            camp_type=view.camp_type,
+            wood=view.wood,
+            water=view.water,
+            food=view.food,
+            status=view.status,
+            actions_done=view.actions_done,
+        )
 
 
 class WeatherRequest(BaseModel):
