@@ -746,15 +746,11 @@ namespace Sahavola
             N<Button>("BtnBGps").Pressed += OnGps;
             N<Button>("BtnDialogOk").Pressed += () => GetNode<Control>(Racine + "DialogPanel").Visible = false;
             N<Button>("BtnOuvrir3D").Pressed += () => AfficherDialogue(
-                T("🗺️ Camp 3D", "🗺️ Camp 3D", "🗺️ 3D camp"),
-                T("Bientôt disponible : la vue 3D du camp n'est pas encore construite.",
-                  "Bientôt disponible : la vue 3D du camp n'est pas encore construite.",
-                  "Coming soon: the 3D camp view is not built yet."));
+                "🗺️ Camp 3D ‖ 🗺️ Camp 3D ‖ 🗺️ 3D camp",
+                "Bientôt disponible : la vue 3D du camp n'est pas encore construite. ‖ Bientôt disponible : la vue 3D du camp n'est pas encore construite. ‖ Coming soon: the 3D camp view is not built yet.");
             N<Button>("BtnQuestHelp").Pressed += () => AfficherDialogue(
-                T("❓ Aide", "❓ Aide", "❓ Help"),
-                T("Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer.",
-                  "Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer.",
-                  "Once a day, collect wood, water and food. Answer the unlocked activities. After a wrong answer, wait for the delay or choose Retry or Skip."));
+                "❓ Aide ‖ ❓ Aide ‖ ❓ Help",
+                "Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer. ‖ Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer. ‖ Once a day, collect wood, water and food. Answer the unlocked activities. After a wrong answer, wait for the delay or choose Retry or Skip.");
             N<Button>("BtnBInv").Pressed += () => ChoisirPanneau("Camp");
             N<Button>("BtnBJournal").Pressed += () => ChoisirPanneau("Activites");
             N<Button>("BtnBCarte").Pressed += () => ChoisirPanneau("Carte");
@@ -1210,8 +1206,8 @@ namespace Sahavola
             N<Label>("Titre3D").Text = T("🗺️ Camp 3D", "🗺️ Camp 3D", "🗺️ 3D camp");
             N<Label>("Info3D").Text = T("Vue du camp en trois dimensions : en construction.", "Vue du camp en trois dimensions : en construction.", "3D view of the camp: under construction.");
             N<Button>("BtnOuvrir3D").Text = T("🗺️ Ouvrir la vue 3D", "🗺️ Ouvrir la vue 3D", "🗺️ Open 3D view");
-            N<Label>("LblQuest").Text = T("🧭 Missions", "🧭 Missions", "🧭 Missions");
-            N<Label>("LblQuestList").Text = T("Aucune mission pour l'instant.", "Aucune mission pour l'instant.", "No mission for now.");
+            N<Label>("LblQuest").Visible = false;
+            N<Label>("LblQuestList").Visible = false;
             N<Button>("BtnQuestHelp").Text = T("❓ Aide", "❓ Aide", "❓ Help");
         }
 
