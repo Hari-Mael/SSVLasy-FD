@@ -1,17 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Godot.NET.Sdk/4.3.0">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.1;net8.0</TargetFrameworks>
-    <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>Sahavola</AssemblyName>
     <RootNamespace>Sahavola</RootNamespace>
-    <AssemblyName>Sahavola.Core</AssemblyName>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Nullable>enable</Nullable>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
 
-  <!-- netstandard2.1 n'inclut pas System.Text.Json : on l'ajoute pour cette cible seulement -->
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
-    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+  <!-- Le noyau partagé (core/) est un projet à part, réutilisé par Unity :
+       le projet Godot ne doit pas le compiler une seconde fois. -->
+  <ItemGroup>
+    <Compile Remove="core/**" />
+    <Compile Remove="backend/**" />
   </ItemGroup>
-
 </Project>
