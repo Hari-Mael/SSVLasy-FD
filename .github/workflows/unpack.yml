@@ -1,8 +1,8 @@
-name: Dézipper le backend
+name: Dézipper les archives
 
 on:
   push:
-    paths: ["SSVLasy-FD-backend.zip"]
+    paths: ["*.zip"]
   workflow_dispatch:
 
 permissions:
@@ -14,16 +14,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Dézipper l'archive (sans toucher aux workflows)
+      - name: Dézipper toutes les archives à la racine (sans toucher aux workflows)
         run: |
-          test -f SSVLasy-FD-backend.zip || { echo "Archive absente, rien à faire"; exit 0; }
-          unzip -o SSVLasy-FD-backend.zip -d . -x ".github/workflows/*"
-          rm SSVLasy-FD-backend.zip
+          shopt -s nullglob
+          archives=(*.zip)
+          if [ ${#archives[@]} -eq 0 ]; then
+            echo "Aucune archive à la racine, rien à faire"
+            exit 0
+          fi
+          for archive in "${archives[@]}"; do
+            echo "Extraction de $archive"
+            unzip -o "$archive" -d . -x ".github/workflows/*"
+            rm "$archive"
+          done
 
       - name: Enregistrer les fichiers extraits
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add -A
-          git diff --cached --quiet || git commit -m "Dézippe le backend à la racine"
+          git diff --cached --quiet || git commit -m "Dézippe les archives à la racine"
           git push
