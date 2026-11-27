@@ -1,0 +1,10 @@
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'morse_lampe';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'morse_sifflet';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'otan';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'semaphore';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'montre_murale';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'pyramide';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'code_q';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'chiffre';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'lohateny';
+ALTER TYPE cipher_kind ADD VALUE IF NOT EXISTS 'code_code';
