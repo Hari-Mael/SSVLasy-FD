@@ -1,0 +1,20 @@
+name: Compiler le noyau Sahavola
+
+on:
+  push:
+    branches: [main]
+    paths: ["core/**", ".github/workflows/core.yml"]
+  pull_request:
+    paths: ["core/**"]
+  workflow_dispatch:
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+      - name: Compiler (net8.0 et netstandard2.1, compatible Unity)
+        run: dotnet build core/Sahavola.Core/Sahavola.Core.csproj --configuration Release
