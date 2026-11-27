@@ -27,7 +27,8 @@ namespace Sahavola
             ["Equipes"] = "EquipesPanel",
             ["Chef"] = "ChefPanel",
             ["Creer"] = "CreerPanel",
-            ["Backend"] = "BackendPanel"
+            ["Backend"] = "BackendPanel",
+            ["3D"] = "Panel3D"
         };
 
         private static readonly Dictionary<string, string> Onglets = new()
@@ -43,7 +44,8 @@ namespace Sahavola
             ["Equipes"] = "BtnTabEquipes",
             ["Chef"] = "BtnTabChef",
             ["Creer"] = "BtnTabCreer",
-            ["Backend"] = "BtnTabBackend"
+            ["Backend"] = "BtnTabBackend",
+            ["3D"] = "BtnTab3D"
         };
 
         private static readonly string[] Modeles =
@@ -643,8 +645,6 @@ namespace Sahavola
 
         private void CacherHorsUsage()
         {
-            GetNode<Control>(Racine + "Panel3D").Visible = false;
-            GetNode<Control>(BarreOnglets + "BtnTab3D").Visible = false;
             GetNode<Control>(Racine + "DialogPanel").Visible = false;
             N<Button>("BtnInteract").Visible = false;
             N<Control>("JoueursTitre").Visible = false;
@@ -744,6 +744,17 @@ namespace Sahavola
             }
 
             N<Button>("BtnBGps").Pressed += OnGps;
+            N<Button>("BtnDialogOk").Pressed += () => GetNode<Control>(Racine + "DialogPanel").Visible = false;
+            N<Button>("BtnOuvrir3D").Pressed += () => AfficherDialogue(
+                T("🗺️ Camp 3D", "🗺️ Camp 3D", "🗺️ 3D camp"),
+                T("Bientôt disponible : la vue 3D du camp n'est pas encore construite.",
+                  "Bientôt disponible : la vue 3D du camp n'est pas encore construite.",
+                  "Coming soon: the 3D camp view is not built yet."));
+            N<Button>("BtnQuestHelp").Pressed += () => AfficherDialogue(
+                T("❓ Aide", "❓ Aide", "❓ Help"),
+                T("Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer.",
+                  "Une fois par jour, collectez bois, eau et nourriture. Répondez aux activités débloquées. Après une erreur, attendez le délai ou choisissez Refaire ou Passer.",
+                  "Once a day, collect wood, water and food. Answer the unlocked activities. After a wrong answer, wait for the delay or choose Retry or Skip."));
             N<Button>("BtnBInv").Pressed += () => ChoisirPanneau("Camp");
             N<Button>("BtnBJournal").Pressed += () => ChoisirPanneau("Activites");
             N<Button>("BtnBCarte").Pressed += () => ChoisirPanneau("Carte");
@@ -1011,6 +1022,7 @@ namespace Sahavola
             TexteMonJoueurActivitesCodes();
             RafraichirBoutonsChoix();
             TexteTarikaCarteEquipesBackend();
+            TextePanel3D();
             TexteComptesChefCreer();
             AppliquerLangue();
         }
@@ -1184,6 +1196,23 @@ namespace Sahavola
                 _optConsult.AddItem(Pick(t.Categorie) + " — " + Pick(t.Titre) + " — " + t.Page);
             }
             if (_optConsult.ItemCount > 0) _optConsult.Select(Math.Max(0, selection));
+        }
+
+        private void AfficherDialogue(string nom, string texte)
+        {
+            N<Label>("LblDialogNom").Text = nom;
+            N<Label>("LblDialogTxt").Text = texte;
+            GetNode<Control>(Racine + "DialogPanel").Visible = true;
+        }
+
+        private void TextePanel3D()
+        {
+            N<Label>("Titre3D").Text = T("🗺️ Camp 3D", "🗺️ Camp 3D", "🗺️ 3D camp");
+            N<Label>("Info3D").Text = T("Vue du camp en trois dimensions : en construction.", "Vue du camp en trois dimensions : en construction.", "3D view of the camp: under construction.");
+            N<Button>("BtnOuvrir3D").Text = T("🗺️ Ouvrir la vue 3D", "🗺️ Ouvrir la vue 3D", "🗺️ Open 3D view");
+            N<Label>("LblQuest").Text = T("🧭 Missions", "🧭 Missions", "🧭 Missions");
+            N<Label>("LblQuestList").Text = T("Aucune mission pour l'instant.", "Aucune mission pour l'instant.", "No mission for now.");
+            N<Button>("BtnQuestHelp").Text = T("❓ Aide", "❓ Aide", "❓ Help");
         }
 
         private void TexteNavigation()
