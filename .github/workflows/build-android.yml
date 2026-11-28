@@ -49,8 +49,14 @@ jobs:
             -storepass android -keypass android -dname "CN=Sahavola, O=Hari-Mael, C=MG"
           echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$RUNNER_TEMP/debug.keystore" >> "$GITHUB_ENV"
 
-      - name: Compiler le C#
-        run: dotnet build Sahavola.sln --configuration Release
+      - name: Compiler le C# (même configuration que l'éditeur Godot)
+        run: |
+          dotnet build Sahavola.csproj --configuration Debug 2>&1 | tee build.log
+          if grep -q "error CS" build.log; then
+            echo "Erreurs de compilation C# détectées :"
+            grep "error CS" build.log | sort -u
+            exit 1
+          fi
 
       - name: Exporter l'APK
         run: |
