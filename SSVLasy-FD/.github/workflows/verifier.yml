@@ -1,0 +1,70 @@
+name: Vérifier Sahavola
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: "4.3-stable"
+
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Installer Godot .NET
+        run: |
+          curl -fsSL -o godot.zip "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_mono_linux_x86_64.zip"
+          unzip -q godot.zip -d "$RUNNER_TEMP/godot"
+          BIN=$(find "$RUNNER_TEMP/godot" -type f -name 'Godot_v*_mono_linux*.x86_64' ! -name '*console*' | head -n 1)
+          if [ -z "$BIN" ]; then
+            echo "::error::Binaire Godot introuvable"
+            ls -R "$RUNNER_TEMP/godot"
+            exit 1
+          fi
+          chmod +x "$BIN"
+          echo "GODOT_BIN=$BIN" >> "$GITHUB_ENV"
+
+      - name: Vérifier les fichiers du projet
+        run: |
+          test -f Sahavola.csproj || { echo "::error::Sahavola.csproj absent"; exit 1; }
+          test -f Sahavola.sln || { echo "::error::Sahavola.sln absent"; exit 1; }
+
+      - name: Compiler le C#
+        run: |
+          dotnet build Sahavola.sln --configuration Debug
+
+      - name: Générer les assemblies Godot
+        run: |
+          "$GODOT_BIN" --headless --path . --build-solutions --quit
+
+      - name: Importer les ressources Godot
+        run: |
+          "$GODOT_BIN" --headless --path . --import
+
+      - name: Démarrer la scène principale
+        run: |
+          timeout 90 "$GODOT_BIN" --headless --path . --quit-after 300 > godot.log 2>&1 || true
+          cat godot.log
+          if grep -E "SCRIPT ERROR|Parse Error|Compile Error|NullReferenceException" godot.log; then
+            echo "::error::Erreur au démarrage de Godot"
+            exit 1
+          fi
+
+      - name: Sauvegarder le journal Godot
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: godot-log
+          path: godot.log
+          if-no-files-found: ignore

@@ -1,0 +1,25 @@
+Modifications à reporter dans le dépôt GitHub Hari-Mael/SSVLasy-FD
+==================================================================
+
+Les chemins ci-dessous sont relatifs à la racine du dépôt.
+
+A. Fichiers modifiés (remplacer le contenu)
+  .gitignore
+  supabase/LISEZMOI-supabase.md
+  supabase/functions/create-member/index.ts
+
+B. Fichiers nouveaux (à ajouter)
+  .github/workflows/supabase.yml
+  supabase/migrations/20261128100000_core_schema.sql
+  supabase/migrations/20261128100100_quotas_and_guards.sql
+  supabase/migrations/20261128100200_rls_policies.sql
+  supabase/migrations/20261128100300_team_management.sql
+  supabase/migrations/20261128100400_campaigns_activities.sql
+  supabase/tests/01_schema_rls_test.sql
+  supabase/tests/02_team_management_test.sql
+  supabase/tests/03_campaign_activity_test.sql
+
+C. Fichier supprimé
+  supabase/migrations/0001_member_accounts.sql
+
+Ordre d'application : les migrations s'appliquent dans l'ordre de leur nom ; les tests s'exécutent dans l'ordre 01, 02, 03.

@@ -1,0 +1,45 @@
+name: Supabase
+
+on:
+  push:
+    branches: [main]
+    paths: ["supabase/**", ".github/workflows/supabase.yml"]
+  pull_request:
+    paths: ["supabase/**", ".github/workflows/supabase.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+      - name: Démarrer Supabase local
+        run: supabase start
+      - name: Tests SQL
+        run: |
+          for f in supabase/tests/*.sql; do
+            psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f "$f"
+          done
+      - name: Arrêter Supabase local
+        if: always()
+        run: supabase stop
+
+  deploy:
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+      - name: Lier le projet
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
+      - name: Appliquer les migrations
+        run: supabase db push
+      - name: Déployer les Edge Functions
+        run: supabase functions deploy create-member

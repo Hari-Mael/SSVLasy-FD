@@ -1,0 +1,80 @@
+name: Construire l'APK Android
+
+on:
+  push:
+    branches: [main]
+    paths: ["scripts/**", "*.tscn", "project.godot", "Sahavola.csproj", "export_presets.cfg"]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+      GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Installer le SDK Android
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+
+      - name: Télécharger Godot 4.3 Mono et les modèles d'export
+        run: |
+          base="https://github.com/godotengine/godot-builds/releases/download/4.3-stable"
+          curl -sSL -o godot.zip "$base/Godot_v4.3-stable_mono_linux_x86_64.zip"
+          unzip -q godot.zip -d "$HOME/godot"
+          curl -sSL -o templates.zip "$base/Godot_v4.3-stable_mono_export_templates.tpz"
+          unzip -q templates.zip -d "$RUNNER_TEMP/tpl"
+          source_dir=$(dirname "$(find "$RUNNER_TEMP/tpl" -name 'android_debug.apk' | head -n 1)")
+          dest="$HOME/.local/share/godot/export_templates/4.3.stable.mono"
+          mkdir -p "$dest"
+          cp -r "$source_dir"/. "$dest"/
+
+      - name: Créer la clé de signature de test (debug)
+        run: |
+          keytool -genkeypair -v -keystore "$RUNNER_TEMP/debug.keystore" -alias androiddebugkey \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -storepass android -keypass android -dname "CN=Sahavola, O=Hari-Mael, C=MG"
+          echo "GODOT_ANDROID_KEYSTORE_DEBUG_PATH=$RUNNER_TEMP/debug.keystore" >> "$GITHUB_ENV"
+
+      - name: Compiler le C# (même configuration que l'éditeur Godot)
+        run: |
+          dotnet build Sahavola.csproj --configuration Debug 2>&1 | tee build.log
+          if grep -q "error CS" build.log; then
+            echo "Erreurs de compilation C# détectées :"
+            grep "error CS" build.log | sort -u
+            exit 1
+          fi
+
+      - name: Installer le modèle de build Android (équivalent du menu Projet)
+        run: |
+          godot_bin=$(find "$HOME/godot" -type f -name 'Godot_v4.3-stable_mono_linux*' ! -name '*.zip' | grep -v console | head -n 1)
+          chmod +x "$godot_bin"
+          "$godot_bin" --headless --path . --install-android-build-template
+          test -d android/build || { echo "Modèle de build Android non installé"; exit 1; }
+
+      - name: Exporter l'APK
+        run: |
+          godot_bin=$(find "$HOME/godot" -type f -name 'Godot_v4.3-stable_mono_linux*' ! -name '*.zip' | grep -v console | head -n 1)
+          chmod +x "$godot_bin"
+          mkdir -p build
+          "$godot_bin" --headless --path . --export-debug "Android" build/Sahavola.apk
+          if [ ! -f build/Sahavola.apk ]; then echo "L'export n'a pas produit l'APK"; exit 1; fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sahavola-android
+          path: build/

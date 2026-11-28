@@ -1,0 +1,13 @@
+.godot/
+.mono/
+bin/
+obj/
+
+# Secrets locaux (le modèle .env.example reste versionné)
+.env
+.env.*
+!.env.example
+
+# Supabase CLI
+supabase/.branches/
+supabase/.temp/
