@@ -58,6 +58,13 @@ jobs:
             exit 1
           fi
 
+      - name: Installer le modèle de build Android (équivalent du menu Projet)
+        run: |
+          godot_bin=$(find "$HOME/godot" -type f -name 'Godot_v4.3-stable_mono_linux*' ! -name '*.zip' | grep -v console | head -n 1)
+          chmod +x "$godot_bin"
+          "$godot_bin" --headless --path . --install-android-build-template
+          test -d android/build || { echo "Modèle de build Android non installé"; exit 1; }
+
       - name: Exporter l'APK
         run: |
           godot_bin=$(find "$HOME/godot" -type f -name 'Godot_v4.3-stable_mono_linux*' ! -name '*.zip' | grep -v console | head -n 1)
