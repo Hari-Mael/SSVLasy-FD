@@ -9,6 +9,7 @@ on:
 jobs:
   apk:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
