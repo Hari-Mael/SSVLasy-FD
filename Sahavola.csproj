@@ -6,4 +6,16 @@
     <Nullable>enable</Nullable>
     <EnableDynamicLoading>true</EnableDynamicLoading>
   </PropertyGroup>
+
+  <!-- Ne compiler que les scripts du jeu :
+       - core/ : noyau partagé, projet à part (réutilisé par Unity)
+       - backend/ : serveur, projet à part
+       - .godot/ : cache généré par Godot (ne doit jamais être compilé)
+       - build/ : sortie d'export -->
+  <ItemGroup>
+    <Compile Remove="core/**" />
+    <Compile Remove="backend/**" />
+    <Compile Remove=".godot/**" />
+    <Compile Remove="build/**" />
+  </ItemGroup>
 </Project>
